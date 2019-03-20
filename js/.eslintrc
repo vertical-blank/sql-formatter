@@ -1,0 +1,6 @@
+{
+    "extends": "zt/base",
+    "env": {
+        "jest": true
+    }
+}
