@@ -7,8 +7,8 @@
  */
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    id 'groovy'
 }
 
 repositories {
@@ -17,13 +17,18 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.apache.commons:commons-math3:3.6.1'
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:27.0.1-jre'
+sourceSets {
+	test {
+		groovy { srcDirs = ['src/test/groovy']}
+	}
+}
+
+dependencies {
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
 }
