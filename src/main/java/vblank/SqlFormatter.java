@@ -1,6 +1,12 @@
 package vblank;
 
-import vblank.core.Tokenizer;
+import javax.swing.*;
+
+import vblank.core.Config;
+import vblank.languages.AbstractFormatter;
+import vblank.languages.Db2Formatter;
+import vblank.languages.N1qlFormatter;
+import vblank.languages.PlSqlFormatter;
 import vblank.languages.StandardSqlFormatter;
 
 import java.util.Optional;
@@ -15,25 +21,29 @@ public class SqlFormatter {
 	 *              cfg.params Collection of params for placeholder replacement
 	 * @return {String}
 	 */
-	public static String format(String query, Tokenizer.Config cfg) {
+	public static String format(String query, Config cfg) {
+		return getFormatter(cfg).format(query);
+	}
+
+	private static AbstractFormatter getFormatter(Config cfg) {
 		String language = Optional.ofNullable(cfg.language).orElse("sql");
 		switch (language) {
-//            case "db2":
-//                return new Db2Formatter(cfg).format(query);
-//            case "n1ql":
-//                return new N1qlFormatter(cfg).format(query);
-//            case "pl/sql":
-//                return new PlSqlFormatter(cfg).format(query);
+            case "db2":
+				return new Db2Formatter(cfg);
+            case "n1ql":
+                return new N1qlFormatter(cfg);
+            case "pl/sql":
+                return new PlSqlFormatter(cfg);
 			case "sql":
 			case "":
-				return new StandardSqlFormatter(cfg).format(query);
+				return new StandardSqlFormatter(cfg);
 			default:
 				throw new RuntimeException("Unsupported SQL dialect: " + cfg.language);
 		}
 	}
 
 	public static String format(String query) {
-		return format(query, Tokenizer.Config.builder().language("sql").indent("  ").build());
+		return format(query, Config.builder().language("sql").indent("  ").build());
 	}
 
 }

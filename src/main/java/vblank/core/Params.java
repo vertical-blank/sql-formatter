@@ -1,27 +1,31 @@
 package vblank.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Handles placeholder replacement with given params.
  */
-public class Params {
+class Params {
 
-    LinkedHashMap<String, Object> params;
+    private LinkedHashMap<String, Object> paramMap;
+    private List<Object> params;
     private int index;
 
     /**
-     * @param params
+     * @param params query param
      */
-    public Params(LinkedHashMap<String, Object> params) {
-       this.params = params;
+    Params(LinkedHashMap<String, Object> params) {
+       this.paramMap = params;
        this.index = 0;
     }
-    public Params() {
-        this(new LinkedHashMap<>());
+    /**
+     * @param params query param
+     */
+    Params(List<Object> params) {
+        this.params = params;
+        this.index = 0;
     }
 
     /**
@@ -31,13 +35,13 @@ public class Params {
      *   token.value Placeholder value
      * @return param or token.value when params are missing
      */
-    public Object get(Tokenizer.Token token) {
-        if (this.params.isEmpty()) {
+    Object get(Token token) {
+        if (this.params == null || this.params.isEmpty()) {
             return token.value;
         }
-        if (token.key != null) {
-            return this.params.get(token.key);
+        if (!(token.key == null || token.key.isEmpty())) {
+            return this.paramMap.get(token.key);
         }
-        return new ArrayList<>(this.params.values()).get(this.index++);
+        return params.get(this.index++);
     }
 }

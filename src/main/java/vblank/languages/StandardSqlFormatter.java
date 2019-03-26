@@ -4,10 +4,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import vblank.core.Config;
 import vblank.core.Formatter;
 import vblank.core.Tokenizer;
 
-public class StandardSqlFormatter {
+public class StandardSqlFormatter extends AbstractFormatter {
 
 	private static final List<String> reservedWords = Arrays.asList(
 					"ACCESSIBLE", "ACTION", "AGAINST", "AGGREGATE", "ALGORITHM", "ALL", "ALTER", "ANALYSE", "ANALYZE", "AS", "ASC", "AUTOCOMMIT",
@@ -79,36 +80,25 @@ public class StandardSqlFormatter {
 					"XOR"
 	);
 
-
-	private Tokenizer.Config cfg;
+	@Override
+	Config dialectConfig() {
+		return Config.builder()
+				.reservedWords(reservedWords)
+				.reservedToplevelWords(reservedToplevelWords)
+				.reservedNewlineWords(reservedNewlineWords)
+				.stringTypes(Arrays.asList("\"\"", "N''", "''", "``", "[]"))
+				.openParens(Arrays.asList("(", "CASE"))
+				.closeParens(Arrays.asList(")", "END"))
+				.indexedPlaceholderTypes(Collections.singletonList("?"))
+				.namedPlaceholderTypes(Arrays.asList("@", ":"))
+				.lineCommentTypes(Arrays.asList("#", "--")).build();
+	}
 
 	/**
 	 * @param cfg Different set of configurations
 	 */
-	public StandardSqlFormatter(Tokenizer.Config cfg) {
-		this.cfg = cfg;
-	}
-
-	/**
-	 * Format the whitespace in a Standard SQL string to make it easier to read
-	 *
-	 * @param query The Standard SQL string
-	 * @return formatted string
-	 */
-	public String format(String query) {
-		Tokenizer tokenizer = new Tokenizer(this.cfg.toBuilder()
-						.reservedWords(reservedWords)
-						.reservedToplevelWords(reservedToplevelWords)
-						.reservedNewlineWords(reservedNewlineWords)
-						.stringTypes(Arrays.asList("\"\"", "N''", "''", "``", "[]"))
-						.openParens(Arrays.asList("(", "CASE"))
-						.closeParens(Arrays.asList(")", "END"))
-						.indexedPlaceholderTypes(Collections.singletonList("?"))
-						.namedPlaceholderTypes(Arrays.asList("@", ":"))
-						.lineCommentTypes(Arrays.asList("#", "--")).build()
-		);
-
-		return new Formatter(this.cfg, tokenizer).format(query);
+	public StandardSqlFormatter(Config cfg) {
+		super(cfg);
 	}
 
 }

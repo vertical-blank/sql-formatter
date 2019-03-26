@@ -1,15 +1,12 @@
-package vblank
+package vblank.core.util
 
 import org.junit.Test
-import vblank.SqlFormatter
-import vblank.core.Tokenizer
 
 class UtilTest {
 
     @Test
-    void escapeRegExp1() {
+    void escapeRegExp() {
         def escaped = Util.escapeRegExp('[lodash](https://lodash.com/)')
-
         assert escaped == '''\\[lodash\\]\\(https://lodash\\.com/\\)'''
     }
 

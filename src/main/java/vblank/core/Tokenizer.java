@@ -1,14 +1,15 @@
 package vblank.core;
 
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import lombok.Builder;
-import vblank.Util;
-
-import static vblank.Util.escapeRegExp;
+import vblank.core.util.JSLikeList;
+import vblank.core.util.Util;
+import static vblank.core.util.Util.escapeRegExp;
 
 
 public class Tokenizer {
@@ -54,44 +55,43 @@ public class Tokenizer {
 
 //        this.BLOCK_COMMENT_REGEX = /^(\/\*[^]*?(?:\*\/|$))/;
         this.BLOCK_COMMENT_REGEX = "^(/\\*(?s).*?(?:\\*/|$))";
-        this.LINE_COMMENT_REGEX = this.createLineCommentRegex(cfg.lineCommentTypes);
+        this.LINE_COMMENT_REGEX = this.createLineCommentRegex(new JSLikeList<>(cfg.lineCommentTypes));
 
-        this.RESERVED_TOPLEVEL_REGEX = this.createReservedWordRegex(cfg.reservedToplevelWords);
-        this.RESERVED_NEWLINE_REGEX = this.createReservedWordRegex(cfg.reservedNewlineWords);
-        this.RESERVED_PLAIN_REGEX = this.createReservedWordRegex(cfg.reservedWords);
+        this.RESERVED_TOPLEVEL_REGEX = this.createReservedWordRegex(new JSLikeList<>(cfg.reservedToplevelWords));
+        this.RESERVED_NEWLINE_REGEX = this.createReservedWordRegex(new JSLikeList<>(cfg.reservedNewlineWords));
+        this.RESERVED_PLAIN_REGEX = this.createReservedWordRegex(new JSLikeList<>(cfg.reservedWords));
 
-        this.WORD_REGEX = this.createWordRegex(cfg.specialWordChars);
-        this.STRING_REGEX = this.createStringRegex(cfg.stringTypes);
+        this.WORD_REGEX = this.createWordRegex(new JSLikeList<>(cfg.specialWordChars));
+        this.STRING_REGEX = this.createStringRegex(new JSLikeList<>(cfg.stringTypes));
 
-        this.OPEN_PAREN_REGEX = this.createParenRegex(cfg.openParens);
-        this.CLOSE_PAREN_REGEX = this.createParenRegex(cfg.closeParens);
+        this.OPEN_PAREN_REGEX = this.createParenRegex(new JSLikeList<>(cfg.openParens));
+        this.CLOSE_PAREN_REGEX = this.createParenRegex(new JSLikeList<>(cfg.closeParens));
 
-        this.INDEXED_PLACEHOLDER_REGEX = createPlaceholderRegex(cfg.indexedPlaceholderTypes, "[0-9]*");
-        this.IDENT_NAMED_PLACEHOLDER_REGEX = createPlaceholderRegex(cfg.namedPlaceholderTypes, "[a-zA-Z0-9._$]+");
+        this.INDEXED_PLACEHOLDER_REGEX = createPlaceholderRegex(new JSLikeList<>(cfg.indexedPlaceholderTypes), "[0-9]*");
+        this.IDENT_NAMED_PLACEHOLDER_REGEX = createPlaceholderRegex(new JSLikeList<>(cfg.namedPlaceholderTypes), "[a-zA-Z0-9._$]+");
         this.STRING_NAMED_PLACEHOLDER_REGEX = createPlaceholderRegex(
-            cfg.namedPlaceholderTypes,
-            this.createStringPattern(cfg.stringTypes)
+                new JSLikeList<>(cfg.namedPlaceholderTypes),
+                this.createStringPattern(new JSLikeList<>(cfg.stringTypes))
         );
     }
 
-    private String createLineCommentRegex(List<String> lineCommentTypes) {
+    private String createLineCommentRegex(JSLikeList<String> lineCommentTypes) {
         return String.format(
             "^((?:%s).*?(?:\n|$))",
-            lineCommentTypes.stream().map(Util::escapeRegExp).collect(Collectors.joining("|"))
+            lineCommentTypes.map(Util::escapeRegExp).join("|")
         );
     }
 
-    private String createReservedWordRegex(List<String> reservedWords) {
-        String reservedWordsPattern = String.join("|", reservedWords)
-            .replaceAll(" ", "\\\\s+");
+    private String createReservedWordRegex(JSLikeList<String> reservedWords) {
+        String reservedWordsPattern = reservedWords.join("|").replaceAll(" ", "\\\\s+");
         return "(?i)" + "^(" + reservedWordsPattern + ")\\b";
     }
 
-    private String createWordRegex(List<String> specialChars) {
-        return "^([\\w" + String.join("", Util.nullToEmpty(specialChars)) + "]+)";
+    private String createWordRegex(JSLikeList<String> specialChars) {
+        return "^([\\w" + specialChars.join("") + "]+)";
     }
 
-    private String createStringRegex(List<String> stringTypes) {
+    private String createStringRegex(JSLikeList<String> stringTypes) {
         return "^(" + this.createStringPattern(stringTypes) + ")";
     }
 
@@ -101,7 +101,7 @@ public class Tokenizer {
     // 3. double quoted string using "" or \" to escape
     // 4. single quoted string using '' or \' to escape
     // 5. national character quoted string using N'' or N\' to escape
-    private String createStringPattern(List<String> stringTypes) {
+    private String createStringPattern(JSLikeList<String> stringTypes) {
         Map<String, String> patterns = new HashMap<>();
         patterns.put("``", "((`[^`]*($|`))+)");
         patterns.put("[]", "((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)");
@@ -109,17 +109,16 @@ public class Tokenizer {
         patterns.put("''", "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)");
         patterns.put("N''", "((N'[^N'\\\\]*(?:\\\\.[^N'\\\\]*)*('|$))+)");
 
-        return stringTypes.stream().map(patterns::get).collect(Collectors.joining("|"));
+        return stringTypes.map(patterns::get).join("|");
     }
 
-    private String createParenRegex(List<String> parens) {
-        return "(?i)" + "^(" + parens.stream().map(Tokenizer::escapeParen).collect(Collectors.joining("|")) + ")";
+    private String createParenRegex(JSLikeList<String> parens) {
+        return "(?i)" + "^(" + parens.map(Tokenizer::escapeParen).join("|") + ")";
     }
 
     private static String escapeParen(String paren) {
         if (paren.length() == 1) {
             // A single punctuation character
-//            return "\\${paren}";
             return escapeRegExp(paren);
         }
         else {
@@ -128,11 +127,11 @@ public class Tokenizer {
         }
     }
 
-    private static String createPlaceholderRegex(List<String> types, String pattern) {
+    private static String createPlaceholderRegex(JSLikeList<String> types, String pattern) {
         if (types.isEmpty()) {
             return null;
         }
-        String typesRegex = types.stream().map(Util::escapeRegExp).collect(Collectors.joining("|"));
+        String typesRegex = types.map(Util::escapeRegExp).join("|");
 
         return String.format("^((?:%s)(?:%s))", typesRegex, pattern);
     }
@@ -268,7 +267,7 @@ public class Tokenizer {
     }
 
     private String getEscapedPlaceholderKey(String key, String quoteChar) {
-       return key.replaceAll("\\" + quoteChar, quoteChar);
+       return key.replaceAll(escapeRegExp("\\") + quoteChar, quoteChar);
     }
 
     // Decimal, binary, or hex numbers
@@ -334,6 +333,10 @@ public class Tokenizer {
     }
 
     private String getFirstMatch(String input, String regex) {
+        if (regex == null) {
+            return null;
+        }
+
         Matcher matcher = Pattern.compile(regex).matcher(input);
         if (matcher.find()){
             return matcher.group();
@@ -350,45 +353,6 @@ public class Tokenizer {
         } else {
             return null;
         }
-    }
-
-    public static class Token {
-        TokenTypes type;
-        String value;
-        String regex;
-        String key;
-
-        Token(TokenTypes type, String value, String regex) {
-            this.type = type;
-            this.value = value;
-            this.regex = regex;
-        }
-        Token(TokenTypes type, String value) {
-            this(type, value, null);
-        }
-
-        @Override
-        public String toString() {
-            return "type: " + type + ", value: [" + value + "], regex: /" + regex + "/";
-        }
-    }
-
-    @Builder(toBuilder = true)
-    public static class Config {
-        public final List<String> lineCommentTypes;
-        public final List<String> reservedToplevelWords;
-        public final List<String> reservedNewlineWords;
-        public final List<String> reservedWords;
-        public final List<String> specialWordChars;
-        public final List<String> stringTypes;
-        public final List<String> openParens;
-        public final List<String> closeParens;
-        public final List<String> indexedPlaceholderTypes;
-        public final List<String> namedPlaceholderTypes;
-
-        public final String language;
-        public final String indent;
-        public final LinkedHashMap<String, Object> params;
     }
 
 }

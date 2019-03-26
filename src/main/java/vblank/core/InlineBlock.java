@@ -10,7 +10,7 @@ import java.util.List;
  * These blocks are formatted on a single line, unlike longer parenthized
  * expressions where open-parenthesis causes newline and increase of indentation.
  */
-public class InlineBlock {
+class InlineBlock {
 
     private static final int INLINE_MAX_LENGTH = 50;
 
@@ -26,7 +26,7 @@ public class InlineBlock {
      * @param  tokens Array of all tokens
      * @param  index Current token position
      */
-    void beginIfPossible(List<Tokenizer.Token> tokens, int index) {
+    void beginIfPossible(List<Token> tokens, int index) {
         if (this.level == 0 && this.isInlineBlock(tokens, index)) {
             this.level = 1;
         }
@@ -56,12 +56,12 @@ public class InlineBlock {
 
     // Check if this should be an inline parentheses block
     // Examples are "NOW()", "COUNT(*)", "int(10)", key(`somecolumn`), DECIMAL(7,2)
-    private boolean isInlineBlock(List<Tokenizer.Token> tokens, int index) {
+    private boolean isInlineBlock(List<Token> tokens, int index) {
         int length = 0;
         int level = 0;
 
         for (int i = index; i < tokens.size(); i++) {
-            Tokenizer.Token token = tokens.get(i);
+            Token token = tokens.get(i);
             length += token.value.length();
 
             // Overran max length
@@ -88,10 +88,11 @@ public class InlineBlock {
 
     // Reserved words that cause newlines, comments and semicolons
     // are not allowed inside inline parentheses block
-    private boolean isForbiddenToken(Tokenizer.Token token) {
+    private boolean isForbiddenToken(Token token) {
         return token.type == TokenTypes.RESERVED_TOPLEVEL ||
                 token.type == TokenTypes.RESERVED_NEWLINE ||
-                token.type == TokenTypes.LINE_COMMENT ||
+//                originally `TokenTypes.LINE_COMMENT` but this symbol is not defined
+//                token.type == TokenTypes.LINE_COMMENT ||
                 token.type == TokenTypes.BLOCK_COMMENT ||
                 token.value.equals(";");
     }

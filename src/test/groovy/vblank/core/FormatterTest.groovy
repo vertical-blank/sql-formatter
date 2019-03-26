@@ -16,7 +16,7 @@ class FormatterTest {
     void 'uses given indent config for indention'() {
         assert SqlFormatter.format(
                 "SELECT count(*),Column1 FROM Table1;",
-                Tokenizer.Config.builder().indent("    ").build()) ==
+                Config.builder().indent("    ").build()) ==
                 "SELECT\n" +
                 "    count(*),\n" +
                 "    Column1\n" +
