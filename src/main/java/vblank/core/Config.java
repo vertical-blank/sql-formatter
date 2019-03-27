@@ -1,6 +1,5 @@
 package vblank.core;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import lombok.Builder;
@@ -20,5 +19,6 @@ public class Config {
 
     public final String language;
     public final String indent;
-    public final Params params;
+    public final Params.Holder params;
+
 }

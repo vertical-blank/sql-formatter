@@ -23,7 +23,7 @@ public class Formatter {
 	public Formatter(Config cfg, Tokenizer tokenizer) {
 		this.indentation = new Indentation(cfg.indent);
 		this.inlineBlock = new InlineBlock();
-		this.params = cfg.params;
+		this.params = new Params(cfg.params);
 		this.tokenizer = tokenizer;
 		this.previousReservedWord = null;
 		this.tokens = Collections.emptyList();

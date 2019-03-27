@@ -5,11 +5,57 @@ import org.junit.Test
 import vblank.SqlFormatter
 
 @TypeChecked
-class StandardSqlFormatterTest extends FormatterTestBase {
+class PlSqlFormatterTest extends FormatterTestBase {
 
     @Override
     String lang() {
-        return 'sql'
+        return 'pl/sql'
+    }
+
+    @Test void "formats FETCH FIRST like LIMIT"() {
+        expect(SqlFormatter.format(
+            "SELECT col1 FROM tbl ORDER BY col2 DESC FETCH FIRST 20 ROWS ONLY;",
+            langConfig()
+        )).toBe(
+            "SELECT\n" +
+                "  col1\n" +
+                "FROM\n" +
+                "  tbl\n" +
+                "ORDER BY\n" +
+                "  col2 DESC\n" +
+                "FETCH FIRST\n" +
+                "  20 ROWS ONLY;"
+        )
+    }
+
+    @Test void "formats only -- as a line comment"() {
+        String result = SqlFormatter.format(
+            "SELECT col FROM\n" +
+                "-- This is a comment\n" +
+                "MyTable;\n",
+            langConfig()
+        )
+        expect(result).toBe(
+            "SELECT\n" +
+                "  col\n" +
+                "FROM\n" +
+                "  -- This is a comment\n" +
+                "  MyTable;"
+        )
+    }
+
+    @Test void "recognizes _, \$, #, . and @ as part of identifiers"() {
+        String result = SqlFormatter.format(
+            "SELECT my_col\$1#, col.2@ FROM tbl\n",
+            langConfig()
+        )
+        expect(result).toBe(
+            "SELECT\n" +
+                "  my_col\$1#,\n" +
+                "  col.2@\n" +
+                "FROM\n" +
+                "  tbl"
+        )
     }
 
     @Test void "formats short CREATE TABLE"() {
@@ -74,47 +120,9 @@ class StandardSqlFormatterTest extends FormatterTestBase {
         expect(SqlFormatter.format("[foo ]] JOIN bar]")).toBe("[foo ]] JOIN bar]")
     }
 
-    @Test void "recognizes @variables"() {
-        String result = SqlFormatter.format(
-            'SELECT @variable, @a1_2.3$, @\'var name\', @"var name", @`var name`, @[var name];'
-        )
-        expect(result).toBe(
-            "SELECT\n" +
-                "  @variable,\n" +
-                "  @a1_2.3\$,\n" +
-                "  @'var name',\n" +
-                "  @\"var name\",\n" +
-                "  @`var name`,\n" +
-                "  @[var name];"
-        )
-    }
-
-    @Test void "replaces @variables with param values"() {
-        String result = SqlFormatter.format(
-            'SELECT @variable, @a1_2.3$, @\'var name\', @"var name", @`var name`, @[var name], @\'var\\name\';',
-            langConfig().toBuilder().params(Params.Holder.of(
-                [
-                    "variable": "\"variable value\"",
-                    "a1_2.3\$": "'weird value'",
-                    "var name": "'var value'",
-                    "var\\name": "'var\\ value'"
-                ])).build()
-        )
-        expect(result).toBe(
-            "SELECT\n" +
-                "  \"variable value\",\n" +
-                "  'weird value',\n" +
-                "  'var value',\n" +
-                "  'var value',\n" +
-                "  'var value',\n" +
-                "  'var value',\n" +
-                "  'var\\ value';"
-        )
-    }
-
     @Test void "recognizes :variables"() {
         String result = SqlFormatter.format(
-            'SELECT :variable, :a1_2.3$, :\'var name\', :"var name", :`var name`, :[var name];'
+            "SELECT :variable, :a1_2.3\$, :'var name', :\"var name\", :`var name`, :[var name];"
         )
         expect(result).toBe(
             "SELECT\n" +
@@ -131,8 +139,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
         String result = SqlFormatter.format(
             "SELECT :variable, :a1_2.3\$, :'var name', :\"var name\", :`var name`," +
                 " :[var name], :'escaped \\'var\\'', :\"^*& weird \\\" var   \";",
-            langConfig().toBuilder().params(Params.Holder.of(
-                [
+                langConfig().toBuilder().params(Params.Holder.of([
                     "variable": "\"variable value\"",
                     "a1_2.3\$": "'weird value'",
                     "var name": "'var value'",
@@ -165,8 +172,11 @@ class StandardSqlFormatterTest extends FormatterTestBase {
 
     @Test void "replaces ? numbered placeholders with param values"() {
         String result = SqlFormatter.format("SELECT ?1, ?2, ?0;",
-            langConfig().toBuilder().params(Params.Holder.of(['0': "first", '1': "second", '2': "third"] )).build())
-
+            langConfig().toBuilder().params(Params.Holder.of([
+                '0': "first",
+                '1': "second",
+                '2': "third"
+            ] )).build())
         expect(result).toBe(
             "SELECT\n" +
                 "  second,\n" +
@@ -177,24 +187,13 @@ class StandardSqlFormatterTest extends FormatterTestBase {
 
     @Test void "replaces ? indexed placeholders with param values"() {
         String result = SqlFormatter.format("SELECT ?, ?, ?;",
-            langConfig().toBuilder().params(Params.Holder.of(["first", "second", "third"])).build())
-
+            langConfig().toBuilder().params(Params.Holder.of([
+            "first", "second", "third"])).build())
         expect(result).toBe(
             "SELECT\n" +
                 "  first,\n" +
                 "  second,\n" +
                 "  third;"
-        )
-    }
-
-    @Test void "formats query with GO batch separator"() {
-        String result = SqlFormatter.format("SELECT 1 GO SELECT 2")
-        expect(result).toBe(
-            "SELECT\n" +
-                "  1\n" +
-                "GO\n" +
-                "SELECT\n" +
-                "  2"
         )
     }
 
@@ -211,7 +210,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test void "formats SELECT query with CROSS APPLY"() {
-        String result = SqlFormatter.format("SELECT a, b FROM t CROSS APPLY fn(t.id)")
+        String result = SqlFormatter.format("SELECT a, b FROM t CROSS APPLY fn(t.id)", )
         expect(result).toBe(
             "SELECT\n" +
                 "  a,\n" +
@@ -233,7 +232,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
         )
     }
 
-    @Test void "formats simple SELECT with national characters (MSSQL)"() {
+    @Test void "formats simple SELECT with national characters"() {
         String result = SqlFormatter.format("SELECT N'value'")
         expect(result).toBe(
             "SELECT\n" +
@@ -250,18 +249,6 @@ class StandardSqlFormatterTest extends FormatterTestBase {
                 "FROM\n" +
                 "  t\n" +
                 "  OUTER APPLY fn(t.id)"
-        )
-    }
-
-    @Test void "formats FETCH FIRST like LIMIT"() {
-        String result = SqlFormatter.format(
-            "SELECT * FETCH FIRST 2 ROWS ONLY;"
-        )
-        expect(result).toBe(
-            "SELECT\n" +
-                "  *\n" +
-                "FETCH FIRST\n" +
-                "  2 ROWS ONLY;"
         )
     }
 
@@ -314,82 +301,6 @@ class StandardSqlFormatterTest extends FormatterTestBase {
                 "  ELSE 4\n" +
                 "END;"
         )
-    }
-
-    @Test void "recognizes lowercase CASE ... END"() {
-        String result = SqlFormatter.format(
-            "case when option = 'foo' then 1 else 2 end;"
-        )
-
-        expect(result).toBe(
-            "case\n" +
-                "  when option = 'foo' then 1\n" +
-                "  else 2\n" +
-                "end;"
-        )
-    }
-
-    // Regression test for issue #43
-    @Test void "ignores words CASE and END inside other strings"() {
-        String result = SqlFormatter.format(
-            "SELECT CASEDATE, ENDDATE FROM table1;"
-        )
-
-        expect(result).toBe(
-            "SELECT\n" +
-                "  CASEDATE,\n" +
-                "  ENDDATE\n" +
-                "FROM\n" +
-                "  table1;"
-        )
-    }
-
-    @Test void "formats tricky line comments"() {
-        expect(SqlFormatter.format("SELECT a#comment, here\nFROM b--comment")).toBe(
-            "SELECT\n" +
-                "  a #comment, here\n" +
-                "FROM\n" +
-                "  b --comment"
-        )
-    }
-
-    @Test void "formats line comments followed by semicolon"() {
-        expect(SqlFormatter.format("SELECT a FROM b\n--comment\n;")).toBe(
-            "SELECT\n" +
-                "  a\n" +
-                "FROM\n" +
-                "  b --comment\n" +
-                ";"
-        )
-    }
-
-    @Test void "formats line comments followed by comma"() {
-        expect(SqlFormatter.format("SELECT a --comment\n, b")).toBe(
-            "SELECT\n" +
-                "  a --comment\n" +
-                ",\n" +
-                "  b"
-        )
-    }
-
-    @Test void "formats line comments followed by close-paren"() {
-        expect(SqlFormatter.format("SELECT ( a --comment\n )")).toBe(
-            "SELECT\n" +
-                "  (a --comment\n" +
-                ")"
-        )
-    }
-
-    @Test void "formats line comments followed by open-paren"() {
-        expect(SqlFormatter.format("SELECT a --comment\n()")).toBe(
-            "SELECT\n" +
-                "  a --comment\n" +
-                "  ()"
-        )
-    }
-
-    @Test void "formats lonely semicolon"() {
-        expect(SqlFormatter.format(";")).toBe(";")
     }
 
 }

@@ -1,8 +1,10 @@
 package vblank.core
 
+import groovy.transform.TypeChecked
 import org.junit.Test
 import vblank.SqlFormatter
 
+@TypeChecked
 abstract class FormatterTestBase {
 
     abstract String lang()
@@ -23,7 +25,7 @@ abstract class FormatterTestBase {
         }
     }
 
-    static expect(String result) {
+    static Helper expect(String result) {
         new Helper(result)
     }
 
@@ -42,7 +44,7 @@ abstract class FormatterTestBase {
         )
     }
 
-    def format(String query) {
+    String format(String query) {
         SqlFormatter.format(query, this.langConfig())
     }
 

@@ -95,7 +95,7 @@ public class PlSqlFormatter extends AbstractFormatter {
                 .closeParens(Arrays.asList(")", "END"))
                 .indexedPlaceholderTypes(Collections.singletonList("?"))
                 .namedPlaceholderTypes(Collections.singletonList(":"))
-                .lineCommentTypes(Arrays.asList("--"))
+                .lineCommentTypes(Collections.singletonList("--"))
                 .specialWordChars(Arrays.asList("_", "$", "#", ".", "@"))
                 .build();
     }

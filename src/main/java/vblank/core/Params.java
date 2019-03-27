@@ -1,31 +1,102 @@
 package vblank.core;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Handles placeholder replacement with given params.
  */
-class Params {
+public class Params {
 
-    private LinkedHashMap<String, Object> paramMap;
-    private List<Object> params;
-    private int index;
+    public interface Holder {
+        boolean isEmpty();
+        Object get();
+        Object getByName(String key);
+
+        /**
+         * @param params query param
+         */
+        static Holder of(Map<String, ?> params) {
+            return new NamedParamHolder(params);
+        }
+
+        /**
+         * @param params query param
+         */
+        static Holder of(List<?> params) {
+            return new IndexedParamHolder(params);
+        }
+    }
+
+    public static class NamedParamHolder implements Holder {
+        private Map<String, ?> params;
+
+        NamedParamHolder(Map<String, ?> params) {
+            this.params = params;
+        }
+
+        public boolean isEmpty() {
+            return this.params.isEmpty();
+        }
+
+        @Override
+        public Object get() {
+            return null;
+        }
+
+        @Override
+        public Object getByName(String key) {
+            return this.params.get(key);
+        }
+    }
+
+    public static class IndexedParamHolder implements Holder {
+        private Queue<?> params;
+
+        IndexedParamHolder(List<?> params) {
+            this.params = new PriorityQueue<>(params);
+        }
+
+        public boolean isEmpty() {
+            return this.params.isEmpty();
+        }
+
+        @Override
+        public Object get() {
+            return this.params.poll();
+        }
+
+        @Override
+        public Object getByName(String key) {
+            return null;
+        }
+    }
+
+
+    private Holder params;
+//    private int index;
 
     /**
      * @param params query param
      */
-    Params(LinkedHashMap<String, Object> params) {
-       this.paramMap = params;
-       this.index = 0;
+    public Params(Map<String, ?> params) {
+       this.params = new NamedParamHolder(params);
     }
     /**
      * @param params query param
      */
-    Params(List<Object> params) {
-        this.params = params;
-        this.index = 0;
+    public Params(List<?> params) {
+        this.params = new IndexedParamHolder(params);
+//        this.index = 0;
+    }
+
+    /**
+     * @param holder query param holder
+     */
+    public Params(Holder holder) {
+        this.params = holder;
     }
 
     /**
@@ -40,8 +111,9 @@ class Params {
             return token.value;
         }
         if (!(token.key == null || token.key.isEmpty())) {
-            return this.paramMap.get(token.key);
+            return this.params.getByName(token.key);
+        } else {
+            return params.get();
         }
-        return params.get(this.index++);
     }
 }

@@ -1,8 +1,10 @@
 package vblank.core
 
+import groovy.transform.TypeChecked
 import org.junit.Test
 import vblank.SqlFormatter
 
+@TypeChecked
 class Db2FormatterTest extends FormatterTestBase {
 
     @Override
@@ -66,7 +68,7 @@ class Db2FormatterTest extends FormatterTestBase {
     @Test void "replaces :variables with param values"() {
         String result = SqlFormatter.format(
             "SELECT :variable",
-            langConfig().toBuilder().params(["variable": "\"variable value\""] as LinkedHashMap).build()
+            langConfig().toBuilder().params(Params.Holder.of(["variable": "\"variable value\""] )).build()
         )
         expect(result).toBe(
             "SELECT\n" +
