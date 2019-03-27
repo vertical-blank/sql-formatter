@@ -3,6 +3,7 @@ package vblank.core;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static vblank.core.util.Util.nullToEmpty;
 import static vblank.core.util.Util.trimEnd;
@@ -17,7 +18,7 @@ public class Formatter {
 	private int index;
 
 	/**
-	 * @param cfg cfg.indent cfg.params
+	 * @param cfg       cfg.indent cfg.params
 	 * @param tokenizer Tokenizer
 	 */
 	public Formatter(Config cfg, Tokenizer tokenizer) {
@@ -128,7 +129,7 @@ public class Formatter {
 						TokenTypes.OPEN_PAREN,
 						TokenTypes.LINE_COMMENT
 		);
-		if (this.previousToken() == null || !nullToEmpty(preserveWhitespaceFor).contains(this.previousToken().type)) {
+		if (!(this.previousToken().filter(t -> nullToEmpty(preserveWhitespaceFor).contains(t.type)).isPresent())) {
 			query = trimEnd(query);
 		}
 		query += token.value;
@@ -163,9 +164,9 @@ public class Formatter {
 
 		if (this.inlineBlock.isActive()) {
 			return query;
-		} else if (this.previousReservedWord.value.matches("(?i)^LIMIT$")){
+		} else if (this.previousReservedWord.value.matches("(?i)^LIMIT$")) {
 			return query;
-		} else{
+		} else {
 			return this.addNewline(query);
 		}
 	}
@@ -191,31 +192,31 @@ public class Formatter {
 	}
 
 	private String trimTrailingWhitespace(String query) {
-		Token token = this.previousNonWhitespaceToken();
-		if (token != null && token.type == TokenTypes.LINE_COMMENT) {
+		Optional<Token> token = this.previousNonWhitespaceToken();
+		if (token.filter(t -> t.type == TokenTypes.LINE_COMMENT).isPresent()) {
 			return trimEnd(query) + "\n";
 		} else {
 			return trimEnd(query);
 		}
 	}
 
-	private Token previousNonWhitespaceToken() {
+	private Optional<Token> previousNonWhitespaceToken() {
 		int n = 1;
-		while (this.previousToken(n) != null && this.previousToken(n).type == TokenTypes.WHITESPACE) {
+		while (this.previousToken(n).filter(t -> t.type == TokenTypes.WHITESPACE).isPresent()) {
 			n++;
 		}
 		return this.previousToken(n);
 	}
 
-	private Token previousToken(int offset) {
-		if (this.index - offset < 0){
-			return null;
+	private Optional<Token> previousToken(int offset) {
+		if (this.index - offset < 0) {
+			return Optional.empty();
 		} else {
-			return this.tokens.get(this.index - offset);
+			return Optional.ofNullable(this.tokens.get(this.index - offset));
 		}
 	}
 
-	private Token previousToken() {
+	private Optional<Token> previousToken() {
 		return this.previousToken(1);
 	}
 }

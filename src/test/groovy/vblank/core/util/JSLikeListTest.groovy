@@ -5,9 +5,8 @@ import org.junit.Test
 class JSLikeListTest {
 
     @Test
-    void escapeRegExp() {
-        def jslist = new JSLikeList([1, 2])
-        assert '12' == jslist.join()
+    void mapAndThenJoin() {
+        assert '2,4' == new JSLikeList([1, 2]).map { it * 2 }.join()
     }
 
 }

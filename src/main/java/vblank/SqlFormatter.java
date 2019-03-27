@@ -1,13 +1,7 @@
 package vblank;
 
-import javax.swing.*;
-
 import vblank.core.Config;
-import vblank.languages.AbstractFormatter;
-import vblank.languages.Db2Formatter;
-import vblank.languages.N1qlFormatter;
-import vblank.languages.PlSqlFormatter;
-import vblank.languages.StandardSqlFormatter;
+import vblank.languages.*;
 
 import java.util.Optional;
 
@@ -28,12 +22,12 @@ public class SqlFormatter {
 	private static AbstractFormatter getFormatter(Config cfg) {
 		String language = Optional.ofNullable(cfg.language).orElse("sql");
 		switch (language) {
-            case "db2":
+			case "db2":
 				return new Db2Formatter(cfg);
-            case "n1ql":
-                return new N1qlFormatter(cfg);
-            case "pl/sql":
-                return new PlSqlFormatter(cfg);
+			case "n1ql":
+				return new N1qlFormatter(cfg);
+			case "pl/sql":
+				return new PlSqlFormatter(cfg);
 			case "sql":
 			case "":
 				return new StandardSqlFormatter(cfg);

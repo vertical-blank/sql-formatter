@@ -1,12 +1,10 @@
 package vblank.languages;
 
+import vblank.core.Config;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import vblank.core.Config;
-import vblank.core.Formatter;
-import vblank.core.Tokenizer;
 
 public class StandardSqlFormatter extends AbstractFormatter {
 
@@ -83,15 +81,15 @@ public class StandardSqlFormatter extends AbstractFormatter {
 	@Override
 	Config dialectConfig() {
 		return Config.builder()
-				.reservedWords(reservedWords)
-				.reservedToplevelWords(reservedToplevelWords)
-				.reservedNewlineWords(reservedNewlineWords)
-				.stringTypes(Arrays.asList("\"\"", "N''", "''", "``", "[]"))
-				.openParens(Arrays.asList("(", "CASE"))
-				.closeParens(Arrays.asList(")", "END"))
-				.indexedPlaceholderTypes(Collections.singletonList("?"))
-				.namedPlaceholderTypes(Arrays.asList("@", ":"))
-				.lineCommentTypes(Arrays.asList("#", "--")).build();
+						.reservedWords(reservedWords)
+						.reservedToplevelWords(reservedToplevelWords)
+						.reservedNewlineWords(reservedNewlineWords)
+						.stringTypes(Arrays.asList("\"\"", "N''", "''", "``", "[]"))
+						.openParens(Arrays.asList("(", "CASE"))
+						.closeParens(Arrays.asList(")", "END"))
+						.indexedPlaceholderTypes(Collections.singletonList("?"))
+						.namedPlaceholderTypes(Arrays.asList("@", ":"))
+						.lineCommentTypes(Arrays.asList("#", "--")).build();
 	}
 
 	/**
