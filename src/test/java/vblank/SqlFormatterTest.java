@@ -2,7 +2,8 @@ package vblank;
 
 import org.junit.Assert;
 import org.junit.Test;
-import vblank.core.Config;
+import vblank.sql_formatter.SqlFormatter;
+import vblank.sql_formatter.core.Config;
 
 public class SqlFormatterTest {
 

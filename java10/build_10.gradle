@@ -18,15 +18,28 @@ jar {
 	}
 }
 
+sourceCompatibility = 1.10
+
+
 sourceSets {
 	test {
 		groovy { srcDirs = ['src/test/groovy']}
 	}
 }
 
+compileJava {
+	inputs.property("moduleName", 'vblank.sql.formatter.main')
+	doFirst {
+		options.compilerArgs = [
+			'--module-path', classpath.asPath,
+		]
+		classpath = files()
+	}
+}
+
 dependencies {
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
