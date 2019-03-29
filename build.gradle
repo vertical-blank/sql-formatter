@@ -4,7 +4,7 @@ plugins {
     id 'maven'
 }
 
-group = "vblank"
+group = "vertical_blank"
 version = "1.0"
 
 repositories {
