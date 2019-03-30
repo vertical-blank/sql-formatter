@@ -45,17 +45,12 @@ SqlFormatter
     .format("SELECT *", "    "); // Defaults to two spaces
 ```
 
-
-
-
 Currently just four SQL dialects are supported:
 
-- **sql** - [Standard SQL][]
-- **n1ql** - [Couchbase N1QL][]
-- **db2** - [IBM DB2][]
-- **pl/sql** - [Oracle PL/SQL][]
-
-
+- **sql** - [Standard SQL](https://en.wikipedia.org/wiki/SQL:2011)
+- **n1ql** - [Couchbase N1QL](http://www.couchbase.com/n1ql)
+- **db2** - [IBM DB2](https://www.ibm.com/analytics/us/en/technology/db2/)
+- **pl/sql** - [Oracle PL/SQL](http://www.oracle.com/technetwork/database/features/plsql/index.html)
 
 ### Placeholders replacement
 
