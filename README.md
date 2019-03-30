@@ -1,6 +1,6 @@
 # java-sql-formatter
 
-Java port of grate SQL formatter https://github.com/zeroturnaround/sql-formatter.
+Java port of great SQL formatter https://github.com/zeroturnaround/sql-formatter.
 
 ## Usage
 
