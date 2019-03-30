@@ -45,6 +45,9 @@ SqlFormatter
     .format("SELECT *", "    "); // Defaults to two spaces
 ```
 
+
+
+
 Currently just four SQL dialects are supported:
 
 - **sql** - [Standard SQL][]
@@ -52,9 +55,11 @@ Currently just four SQL dialects are supported:
 - **db2** - [IBM DB2][]
 - **pl/sql** - [Oracle PL/SQL][]
 
+
+
 ### Placeholders replacement
 
-```
+```java
 // Named placeholders
 Map<String, ?> namedParams = new HashMap<>();
 namedParams.put("foo", "'bar'");
@@ -66,7 +71,7 @@ SqlFormatter.format("SELECT * FROM tbl WHERE foo = ?", Arrays.asList("'bar'"));
 
 Both result in:
 
-```
+```sql
 SELECT
   *
 FROM
