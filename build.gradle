@@ -7,6 +7,13 @@ plugins {
 group = "vertical_blank"
 version = "1.0"
 
+sourceCompatibility = '1.10'
+targetCompatibility = '1.10'
+
+//tasks.withType(JavaCompile) {
+//	options.compilerArgs.addAll(['--release', '8'])
+//}
+
 repositories {
     jcenter()
     mavenLocal()
@@ -14,7 +21,7 @@ repositories {
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'vblank.sql_formatter.Main'
+		attributes 'Main-Class': 'vertical_blank.sql_formatter.Main'
 	}
 }
 
@@ -24,7 +31,13 @@ sourceSets {
 	}
 }
 
+test {
+	useJUnitPlatform()
+}
+
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.6'
 }
