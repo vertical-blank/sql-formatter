@@ -1,7 +1,7 @@
 package vertical_blank.sql_formatter
 
 import groovy.transform.TypeChecked
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @TypeChecked
 class PlSqlFormatterTest extends FormatterTestBase {
@@ -44,7 +44,8 @@ class PlSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "recognizes _, \$, #, . and @ as part of identifiers"() {
+    //recognizes _, \$, #, . and @ as part of identifiers
+    void "recognizes  as part of identifiers"() {
         String result = formatWithLang(
                 "SELECT my_col\$1#, col.2@ FROM tbl\n"
         )
@@ -94,7 +95,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats ALTER TABLE ... MODIFY query"() {
+    void "formats ALTER TABLE MODIFY query"() {
         String result = formatWithLang(
                 "ALTER TABLE supplier MODIFY supplier_name char(100) NOT NULL;"
         )
@@ -107,7 +108,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats ALTER TABLE ... ALTER COLUMN query"() {
+    void "formats ALTER TABLE ALTER COLUMN query"() {
         String result = formatWithLang(
                 "ALTER TABLE supplier ALTER COLUMN supplier_name VARCHAR(100) NOT NULL;"
         )
@@ -125,7 +126,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
 //        expect(formatWithLang("[foo JOIN bar]")).toBe("[foo JOIN bar]")
 //        expect(formatWithLang("[foo ]] JOIN bar]")).toBe("[foo ]] JOIN bar]")
 //    }
-
+//
 //    Originally, this Test is run against StandardSql.
 //    @Test
 //    void "recognizes :variables"() {
@@ -142,7 +143,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
 //                        "  :[var name];"
 //        )
 //    }
-
+//
 //    Originally, this Test is run against StandardSql.
 //    @Test
 //    void "replaces :variables with param values"() {
@@ -170,16 +171,16 @@ class PlSqlFormatterTest extends FormatterTestBase {
 //        )
 //    }
 
-    @Test
-    void "recognizes ?[0-9]* placeholders"() {
-        String result = formatWithLang("SELECT ?1, ?25, ?;")
-        expect(result).toBe(
-                "SELECT\n" +
-                        "  ?1,\n" +
-                        "  ?25,\n" +
-                        "  ?;"
-        )
-    }
+//    @Test
+//    void "recognizes ?[0-9]* placeholders"() {
+//        String result = formatWithLang("SELECT ?1, ?25, ?;")
+//        expect(result).toBe(
+//                "SELECT\n" +
+//                        "  ?1,\n" +
+//                        "  ?25,\n" +
+//                        "  ?;"
+//        )
+//    }
 
     @Test
     void "replaces ? numbered placeholders with param values"() {
@@ -269,7 +270,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats CASE ... WHEN with a blank expression"() {
+    void "formats CASE WHEN with a blank expression"() {
         String result = formatWithLang(
                 "CASE WHEN option = 'foo' THEN 1 WHEN option = 'bar' THEN 2 WHEN option = 'baz' THEN 3 ELSE 4 END;"
         )
@@ -285,7 +286,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats CASE ... WHEN inside SELECT"() {
+    void "formats CASE WHEN inside SELECT"() {
         String result = formatWithLang(
                 "SELECT foo, bar, CASE baz WHEN 'one' THEN 1 WHEN 'two' THEN 2 ELSE 3 END FROM table"
         )
@@ -306,7 +307,7 @@ class PlSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats CASE ... WHEN with an expression"() {
+    void "formats CASE WHEN with an expression"() {
         String result = formatWithLang(
                 "CASE toString(getNumber()) WHEN 'one' THEN 1 WHEN 'two' THEN 2 WHEN 'three' THEN 3 ELSE 4 END;"
         )

@@ -1,7 +1,7 @@
 package vertical_blank.sql_formatter
 
 import groovy.transform.TypeChecked
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @TypeChecked
 class Db2FormatterTest extends FormatterTestBase {

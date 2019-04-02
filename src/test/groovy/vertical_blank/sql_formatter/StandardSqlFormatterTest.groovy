@@ -1,7 +1,7 @@
 package vertical_blank.sql_formatter
 
 import groovy.transform.TypeChecked
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @TypeChecked
 class StandardSqlFormatterTest extends FormatterTestBase {
@@ -48,7 +48,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats ALTER TABLE ... MODIFY query"() {
+    void "formats ALTER TABLE MODIFY query"() {
         String result = formatWithLang(
                 "ALTER TABLE supplier MODIFY supplier_name char(100) NOT NULL;"
         )
@@ -61,7 +61,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats ALTER TABLE ... ALTER COLUMN query"() {
+    void "formats ALTER TABLE ALTER COLUMN query"() {
         String result = formatWithLang(
                 "ALTER TABLE supplier ALTER COLUMN supplier_name VARCHAR(100) NOT NULL;"
         )
@@ -74,7 +74,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "recognizes [] strings"() {
+    void "recognizes brackets strings"() {
         expect(formatWithLang("[foo JOIN bar]")).toBe("[foo JOIN bar]")
         expect(formatWithLang("[foo ]] JOIN bar]")).toBe("[foo ]] JOIN bar]")
     }
@@ -159,7 +159,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "recognizes ?[0-9]* placeholders"() {
+    void "recognizes indexed placeholders"() {
         String result = formatWithLang("SELECT ?1, ?25, ?;")
         expect(result).toBe(
                 "SELECT\n" +
@@ -279,7 +279,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats CASE ... WHEN with a blank expression"() {
+    void "formats CASE WHEN with a blank expression"() {
         String result = formatWithLang(
                 "CASE WHEN option = 'foo' THEN 1 WHEN option = 'bar' THEN 2 WHEN option = 'baz' THEN 3 ELSE 4 END;"
         )
@@ -295,7 +295,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats CASE ... WHEN inside SELECT"() {
+    void "formats CASE WHEN inside SELECT"() {
         String result = formatWithLang(
                 "SELECT foo, bar, CASE baz WHEN 'one' THEN 1 WHEN 'two' THEN 2 ELSE 3 END FROM table"
         )
@@ -316,7 +316,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats CASE ... WHEN with an expression"() {
+    void "formats CASE WHEN with an expression"() {
         String result = formatWithLang(
                 "CASE toString(getNumber()) WHEN 'one' THEN 1 WHEN 'two' THEN 2 WHEN 'three' THEN 3 ELSE 4 END;"
         )
@@ -333,7 +333,7 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "recognizes lowercase CASE ... END"() {
+    void "recognizes lowercase CASE END"() {
         String result = formatWithLang(
                 "case when option = 'foo' then 1 else 2 end;"
         )

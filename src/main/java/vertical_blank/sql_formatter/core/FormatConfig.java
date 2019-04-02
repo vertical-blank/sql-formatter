@@ -7,7 +7,6 @@ public class FormatConfig {
 	public final String indent;
 	public final Params.Holder params;
 
-	@java.beans.ConstructorProperties({"indent", "params"})
 	FormatConfig(String indent, Params.Holder params) {
 		this.indent = indent;
 		this.params = params;

@@ -14,7 +14,6 @@ public class DialectConfig {
     public final List<String> indexedPlaceholderTypes;
     public final List<String> namedPlaceholderTypes;
 
-    @java.beans.ConstructorProperties({"lineCommentTypes", "reservedToplevelWords", "reservedNewlineWords", "reservedWords", "specialWordChars", "stringTypes", "openParens", "closeParens", "indexedPlaceholderTypes", "namedPlaceholderTypes"})
     DialectConfig(List<String> lineCommentTypes, List<String> reservedToplevelWords, List<String> reservedNewlineWords, List<String> reservedWords, List<String> specialWordChars, List<String> stringTypes, List<String> openParens, List<String> closeParens, List<String> indexedPlaceholderTypes, List<String> namedPlaceholderTypes) {
         this.lineCommentTypes = lineCommentTypes;
         this.reservedToplevelWords = reservedToplevelWords;
