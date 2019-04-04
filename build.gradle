@@ -5,7 +5,7 @@ plugins {
 	id 'jacoco'
 }
 
-group = "com.github.vertical.blank"
+group = "com.github.vertical-blank"
 version = "1.0"
 
 sourceCompatibility = targetCompatibility = '1.8'
