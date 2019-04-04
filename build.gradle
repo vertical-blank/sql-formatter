@@ -7,22 +7,10 @@ plugins {
 group = "vertical_blank"
 version = "1.0"
 
-sourceCompatibility = '1.10'
-targetCompatibility = '1.10'
-
-//tasks.withType(JavaCompile) {
-//	options.compilerArgs.addAll(['--release', '8'])
-//}
+sourceCompatibility = targetCompatibility = '1.8'
 
 repositories {
     jcenter()
-    mavenLocal()
-}
-
-jar {
-	manifest {
-		attributes 'Main-Class': 'vertical_blank.sql_formatter.Main'
-	}
 }
 
 sourceSets {
