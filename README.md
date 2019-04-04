@@ -1,4 +1,6 @@
-# sql-formatter ![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master)
+# sql-formatter
+
+![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master) [![codecov](https://codecov.io/gh/vertical-blank/sql-formatter/branch/master/graph/badge.svg)](https://codecov.io/gh/vertical-blank/sql-formatter)
 
 Java port of great SQL formatter https://github.com/zeroturnaround/sql-formatter.
 
