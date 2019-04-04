@@ -1,12 +1,13 @@
 plugins {
 	id 'java'
 	id 'groovy'
-	id 'maven'
 	id 'jacoco'
+	id 'maven'
+	id 'signing'
 }
 
 group = "com.github.vertical-blank"
-version = "1.0"
+version = project.getProperties().version
 
 sourceCompatibility = targetCompatibility = '1.8'
 
@@ -31,13 +32,72 @@ jacocoTestReport {
 		csv.enabled false
 	}
 }
-
 check.dependsOn jacocoTestReport
-
 
 dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
 	testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.6'
+}
+
+task javadocJar(type: Jar) {
+	classifier = 'javadoc'
+	from javadoc
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+signing {
+	sign configurations.archives
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { signing.signPom(it) }
+
+			def sonatypeUsername = project.getProperties().'sonatype.user'
+			def sonatypePassword = project.getProperties().'sonatype.pass'
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			pom.project {
+				name 'sql-formatter'
+				packaging 'jar'
+				url 'https://github.com/vertical-blank/sql-formatter'
+				licenses {
+					license {
+						name 'The MIT License'
+						url 'https://opensource.org/licenses/MIT'
+					}
+				}
+				scm {
+					url 'scm:git@github.com:vertical-blank/sql-formatter.git'
+					connection 'scm:git@github.com:vertical-blank/sql-formatter.git'
+					developerConnection 'scm:git@github.com:vertical-blank/sql-formatter.git'
+				}
+				developers {
+					developer {
+						id 'vertical-blank'
+						name 'Yohei Yamana'
+						email 'fixeight@gmail.com'
+					}
+				}
+			}
+		}
+	}
 }

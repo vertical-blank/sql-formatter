@@ -27,7 +27,7 @@ First, add following dependency into your `pom.xml` :
 
 ## Examples
 
-You can easily use `com.github.vertical.blank.sqlformatter.SqlFormatter` :
+You can easily use `com.github.vertical_blank.sqlformatter.SqlFormatter` :
 
 ```
 SqlFormatter.format("SELECT * FROM table1")
