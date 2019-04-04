@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'groovy'
     id 'maven'
+	id 'jacoco'
 }
 
 group = "com.github.vertical.blank"
