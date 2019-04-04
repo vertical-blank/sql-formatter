@@ -4,7 +4,7 @@
 
 Java port of great SQL formatter https://github.com/zeroturnaround/sql-formatter.
 
-Written in only Java Standard Library, with no dependent library.
+Written with only Java Standard Library, without dependent library.
 
 ## Usage
 
