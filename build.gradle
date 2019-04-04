@@ -1,7 +1,7 @@
 plugins {
-    id 'java'
-    id 'groovy'
-    id 'maven'
+	id 'java'
+	id 'groovy'
+	id 'maven'
 	id 'jacoco'
 }
 
@@ -11,7 +11,7 @@ version = "1.0"
 sourceCompatibility = targetCompatibility = '1.8'
 
 repositories {
-    jcenter()
+	jcenter()
 }
 
 sourceSets {
@@ -23,11 +23,21 @@ sourceSets {
 test {
 	useJUnitPlatform()
 }
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		xml.destination file("${buildDir}/reports/jacoco/report.xml")
+		html.enabled false
+		csv.enabled false
+	}
+}
+
 check.dependsOn jacocoTestReport
+
 
 dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
-    testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.6'
+	testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.6'
 }
