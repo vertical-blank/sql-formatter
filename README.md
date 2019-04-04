@@ -25,7 +25,7 @@ First, add following dependency into your `pom.xml` :
 
 ## Examples
 
-You can easily use `com.github.vertical.blank.sql_formatter.SqlFormatter` :
+You can easily use `com.github.vertical.blank.SqlFormatter` :
 
 ```
 SqlFormatter.format("SELECT * FROM table1")
@@ -97,4 +97,3 @@ FROM
 WHERE
   foo = 'bar'
 ```
-
