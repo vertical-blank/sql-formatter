@@ -23,6 +23,7 @@ sourceSets {
 test {
 	useJUnitPlatform()
 }
+check.dependsOn jacocoTestReport
 
 dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
