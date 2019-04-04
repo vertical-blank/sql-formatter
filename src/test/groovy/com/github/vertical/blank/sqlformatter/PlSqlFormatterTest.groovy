@@ -1,4 +1,4 @@
-package com.github.vertical.blank
+package com.github.vertical.blank.sqlformatter
 
 import groovy.transform.TypeChecked
 import org.junit.jupiter.api.Test

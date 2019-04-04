@@ -1,6 +1,6 @@
-package com.github.vertical.blank.languages;
+package com.github.vertical.blank.sqlformatter.languages;
 
-import com.github.vertical.blank.core.DialectConfig;
+import com.github.vertical.blank.sqlformatter.core.DialectConfig;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.github.vertical.blank.core;
+package com.github.vertical.blank.sqlformatter.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.vertical.blank.core.util.JSLikeList;
-import com.github.vertical.blank.core.util.Util;
+import com.github.vertical.blank.sqlformatter.core.util.JSLikeList;
+import com.github.vertical.blank.sqlformatter.core.util.Util;
 
 
 public class Tokenizer {

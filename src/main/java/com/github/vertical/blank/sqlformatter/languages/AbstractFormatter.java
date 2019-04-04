@@ -1,15 +1,15 @@
-package com.github.vertical.blank.languages;
+package com.github.vertical.blank.sqlformatter.languages;
 
-import com.github.vertical.blank.core.DialectConfig;
-import com.github.vertical.blank.core.FormatConfig;
-import com.github.vertical.blank.core.Formatter;
-import com.github.vertical.blank.core.Params;
-import com.github.vertical.blank.core.Tokenizer;
+import com.github.vertical.blank.sqlformatter.core.DialectConfig;
+import com.github.vertical.blank.sqlformatter.core.FormatConfig;
+import com.github.vertical.blank.sqlformatter.core.Formatter;
+import com.github.vertical.blank.sqlformatter.core.Params;
+import com.github.vertical.blank.sqlformatter.core.Tokenizer;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.github.vertical.blank.core.FormatConfig.DEFAULT_INDENT;
+import static com.github.vertical.blank.sqlformatter.core.FormatConfig.DEFAULT_INDENT;
 
 public abstract class AbstractFormatter {
 

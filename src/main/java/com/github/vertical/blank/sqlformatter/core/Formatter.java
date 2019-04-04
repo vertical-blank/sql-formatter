@@ -1,6 +1,6 @@
-package com.github.vertical.blank.core;
+package com.github.vertical.blank.sqlformatter.core;
 
-import com.github.vertical.blank.core.util.Util;
+import com.github.vertical.blank.sqlformatter.core.util.Util;
 
 import java.util.Arrays;
 import java.util.Collections;

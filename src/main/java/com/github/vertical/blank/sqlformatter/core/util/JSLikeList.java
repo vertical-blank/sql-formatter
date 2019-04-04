@@ -1,4 +1,4 @@
-package com.github.vertical.blank.core.util;
+package com.github.vertical.blank.sqlformatter.core.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

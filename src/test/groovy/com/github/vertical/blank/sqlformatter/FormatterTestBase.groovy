@@ -1,6 +1,6 @@
-package com.github.vertical.blank
+package com.github.vertical.blank.sqlformatter
 
-
+import com.github.vertical.blank.sqlformatter.languages.AbstractFormatter
 import groovy.transform.TypeChecked
 import org.junit.jupiter.api.Test
 
@@ -25,7 +25,7 @@ abstract class FormatterTestBase {
         new Helper(result)
     }
 
-    private com.github.vertical.blank.languages.AbstractFormatter getFormatter() {
+    private AbstractFormatter getFormatter() {
         SqlFormatter.of(this.lang())
     }
 
