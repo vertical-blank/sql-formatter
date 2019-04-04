@@ -1,4 +1,4 @@
-# java-sql-formatter
+# java-sql-formatter ![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master)
 
 Java port of great SQL formatter https://github.com/zeroturnaround/sql-formatter.
 
