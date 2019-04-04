@@ -1,4 +1,4 @@
-package com.github.vertical.blank;
+package com.github.vertical.blank.sqlformatter;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.github.vertical.blank.core;
+package com.github.vertical.blank.sqlformatter.core;
 
 public class Token {
 	public final TokenTypes type;

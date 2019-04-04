@@ -1,4 +1,4 @@
-package com.github.vertical.blank.core.util
+package com.github.vertical.blank.sqlformatter.core.util
 
 import org.junit.jupiter.api.Test
 

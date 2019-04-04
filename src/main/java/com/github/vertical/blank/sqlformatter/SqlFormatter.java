@@ -1,11 +1,11 @@
-package com.github.vertical.blank;
+package com.github.vertical.blank.sqlformatter;
 
-import com.github.vertical.blank.core.FormatConfig;
-import com.github.vertical.blank.languages.AbstractFormatter;
-import com.github.vertical.blank.languages.Db2Formatter;
-import com.github.vertical.blank.languages.N1qlFormatter;
-import com.github.vertical.blank.languages.PlSqlFormatter;
-import com.github.vertical.blank.languages.StandardSqlFormatter;
+import com.github.vertical.blank.sqlformatter.core.FormatConfig;
+import com.github.vertical.blank.sqlformatter.languages.AbstractFormatter;
+import com.github.vertical.blank.sqlformatter.languages.Db2Formatter;
+import com.github.vertical.blank.sqlformatter.languages.N1qlFormatter;
+import com.github.vertical.blank.sqlformatter.languages.PlSqlFormatter;
+import com.github.vertical.blank.sqlformatter.languages.StandardSqlFormatter;
 
 import java.util.List;
 import java.util.Map;

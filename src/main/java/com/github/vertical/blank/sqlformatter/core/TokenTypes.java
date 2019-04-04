@@ -1,4 +1,4 @@
-package com.github.vertical.blank.core;
+package com.github.vertical.blank.sqlformatter.core;
 
 /**
  * Constants for token types
