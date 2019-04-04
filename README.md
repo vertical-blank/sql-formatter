@@ -1,12 +1,14 @@
-# java-sql-formatter ![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master)
+# sql-formatter ![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master)
 
 Java port of great SQL formatter https://github.com/zeroturnaround/sql-formatter.
+
+Written in only Java Standard Library, with no dependent library.
 
 ## Usage
 
 ### Maven
 
-First, add following dependency into your `pom.xml`:
+First, add following dependency into your `pom.xml` :
 
 ```xml
 <dependencies>
@@ -21,7 +23,9 @@ First, add following dependency into your `pom.xml`:
 `'com.github.vertical.blank:sql-formatter:1.0'`
 
 
-You can easily use `vertical_blank.sql_formatter.SqlFormatter`:
+## Examples
+
+You can easily use `com.github.vertical.blank.sql_formatter.SqlFormatter` :
 
 ```
 SqlFormatter.format("SELECT * FROM table1")
@@ -37,7 +41,7 @@ FROM
 
 ### Dialect
 
-You can pass dialect name to `SqlFormatter.of`:
+You can pass dialect name to `SqlFormatter.of` :
 
 ```java
 SqlFormatter
@@ -55,7 +59,7 @@ Currently just four SQL dialects are supported:
 ### Format
 
 Defaults to two spaces.
-You can pass indent string to `format`:
+You can pass indent string to `format` :
 
 ```java
 SqlFormatter.format("SELECT * FROM table1", "    ");
@@ -71,7 +75,7 @@ FROM
 
 ### Placeholders replacement
 
-You can pass List or Map to `format`:
+You can pass List or Map to `format` :
 
 ```java
 // Named placeholders
