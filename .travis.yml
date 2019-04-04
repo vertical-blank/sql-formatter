@@ -4,4 +4,4 @@ jdk:
   - openjdk8
 
 script:
-  - gradle build
+  - ./gradlew build
