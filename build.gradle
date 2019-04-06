@@ -41,6 +41,20 @@ dependencies {
 	testImplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.6'
 }
 
+def isReleaseBuild = project.hasProperty("release")
+def isSnapShotBuild = project.hasProperty("snapshot")
+def isDevBuild = !(isReleaseBuild || isSnapShotBuild)
+def sonatypeRepositoryUrl
+if (isReleaseBuild) {
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+} else if (isSnapShotBuild) {
+    version += "-SNAPSHOT"
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+} else {
+    version += "-SNAPSHOT"
+}
+
+
 task javadocJar(type: Jar) {
 	classifier = 'javadoc'
 	from javadoc
@@ -56,6 +70,7 @@ artifacts {
 }
 
 signing {
+	required { isReleaseBuild }
 	sign configurations.archives
 }
 
@@ -67,11 +82,7 @@ uploadArchives {
 			def sonatypeUsername = project.getProperties().'sonatype.user'
 			def sonatypePassword = project.getProperties().'sonatype.pass'
 
-			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-				authentication(userName: sonatypeUsername, password: sonatypePassword)
-			}
-
-			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+			repository(url: sonatypeRepositoryUrl) {
 				authentication(userName: sonatypeUsername, password: sonatypePassword)
 			}
 
