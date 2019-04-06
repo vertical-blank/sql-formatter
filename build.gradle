@@ -88,6 +88,7 @@ uploadArchives {
 
 			pom.project {
 				name 'sql-formatter'
+				description 'Simple SQL formatter without dependencies.'
 				packaging 'jar'
 				url 'https://github.com/vertical-blank/sql-formatter'
 				licenses {
