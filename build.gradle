@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.vertical-blank"
-version = project.getProperties().version
+version = '1.0'
 
 sourceCompatibility = targetCompatibility = '1.8'
 
