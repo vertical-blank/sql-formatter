@@ -10,20 +10,19 @@ Written with only Java Standard Library, without dependent library.
 
 ### Maven
 
-First, add following dependency into your `pom.xml` :
-
 ```xml
-<dependencies>
-  <dependency>
-...
-  </dependency>
-</dependencies>
+<dependency>
+  <groupId>com.github.vertical-blank</groupId>
+  <artifactId>sql-formatter</artifactId>
+  <version>1.0</version>
+</dependency>
 ```
 
 ### Gradle
 
-`'com.github.vertical.blank:sql-formatter:1.0'`
-
+```gradle
+implementation 'com.github.vertical-blank:sql-formatter:1.0
+```
 
 ## Examples
 
