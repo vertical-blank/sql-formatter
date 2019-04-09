@@ -23,7 +23,7 @@ Written with only Java Standard Library, without dependent library.
 ### Gradle
 
 ```gradle
-implementation 'com.github.vertical-blank:sql-formatter:1.0
+implementation 'com.github.vertical-blank:sql-formatter:1.0'
 ```
 
 ## Examples
