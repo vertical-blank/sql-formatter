@@ -5,8 +5,10 @@
 build
 out
 bin
+target
 
 *.iml
+settings.json
 
 .idea
 .settings

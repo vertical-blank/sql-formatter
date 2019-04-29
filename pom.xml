@@ -21,6 +21,12 @@
       <email>fixeight@gmail.com</email>
     </developer>
   </developers>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
   <scm>
     <connection>scm:git@github.com:vertical-blank/sql-formatter.git</connection>
     <developerConnection>scm:git@github.com:vertical-blank/sql-formatter.git</developerConnection>
@@ -88,6 +94,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.1.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
           <docencoding>UTF-8</docencoding>

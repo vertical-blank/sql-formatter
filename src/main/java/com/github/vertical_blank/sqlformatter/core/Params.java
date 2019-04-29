@@ -19,6 +19,7 @@ public class Params {
 
 		/**
 		 * @param params query param
+		 * @return Holder
 		 */
 		static Holder of(Map<String, ?> params) {
 			return new NamedParamHolder(params);
@@ -26,6 +27,7 @@ public class Params {
 
 		/**
 		 * @param params query param
+		 * @return Holder
 		 */
 		static Holder of(List<?> params) {
 			return new IndexedParamHolder(params);
