@@ -5,6 +5,7 @@
 build
 out
 bin
+target
 
 *.iml
 
