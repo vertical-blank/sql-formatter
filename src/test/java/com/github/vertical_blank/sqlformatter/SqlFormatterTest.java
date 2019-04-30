@@ -1,18 +1,19 @@
 package com.github.vertical_blank.sqlformatter;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SqlFormatterTest {
 
 	@Test
 	public void simple() {
 		String format = SqlFormatter.format("SELECT foo, bar, CASE baz WHEN 'one' THEN 1 WHEN 'two' THEN 2 ELSE 3 END FROM table");
-		Assert.assertEquals(format, "SELECT\n" +
+		assertEquals(format, "SELECT\n" +
 						"  foo,\n" +
 						"  bar,\n" +
 						"  CASE\n" +
@@ -30,7 +31,7 @@ public class SqlFormatterTest {
 		String format = SqlFormatter.format(
 										"SELECT foo, bar, CASE baz WHEN 'one' THEN 1 WHEN 'two' THEN 2 ELSE 3 END FROM table",
 										"    ");
-		Assert.assertEquals(format, "SELECT\n" +
+		assertEquals(format, "SELECT\n" +
 						"    foo,\n" +
 						"    bar,\n" +
 						"    CASE\n" +
@@ -49,7 +50,7 @@ public class SqlFormatterTest {
 		namedParams.put("foo", "'bar'");
 
 		String format = SqlFormatter.format("SELECT * FROM tbl WHERE foo = @foo", namedParams);
-		Assert.assertEquals(format, "SELECT\n" +
+		assertEquals(format, "SELECT\n" +
 						"  *\n" +
 						"FROM\n" +
 						"  tbl\n" +
@@ -60,7 +61,7 @@ public class SqlFormatterTest {
 	@Test
 	public void withIndexedParams() {
 		String format = SqlFormatter.format("SELECT * FROM tbl WHERE foo = ?", Arrays.asList("'bar'"));
-		Assert.assertEquals(format, "SELECT\n" +
+		assertEquals(format, "SELECT\n" +
 						"  *\n" +
 						"FROM\n" +
 						"  tbl\n" +
