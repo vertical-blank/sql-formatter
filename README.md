@@ -4,11 +4,13 @@
 ![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master)
 [![codecov](https://codecov.io/gh/vertical-blank/sql-formatter/branch/master/graph/badge.svg)](https://codecov.io/gh/vertical-blank/sql-formatter)
 
-Java port of great SQL formatter https://github.com/zeroturnaround/sql-formatter.
+Java port of great SQL formatter <https://github.com/zeroturnaround/sql-formatter.>
 
 Written with only Java Standard Library, without dependencies.
 
 [Demo](http://www.vertical-blank.com/sql-formatter/)
+
+Demo is running on Google Cloud Function, with native-compiled shared library by GraalVM.
 
 ## Usage
 
@@ -32,11 +34,12 @@ implementation 'com.github.vertical-blank:sql-formatter:1.0'
 
 You can easily use `com.github.vertical_blank.sqlformatter.SqlFormatter` :
 
-```
+```java
 SqlFormatter.format("SELECT * FROM table1")
 ```
 
 This will output:
+
 ```sql
 SELECT
   *
@@ -71,6 +74,7 @@ SqlFormatter.format("SELECT * FROM table1", "    ");
 ```
 
 This will output:
+
 ```sql
 SELECT
     *
