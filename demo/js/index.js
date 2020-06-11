@@ -1,6 +1,8 @@
 const ref = require('ref');
 const ffi = require('ffi');
 
+const version = '1.0.1'
+
 const libJava = ffi.Library(__dirname + '/sqlformatterdemo', {
   graal_create_isolate: [
     ref.types.int, [
@@ -42,7 +44,7 @@ exports.handler = (req, res) => {
     const hello = libJava.hello(ref.deref(p_graal_isolatethread_t))
     res.header('Access-Control-Allow-Origin', "*");
     res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept");
-    res.send(hello);
+    res.send(`${hello} ${version}`);
   } else {
     const formatted = libJava.format_sql(ref.deref(p_graal_isolatethread_t), ref.allocCString(req.rawBody.toString()))
     res.header('Access-Control-Allow-Origin', "*");
