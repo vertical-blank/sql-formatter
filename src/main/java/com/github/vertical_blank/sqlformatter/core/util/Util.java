@@ -19,7 +19,12 @@ public class Util {
 	}
 
 	public static String trimEnd(String s) {
-		return s.replaceAll("[ |\\n|\\r]*$", "");
+		int endIndex = s.length();
+		char[] chars = s.toCharArray();
+		while(endIndex > 0 && (chars[endIndex  - 1] == ' ' || chars[endIndex  - 1] == '\n' || chars[endIndex  - 1] == '\r')) {
+			endIndex--;
+		}
+		return new String(chars, 0, endIndex);
 	}
 
 	public static String escapeRegExp(String s) {
