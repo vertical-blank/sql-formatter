@@ -20,14 +20,14 @@ Demo is running on Google Cloud Function, with native-compiled shared library by
 <dependency>
   <groupId>com.github.vertical-blank</groupId>
   <artifactId>sql-formatter</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-implementation 'com.github.vertical-blank:sql-formatter:1.0'
+implementation 'com.github.vertical-blank:sql-formatter:1.0.1'
 ```
 
 ## Examples
