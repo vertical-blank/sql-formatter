@@ -59,6 +59,17 @@ public class SqlFormatterTest {
 	}
 
 	@Test
+	public void withFatArrow() {
+		String format = SqlFormatter.format("SELECT * FROM tbl WHERE foo => '123'");
+		assertEquals(format, "SELECT\n" +
+				"  *\n" +
+				"FROM\n" +
+				"  tbl\n" +
+				"WHERE\n" +
+				"  foo => '123'");
+	}
+
+	@Test
 	public void withIndexedParams() {
 		String format = SqlFormatter.format("SELECT * FROM tbl WHERE foo = ?", Arrays.asList("'bar'"));
 		assertEquals(format, "SELECT\n" +
