@@ -163,7 +163,7 @@ public class Formatter {
 
 		if (this.inlineBlock.isActive()) {
 			return query;
-		} else if (this.previousReservedWord.value.matches("(?i)^LIMIT$")) {
+		} else if (this.previousReservedWord != null && this.previousReservedWord.value.matches("(?i)^LIMIT$")) {
 			return query;
 		} else {
 			return this.addNewline(query);
