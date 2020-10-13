@@ -10,6 +10,11 @@ import java.util.stream.Stream;
 
 public class Util {
 
+	private static final String ESCAPE_REGEX = Stream.of("^", "$", "\\", ".", "*", "+", "*", "?", "(", ")", "[", "]", "{", "}", "|")
+			.map(spChr -> "(\\" + spChr + ")").collect(Collectors.joining("|"));
+	public static final Pattern ESCAPE_REGEX_PATTERN = Pattern.compile(ESCAPE_REGEX);
+
+
 	public static <T> List<T> nullToEmpty(List<T> ts) {
 		if (ts == null) {
 			return Collections.emptyList();
@@ -28,10 +33,7 @@ public class Util {
 	}
 
 	public static String escapeRegExp(String s) {
-		String regexp = Stream.of("^", "$", "\\", ".", "*", "+", "*", "?", "(", ")", "[", "]", "{", "}", "|")
-						.map(spChr -> "(\\" + spChr + ")").collect(Collectors.joining("|"));
-
-		return Pattern.compile(regexp).matcher(s).replaceAll("\\\\$0");
+		return ESCAPE_REGEX_PATTERN.matcher(s).replaceAll("\\\\$0");
 	}
 
 	@SafeVarargs
