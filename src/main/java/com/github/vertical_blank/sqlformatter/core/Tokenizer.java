@@ -12,26 +12,26 @@ import com.github.vertical_blank.sqlformatter.core.util.Util;
 
 
 public class Tokenizer {
-	private String WHITESPACE_REGEX;
-	private String NUMBER_REGEX;
-	private String OPERATOR_REGEX;
+	private final Pattern WHITESPACE_PATTERN;
+	private final Pattern NUMBER_PATTERN;
+	private final Pattern OPERATOR_PATTERN;
 
-	private String BLOCK_COMMENT_REGEX;
-	private String LINE_COMMENT_REGEX;
+	private final Pattern BLOCK_COMMENT_PATTERN;
+	private final Pattern LINE_COMMENT_PATTERN;
 
-	private String RESERVED_TOPLEVEL_REGEX;
-	private String RESERVED_NEWLINE_REGEX;
-	private String RESERVED_PLAIN_REGEX;
+	private final Pattern RESERVED_TOPLEVEL_PATTERN;
+	private final Pattern RESERVED_NEWLINE_PATTERN;
+	private final Pattern RESERVED_PLAIN_PATTERN;
 
-	private String WORD_REGEX;
-	private String STRING_REGEX;
+	private final Pattern WORD_PATTERN;
+	private final Pattern STRING_PATTERN;
 
-	private String OPEN_PAREN_REGEX;
-	private String CLOSE_PAREN_REGEX;
+	private final Pattern OPEN_PAREN_PATTERN;
+	private final Pattern CLOSE_PAREN_PATTERN;
 
-	private String INDEXED_PLACEHOLDER_REGEX;
-	private String IDENT_NAMED_PLACEHOLDER_REGEX;
-	private String STRING_NAMED_PLACEHOLDER_REGEX;
+	private final Pattern INDEXED_PLACEHOLDER_PATTERN;
+	private final Pattern IDENT_NAMED_PLACEHOLDER_PATTERN;
+	private final Pattern STRING_NAMED_PLACEHOLDER_PATTERN;
 
 
 	/**
@@ -47,27 +47,28 @@ public class Tokenizer {
 	 *            {String[]} cfg.specialWordChars Special chars that can be found inside of words, like @ and #
 	 */
 	public Tokenizer(DialectConfig cfg) {
-		this.WHITESPACE_REGEX = "^(\\s+)";
-		this.NUMBER_REGEX = "^((-\\s*)?[0-9]+(\\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\\b";
-		this.OPERATOR_REGEX = "^(!=|<>|==|<=|>=|!<|!>|\\|\\||::|->>|=>|->|~~\\*|~~|!~~\\*|!~~|~\\*|!~\\*|!~|.)";
+		this.WHITESPACE_PATTERN = Pattern.compile("^(\\s+)");
+		this.NUMBER_PATTERN = Pattern.compile("^((-\\s*)?[0-9]+(\\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\\b");
+		this.OPERATOR_PATTERN = Pattern.compile("^(!=|<>|==|<=|>=|!<|!>|\\|\\||::|->>|=>|->|~~\\*|~~|!~~\\*|!~~|~\\*|!~\\*|!~|.)");
 
 //        this.BLOCK_COMMENT_REGEX = /^(\/\*[^]*?(?:\*\/|$))/;
-		this.BLOCK_COMMENT_REGEX = "^(/\\*(?s).*?(?:\\*/|$))";
-		this.LINE_COMMENT_REGEX = this.createLineCommentRegex(new JSLikeList<>(cfg.lineCommentTypes));
+		this.BLOCK_COMMENT_PATTERN = Pattern.compile("^(/\\*(?s).*?(?:\\*/|$))");
+		this.LINE_COMMENT_PATTERN = Pattern.compile(this.createLineCommentRegex(new JSLikeList<>(cfg.lineCommentTypes)));
 
-		this.RESERVED_TOPLEVEL_REGEX = this.createReservedWordRegex(new JSLikeList<>(cfg.reservedToplevelWords));
-		this.RESERVED_NEWLINE_REGEX = this.createReservedWordRegex(new JSLikeList<>(cfg.reservedNewlineWords));
-		this.RESERVED_PLAIN_REGEX = this.createReservedWordRegex(new JSLikeList<>(cfg.reservedWords));
+		this.RESERVED_TOPLEVEL_PATTERN = Pattern.compile(this.createReservedWordRegex(new JSLikeList<>(cfg.reservedToplevelWords)));
+		this.RESERVED_NEWLINE_PATTERN = Pattern.compile(this.createReservedWordRegex(new JSLikeList<>(cfg.reservedNewlineWords)));
+		this.RESERVED_PLAIN_PATTERN = Pattern.compile(this.createReservedWordRegex(new JSLikeList<>(cfg.reservedWords)));
 
-		this.WORD_REGEX = this.createWordRegex(new JSLikeList<>(cfg.specialWordChars));
-		this.STRING_REGEX = this.createStringRegex(new JSLikeList<>(cfg.stringTypes));
+		this.WORD_PATTERN = Pattern.compile(this.createWordRegex(new JSLikeList<>(cfg.specialWordChars)));
+		this.STRING_PATTERN = Pattern.compile(this.createStringRegex(new JSLikeList<>(cfg.stringTypes)));
 
-		this.OPEN_PAREN_REGEX = this.createParenRegex(new JSLikeList<>(cfg.openParens));
-		this.CLOSE_PAREN_REGEX = this.createParenRegex(new JSLikeList<>(cfg.closeParens));
+		this.OPEN_PAREN_PATTERN = Pattern.compile(this.createParenRegex(new JSLikeList<>(cfg.openParens)));
+		this.CLOSE_PAREN_PATTERN = Pattern.compile(this.createParenRegex(new JSLikeList<>(cfg.closeParens)));
 
-		this.INDEXED_PLACEHOLDER_REGEX = createPlaceholderRegex(new JSLikeList<>(cfg.indexedPlaceholderTypes), "[0-9]*");
-		this.IDENT_NAMED_PLACEHOLDER_REGEX = createPlaceholderRegex(new JSLikeList<>(cfg.namedPlaceholderTypes), "[a-zA-Z0-9._$]+");
-		this.STRING_NAMED_PLACEHOLDER_REGEX = createPlaceholderRegex(
+
+		this.INDEXED_PLACEHOLDER_PATTERN = createPlaceholderRegexPattern(new JSLikeList<>(cfg.indexedPlaceholderTypes), "[0-9]*");
+		this.IDENT_NAMED_PLACEHOLDER_PATTERN = createPlaceholderRegexPattern(new JSLikeList<>(cfg.namedPlaceholderTypes), "[a-zA-Z0-9._$]+");
+		this.STRING_NAMED_PLACEHOLDER_PATTERN = createPlaceholderRegexPattern(
 						new JSLikeList<>(cfg.namedPlaceholderTypes),
 						this.createStringPattern(new JSLikeList<>(cfg.stringTypes))
 		);
@@ -124,13 +125,13 @@ public class Tokenizer {
 		}
 	}
 
-	private static String createPlaceholderRegex(JSLikeList<String> types, String pattern) {
+	private static Pattern createPlaceholderRegexPattern(JSLikeList<String> types, String pattern) {
 		if (types.isEmpty()) {
 			return null;
 		}
 		String typesRegex = types.map(Util::escapeRegExp).join("|");
 
-		return String.format("^((?:%s)(?:%s))", typesRegex, pattern);
+		return Pattern.compile(String.format("^((?:%s)(?:%s))", typesRegex, pattern));
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.WHITESPACE,
-						this.WHITESPACE_REGEX
+						this.WHITESPACE_PATTERN
 		);
 	}
 
@@ -188,7 +189,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.LINE_COMMENT,
-						this.LINE_COMMENT_REGEX
+						this.LINE_COMMENT_PATTERN
 		);
 	}
 
@@ -196,7 +197,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.BLOCK_COMMENT,
-						this.BLOCK_COMMENT_REGEX
+						this.BLOCK_COMMENT_PATTERN
 		);
 	}
 
@@ -204,7 +205,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.STRING,
-						this.STRING_REGEX
+						this.STRING_PATTERN
 		);
 	}
 
@@ -212,7 +213,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.OPEN_PAREN,
-						this.OPEN_PAREN_REGEX
+						this.OPEN_PAREN_PATTERN
 		);
 	}
 
@@ -220,7 +221,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.CLOSE_PAREN,
-						this.CLOSE_PAREN_REGEX
+						this.CLOSE_PAREN_PATTERN
 		);
 	}
 
@@ -234,7 +235,7 @@ public class Tokenizer {
 	private Token getIdentNamedPlaceholderToken(String input) {
 		return this.getPlaceholderTokenWithKey(
 						input,
-						this.IDENT_NAMED_PLACEHOLDER_REGEX,
+						this.IDENT_NAMED_PLACEHOLDER_PATTERN,
 						v -> v.substring(1)
 		);
 	}
@@ -242,7 +243,7 @@ public class Tokenizer {
 	private Token getStringNamedPlaceholderToken(String input) {
 		return this.getPlaceholderTokenWithKey(
 						input,
-						this.STRING_NAMED_PLACEHOLDER_REGEX,
+						this.STRING_NAMED_PLACEHOLDER_PATTERN,
 						v -> this.getEscapedPlaceholderKey(v.substring(2, v.length() - 1), v.substring(v.length() - 1))
 		);
 	}
@@ -250,12 +251,12 @@ public class Tokenizer {
 	private Token getIndexedPlaceholderToken(String input) {
 		return this.getPlaceholderTokenWithKey(
 						input,
-						this.INDEXED_PLACEHOLDER_REGEX,
+						this.INDEXED_PLACEHOLDER_PATTERN,
 						v -> v.substring(1)
 		);
 	}
 
-	private Token getPlaceholderTokenWithKey(String input, String regex, java.util.function.Function<String, String> parseKey) {
+	private Token getPlaceholderTokenWithKey(String input, Pattern regex, java.util.function.Function<String, String> parseKey) {
 		Token token = this.getTokenOnFirstMatch(input, TokenTypes.PLACEHOLDER, regex);
 		if (token != null) {
 			token.key = parseKey.apply(token.value);
@@ -272,7 +273,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.NUMBER,
-						this.NUMBER_REGEX
+						this.NUMBER_PATTERN
 		);
 	}
 
@@ -281,7 +282,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.OPERATOR,
-						this.OPERATOR_REGEX
+						this.OPERATOR_PATTERN
 		);
 	}
 
@@ -301,7 +302,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.RESERVED_TOPLEVEL,
-						this.RESERVED_TOPLEVEL_REGEX
+						this.RESERVED_TOPLEVEL_PATTERN
 		);
 	}
 
@@ -309,7 +310,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.RESERVED_NEWLINE,
-						this.RESERVED_NEWLINE_REGEX
+						this.RESERVED_NEWLINE_PATTERN
 		);
 	}
 
@@ -317,7 +318,7 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.RESERVED,
-						this.RESERVED_PLAIN_REGEX
+						this.RESERVED_PLAIN_PATTERN
 		);
 	}
 
@@ -325,16 +326,16 @@ public class Tokenizer {
 		return this.getTokenOnFirstMatch(
 						input,
 						TokenTypes.WORD,
-						this.WORD_REGEX
+						this.WORD_PATTERN
 		);
 	}
 
-	private String getFirstMatch(String input, String regex) {
+	private String getFirstMatch(String input, Pattern regex) {
 		if (regex == null) {
 			return null;
 		}
 
-		Matcher matcher = Pattern.compile(regex).matcher(input);
+		Matcher matcher = regex.matcher(input);
 		if (matcher.find()) {
 			return matcher.group();
 		} else {
@@ -342,7 +343,7 @@ public class Tokenizer {
 		}
 	}
 
-	private Token getTokenOnFirstMatch(String input, TokenTypes type, String regex) {
+	private Token getTokenOnFirstMatch(String input, TokenTypes type, Pattern regex) {
 		String matches = getFirstMatch(input, regex);
 
 		if (matches != null) {
