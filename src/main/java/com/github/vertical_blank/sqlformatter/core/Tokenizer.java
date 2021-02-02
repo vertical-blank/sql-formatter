@@ -49,7 +49,33 @@ public class Tokenizer {
 	public Tokenizer(DialectConfig cfg) {
 		this.WHITESPACE_PATTERN = Pattern.compile("^(\\s+)");
 		this.NUMBER_PATTERN = Pattern.compile("^((-\\s*)?[0-9]+(\\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\\b");
-		this.OPERATOR_PATTERN = Pattern.compile("^(!=|<>|==|<=|>=|!<|!>|\\|\\||::|->>|=>|->|~~\\*|~~|!~~\\*|!~~|~\\*|!~\\*|!~|.)");
+		this.OPERATOR_PATTERN = Pattern.compile(this.createOperatorRegex(new JSLikeList<>(Arrays.asList(
+			"!=",
+			"<<",
+			">>",
+			"<>",
+			"==",
+			"<=",
+			">=",
+			"!<",
+			"!>",
+			"||/",
+			"|/",
+			"||",
+			"::",
+			"->>",
+			"=>",
+			"->",
+			"~~*",
+			"~~",
+			"!~~*",
+			"!~~",
+			"~*",
+			"!~*",
+			"!~",
+			":=",
+			"@"
+		))));
 
 //        this.BLOCK_COMMENT_REGEX = /^(\/\*[^]*?(?:\*\/|$))/;
 		this.BLOCK_COMMENT_PATTERN = Pattern.compile("^(/\\*(?s).*?(?:\\*/|$))");
@@ -72,6 +98,10 @@ public class Tokenizer {
 						new JSLikeList<>(cfg.namedPlaceholderTypes),
 						this.createStringPattern(new JSLikeList<>(cfg.stringTypes))
 		);
+	}
+
+	private String createOperatorRegex(JSLikeList<String> multiLetterOperators) {
+		return String.format("^(%s|.)", multiLetterOperators.map(Util::escapeRegExp).join("|"));
 	}
 
 	private String createLineCommentRegex(JSLikeList<String> lineCommentTypes) {
