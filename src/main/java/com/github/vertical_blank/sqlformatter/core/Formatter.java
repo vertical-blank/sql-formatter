@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Formatter {
+	private final FormatConfig cfg;
 	private final Indentation indentation;
 	private final InlineBlock inlineBlock;
 	private final Params params;
@@ -21,6 +22,7 @@ public class Formatter {
 	 * @param tokenizer Tokenizer
 	 */
 	public Formatter(FormatConfig cfg, Tokenizer tokenizer) {
+		this.cfg = cfg;
 		this.indentation = new Indentation(cfg.indent);
 		this.inlineBlock = new InlineBlock(cfg.maxColumnLength);
 		this.params = new Params(cfg.params);
@@ -88,7 +90,7 @@ public class Formatter {
 	}
 
 	private String formatLineComment(Token token, String query) {
-		return this.addNewline(query + token.value);
+		return this.addNewline(query + this.show(token));
 	}
 
 	private String formatBlockComment(Token token, String query) {
@@ -106,12 +108,12 @@ public class Formatter {
 
 		this.indentation.increaseToplevel();
 
-		query += this.equalizeWhitespace(token.value);
+		query += this.equalizeWhitespace(this.show(token));
 		return this.addNewline(query);
 	}
 
 	private String formatNewlineReservedWord(Token token, String query) {
-		return this.addNewline(query) + this.equalizeWhitespace(token.value) + " ";
+		return this.addNewline(query) + this.equalizeWhitespace(this.show(token)) + " ";
 	}
 
 	// Replace any sequence of whitespace characters with single space
@@ -131,7 +133,7 @@ public class Formatter {
 		if (!(this.previousToken().filter(t -> Util.nullToEmpty(preserveWhitespaceFor).contains(t.type)).isPresent())) {
 			query = Util.trimEnd(query);
 		}
-		query += token.value;
+		query += this.show(token);
 
 		this.inlineBlock.beginIfPossible(this.tokens, this.index);
 
@@ -159,7 +161,7 @@ public class Formatter {
 
 	// Commas start a new line (unless within inline parentheses or SQL "LIMIT" clause)
 	private String formatComma(Token token, String query) {
-		query = this.trimTrailingWhitespace(query) + token.value + " ";
+		query = this.trimTrailingWhitespace(query) + this.show(token) + " ";
 
 		if (this.inlineBlock.isActive()) {
 			return query;
@@ -171,19 +173,36 @@ public class Formatter {
 	}
 
 	private String formatWithSpaceAfter(Token token, String query) {
-		return this.trimTrailingWhitespace(query) + token.value + " ";
+		return this.trimTrailingWhitespace(query) + this.show(token) + " ";
 	}
 
 	private String formatWithoutSpaces(Token token, String query) {
-		return this.trimTrailingWhitespace(query) + token.value;
+		return this.trimTrailingWhitespace(query) + this.show(token);
 	}
 
 	private String formatWithSpaces(Token token, String query) {
-		return query + token.value + " ";
+		return query + this.show(token) + " ";
 	}
 
 	private String formatQuerySeparator(Token token, String query) {
-		return this.trimTrailingWhitespace(query) + token.value + "\n";
+		return this.trimTrailingWhitespace(query) + this.show(token) + "\n";
+	}
+
+	// Converts token to string (uppercasing it if needed)
+	private String show(Token token) {
+		if (
+			this.cfg.uppercase &&
+			(token.type == TokenTypes.RESERVED ||
+				// type == TokenTypes.RESERVED_TOP_LEVEL ||
+				// type == TokenTypes.RESERVED_TOP_LEVEL_NO_INDENT ||
+				token.type == TokenTypes.RESERVED_NEWLINE ||
+				token.type == TokenTypes.OPEN_PAREN ||
+				token.type == TokenTypes.CLOSE_PAREN)
+		) {
+			return token.value.toUpperCase();
+		} else {
+			return token.value;
+		}
 	}
 
 	private String addNewline(String query) {

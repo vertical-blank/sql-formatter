@@ -1,6 +1,7 @@
 package com.github.vertical_blank.sqlformatter
 
 
+import com.github.vertical_blank.sqlformatter.core.FormatConfig
 import com.github.vertical_blank.sqlformatter.languages.AbstractFormatter
 import groovy.transform.TypeChecked
 import org.junit.jupiter.api.Test
@@ -40,6 +41,10 @@ abstract class FormatterTestBase {
 
     String formatWithLang(String query, Map<String, ?> params) {
         getFormatter().format(query, params)
+    }
+
+    String formatWithLang(String query, FormatConfig config) {
+        getFormatter().format(query, config)
     }
 
     @Test

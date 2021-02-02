@@ -1,5 +1,6 @@
 package com.github.vertical_blank.sqlformatter
 
+import com.github.vertical_blank.sqlformatter.core.FormatConfig
 import groovy.transform.TypeChecked
 import org.junit.jupiter.api.Test
 
@@ -360,6 +361,22 @@ class StandardSqlFormatterTest extends FormatterTestBase {
                         "FROM\n" +
                         "  table1;"
         )
+    }
+
+    @Test
+    void 'properly converts to uppercase in case statements'() {
+        String result = formatWithLang(
+            "case toString(getNumber()) when 'one' then 1 when 'two' then 2 when 'three' then 3 else 4 end;",
+            FormatConfig.builder().uppercase(true).indent('        ').build()
+        );
+        expect(result).toBe(
+         '''|CASE
+            |        toString(getNumber())
+            |        WHEN 'one' THEN 1
+            |        WHEN 'two' THEN 2
+            |        WHEN 'three' THEN 3
+            |        ELSE 4
+            |END;'''.stripMargin());
     }
 
     @Test
