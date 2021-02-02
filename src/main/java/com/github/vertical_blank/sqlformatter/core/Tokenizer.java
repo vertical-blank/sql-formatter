@@ -2,14 +2,13 @@ package com.github.vertical_blank.sqlformatter.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.vertical_blank.sqlformatter.core.util.JSLikeList;
+import com.github.vertical_blank.sqlformatter.core.util.RegexUtil;
 import com.github.vertical_blank.sqlformatter.core.util.Util;
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 
 public class Tokenizer {
@@ -50,7 +49,7 @@ public class Tokenizer {
 	public Tokenizer(DialectConfig cfg) {
 		this.WHITESPACE_PATTERN = Pattern.compile("^(\\s+)");
 		this.NUMBER_PATTERN = Pattern.compile("^((-\\s*)?[0-9]+(\\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\\b");
-		this.OPERATOR_PATTERN = Pattern.compile(this.createOperatorRegex(new JSLikeList<>(Arrays.asList(
+		this.OPERATOR_PATTERN = Pattern.compile(RegexUtil.createOperatorRegex(new JSLikeList<>(Arrays.asList(
 			"!=",
 			"<<",
 			">>",
@@ -80,89 +79,25 @@ public class Tokenizer {
 
 //        this.BLOCK_COMMENT_REGEX = /^(\/\*[^]*?(?:\*\/|$))/;
 		this.BLOCK_COMMENT_PATTERN = Pattern.compile("^(/\\*(?s).*?(?:\\*/|$))");
-		this.LINE_COMMENT_PATTERN = Pattern.compile(this.createLineCommentRegex(new JSLikeList<>(cfg.lineCommentTypes)));
+		this.LINE_COMMENT_PATTERN = Pattern.compile(RegexUtil.createLineCommentRegex(new JSLikeList<>(cfg.lineCommentTypes)));
 
-		this.RESERVED_TOPLEVEL_PATTERN = Pattern.compile(this.createReservedWordRegex(new JSLikeList<>(cfg.reservedToplevelWords)));
-		this.RESERVED_NEWLINE_PATTERN = Pattern.compile(this.createReservedWordRegex(new JSLikeList<>(cfg.reservedNewlineWords)));
-		this.RESERVED_PLAIN_PATTERN = Pattern.compile(this.createReservedWordRegex(new JSLikeList<>(cfg.reservedWords)));
+		this.RESERVED_TOPLEVEL_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedToplevelWords)));
+		this.RESERVED_NEWLINE_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedNewlineWords)));
+		this.RESERVED_PLAIN_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedWords)));
 
-		this.WORD_PATTERN = Pattern.compile(this.createWordRegex(new JSLikeList<>(cfg.specialWordChars)));
-		this.STRING_PATTERN = Pattern.compile(this.createStringRegex(new JSLikeList<>(cfg.stringTypes)));
+		this.WORD_PATTERN = Pattern.compile(RegexUtil.createWordRegex(new JSLikeList<>(cfg.specialWordChars)));
+		this.STRING_PATTERN = Pattern.compile(RegexUtil.createStringRegex(new JSLikeList<>(cfg.stringTypes)));
 
-		this.OPEN_PAREN_PATTERN = Pattern.compile(this.createParenRegex(new JSLikeList<>(cfg.openParens)));
-		this.CLOSE_PAREN_PATTERN = Pattern.compile(this.createParenRegex(new JSLikeList<>(cfg.closeParens)));
+		this.OPEN_PAREN_PATTERN = Pattern.compile(RegexUtil.createParenRegex(new JSLikeList<>(cfg.openParens)));
+		this.CLOSE_PAREN_PATTERN = Pattern.compile(RegexUtil.createParenRegex(new JSLikeList<>(cfg.closeParens)));
 
 
-		this.INDEXED_PLACEHOLDER_PATTERN = createPlaceholderRegexPattern(new JSLikeList<>(cfg.indexedPlaceholderTypes), "[0-9]*");
-		this.IDENT_NAMED_PLACEHOLDER_PATTERN = createPlaceholderRegexPattern(new JSLikeList<>(cfg.namedPlaceholderTypes), "[a-zA-Z0-9._$]+");
-		this.STRING_NAMED_PLACEHOLDER_PATTERN = createPlaceholderRegexPattern(
+		this.INDEXED_PLACEHOLDER_PATTERN = RegexUtil.createPlaceholderRegexPattern(new JSLikeList<>(cfg.indexedPlaceholderTypes), "[0-9]*");
+		this.IDENT_NAMED_PLACEHOLDER_PATTERN = RegexUtil.createPlaceholderRegexPattern(new JSLikeList<>(cfg.namedPlaceholderTypes), "[a-zA-Z0-9._$]+");
+		this.STRING_NAMED_PLACEHOLDER_PATTERN = RegexUtil.createPlaceholderRegexPattern(
 						new JSLikeList<>(cfg.namedPlaceholderTypes),
-						this.createStringPattern(new JSLikeList<>(cfg.stringTypes))
+						RegexUtil.createStringPattern(new JSLikeList<>(cfg.stringTypes))
 		);
-	}
-
-	private String createOperatorRegex(JSLikeList<String> multiLetterOperators) {
-		return String.format("^(%s|.)", multiLetterOperators.map(Util::escapeRegExp).join("|"));
-	}
-
-	private String createLineCommentRegex(JSLikeList<String> lineCommentTypes) {
-		return String.format(
-						"^((?:%s).*?(?:\n|$))",
-						lineCommentTypes.map(Util::escapeRegExp).join("|")
-		);
-	}
-
-	private String createReservedWordRegex(JSLikeList<String> reservedWords) {
-		String reservedWordsPattern = reservedWords.join("|").replaceAll(" ", "\\\\s+");
-		return "(?i)" + "^(" + reservedWordsPattern + ")\\b";
-	}
-
-	private String createWordRegex(JSLikeList<String> specialChars) {
-		return "^([\\w" + specialChars.join("") + "]+)";
-	}
-
-	private String createStringRegex(JSLikeList<StringLiteral> stringTypes) {
-		return "^(" + this.createStringPattern(stringTypes) + ")";
-	}
-
-	// This enables the following string patterns:
-	// 1. backtick quoted string using `` to escape
-	// 2. square bracket quoted string (SQL Server) using ]] to escape
-	// 3. double quoted string using "" or \" to escape
-	// 4. single quoted string using '' or \' to escape
-	// 5. national character quoted string using N'' or N\' to escape
-	private String createStringPattern(JSLikeList<StringLiteral> stringTypes) {
-		EnumMap<StringLiteral, String> patterns = new EnumMap<>(StringLiteral.class);
-		patterns.put(StringLiteral.BackQuote, "((`[^`]*($|`))+)");
-		patterns.put(StringLiteral.Bracket, "((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)");
-		patterns.put(StringLiteral.DoubleQuote, "((\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*(\"|$))+)");
-		patterns.put(StringLiteral.SingleQuote, "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)");
-		patterns.put(StringLiteral.NSingleQuote, "((N'[^N'\\\\]*(?:\\\\.[^N'\\\\]*)*('|$))+)");
-
-		return stringTypes.map(patterns::get).join("|");
-	}
-
-	private String createParenRegex(JSLikeList<String> parens) {
-		return "(?i)" + "^(" + parens.map(Tokenizer::escapeParen).join("|") + ")";
-	}
-
-	private static String escapeParen(String paren) {
-		if (paren.length() == 1) {
-			// A single punctuation character
-			return Util.escapeRegExp(paren);
-		} else {
-			// longer word
-			return "\\b" + paren + "\\b";
-		}
-	}
-
-	private static Pattern createPlaceholderRegexPattern(JSLikeList<String> types, String pattern) {
-		if (types.isEmpty()) {
-			return null;
-		}
-		String typesRegex = types.map(Util::escapeRegExp).join("|");
-
-		return Pattern.compile(String.format("^((?:%s)(?:%s))", typesRegex, pattern));
 	}
 
 	/**
@@ -296,7 +231,7 @@ public class Tokenizer {
 	}
 
 	private String getEscapedPlaceholderKey(String key, String quoteChar) {
-		return key.replaceAll(Util.escapeRegExp("\\") + quoteChar, quoteChar);
+		return key.replaceAll(RegexUtil.escapeRegExp("\\") + quoteChar, quoteChar);
 	}
 
 	// Decimal, binary, or hex numbers
