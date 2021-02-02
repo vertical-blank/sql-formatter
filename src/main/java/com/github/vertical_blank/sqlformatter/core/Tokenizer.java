@@ -1,14 +1,15 @@
 package com.github.vertical_blank.sqlformatter.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.vertical_blank.sqlformatter.core.util.JSLikeList;
 import com.github.vertical_blank.sqlformatter.core.util.Util;
+import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 
 public class Tokenizer {
@@ -120,7 +121,7 @@ public class Tokenizer {
 		return "^([\\w" + specialChars.join("") + "]+)";
 	}
 
-	private String createStringRegex(JSLikeList<String> stringTypes) {
+	private String createStringRegex(JSLikeList<StringLiteral> stringTypes) {
 		return "^(" + this.createStringPattern(stringTypes) + ")";
 	}
 
@@ -130,13 +131,13 @@ public class Tokenizer {
 	// 3. double quoted string using "" or \" to escape
 	// 4. single quoted string using '' or \' to escape
 	// 5. national character quoted string using N'' or N\' to escape
-	private String createStringPattern(JSLikeList<String> stringTypes) {
-		Map<String, String> patterns = new HashMap<>();
-		patterns.put("``", "((`[^`]*($|`))+)");
-		patterns.put("[]", "((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)");
-		patterns.put("\"\"", "((\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*(\"|$))+)");
-		patterns.put("''", "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)");
-		patterns.put("N''", "((N'[^N'\\\\]*(?:\\\\.[^N'\\\\]*)*('|$))+)");
+	private String createStringPattern(JSLikeList<StringLiteral> stringTypes) {
+		EnumMap<StringLiteral, String> patterns = new EnumMap<>(StringLiteral.class);
+		patterns.put(StringLiteral.BackQuote, "((`[^`]*($|`))+)");
+		patterns.put(StringLiteral.Bracket, "((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)");
+		patterns.put(StringLiteral.DoubleQuote, "((\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*(\"|$))+)");
+		patterns.put(StringLiteral.SingleQuote, "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)");
+		patterns.put(StringLiteral.NSingleQuote, "((N'[^N'\\\\]*(?:\\\\.[^N'\\\\]*)*('|$))+)");
 
 		return stringTypes.map(patterns::get).join("|");
 	}

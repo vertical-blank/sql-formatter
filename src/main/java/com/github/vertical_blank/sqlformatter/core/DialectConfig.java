@@ -2,19 +2,21 @@ package com.github.vertical_blank.sqlformatter.core;
 
 import java.util.List;
 
+import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
+
 public class DialectConfig {
     public final List<String> lineCommentTypes;
     public final List<String> reservedToplevelWords;
     public final List<String> reservedNewlineWords;
     public final List<String> reservedWords;
     public final List<String> specialWordChars;
-    public final List<String> stringTypes;
+    public final List<StringLiteral> stringTypes;
     public final List<String> openParens;
     public final List<String> closeParens;
     public final List<String> indexedPlaceholderTypes;
     public final List<String> namedPlaceholderTypes;
 
-    DialectConfig(List<String> lineCommentTypes, List<String> reservedToplevelWords, List<String> reservedNewlineWords, List<String> reservedWords, List<String> specialWordChars, List<String> stringTypes, List<String> openParens, List<String> closeParens, List<String> indexedPlaceholderTypes, List<String> namedPlaceholderTypes) {
+    DialectConfig(List<String> lineCommentTypes, List<String> reservedToplevelWords, List<String> reservedNewlineWords, List<String> reservedWords, List<String> specialWordChars, List<StringLiteral> stringTypes, List<String> openParens, List<String> closeParens, List<String> indexedPlaceholderTypes, List<String> namedPlaceholderTypes) {
         this.lineCommentTypes = lineCommentTypes;
         this.reservedToplevelWords = reservedToplevelWords;
         this.reservedNewlineWords = reservedNewlineWords;
@@ -37,7 +39,7 @@ public class DialectConfig {
         private List<String> reservedNewlineWords;
         private List<String> reservedWords;
         private List<String> specialWordChars;
-        private List<String> stringTypes;
+        private List<StringLiteral> stringTypes;
         private List<String> openParens;
         private List<String> closeParens;
         private List<String> indexedPlaceholderTypes;
@@ -71,7 +73,7 @@ public class DialectConfig {
             return this;
         }
 
-        public DialectConfigBuilder stringTypes(List<String> stringTypes) {
+        public DialectConfigBuilder stringTypes(List<StringLiteral> stringTypes) {
             this.stringTypes = stringTypes;
             return this;
         }

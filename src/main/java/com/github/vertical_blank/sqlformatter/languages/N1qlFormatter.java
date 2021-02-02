@@ -1,6 +1,7 @@
 package com.github.vertical_blank.sqlformatter.languages;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
+import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class N1qlFormatter extends AbstractFormatter {
 						.reservedWords(reservedWords)
 						.reservedToplevelWords(reservedToplevelWords)
 						.reservedNewlineWords(reservedNewlineWords)
-						.stringTypes(Arrays.asList("\"\"", "''", "``"))
+						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote))
 						.openParens(Arrays.asList("(", "[", "{"))
 						.closeParens(Arrays.asList(")", "]", "}"))
 						.namedPlaceholderTypes(Collections.singletonList("$"))

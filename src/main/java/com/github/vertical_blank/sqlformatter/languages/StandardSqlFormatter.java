@@ -1,6 +1,7 @@
 package com.github.vertical_blank.sqlformatter.languages;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
+import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,12 +80,12 @@ public class StandardSqlFormatter extends AbstractFormatter {
 	);
 
 	@Override
-    DialectConfig dialectConfig() {
+  public DialectConfig dialectConfig() {
 		return DialectConfig.builder()
 						.reservedWords(reservedWords)
 						.reservedToplevelWords(reservedToplevelWords)
 						.reservedNewlineWords(reservedNewlineWords)
-						.stringTypes(Arrays.asList("\"\"", "N''", "''", "``", "[]"))
+						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.NSingleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Bracket))
 						.openParens(Arrays.asList("(", "CASE"))
 						.closeParens(Arrays.asList(")", "END"))
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
