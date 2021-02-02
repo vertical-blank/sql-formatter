@@ -24,7 +24,7 @@ public class RegexUtil {
 
 	public static String createLineCommentRegex(JSLikeList<String> lineCommentTypes) {
 		return String.format(
-						"^((?:%s).*?(?:\n|$))",
+						"^((?:%s).*?)(?:\r\n|\r|\n|$)",
 						lineCommentTypes.map(RegexUtil::escapeRegExp).join("|")
 		);
 	}

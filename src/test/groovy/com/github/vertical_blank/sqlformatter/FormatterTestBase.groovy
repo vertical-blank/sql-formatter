@@ -533,4 +533,13 @@ abstract class FormatterTestBase {
         )
     }
 
+
+
+    @Test
+    void 'recognizes line-comments with Windows line-endings' () {
+        String result = formatWithLang('SELECT * FROM\r\n-- line comment 1\r\nMyTable -- line comment 2\r\n');
+        println result
+        expect(result).toBe('SELECT\n  *\nFROM\n  -- line comment 1\n  MyTable -- line comment 2');
+    }
+
 }
