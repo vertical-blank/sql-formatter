@@ -193,8 +193,8 @@ public class Formatter {
 		if (
 			this.cfg.uppercase &&
 			(token.type == TokenTypes.RESERVED ||
-				// type == TokenTypes.RESERVED_TOP_LEVEL ||
-				// type == TokenTypes.RESERVED_TOP_LEVEL_NO_INDENT ||
+				token.type == TokenTypes.RESERVED_TOP_LEVEL ||
+				token.type == TokenTypes.RESERVED_TOP_LEVEL_NO_INDENT ||
 				token.type == TokenTypes.RESERVED_NEWLINE ||
 				token.type == TokenTypes.OPEN_PAREN ||
 				token.type == TokenTypes.CLOSE_PAREN)
