@@ -19,7 +19,8 @@ public class Tokenizer {
 	private final Pattern BLOCK_COMMENT_PATTERN;
 	private final Pattern LINE_COMMENT_PATTERN;
 
-	private final Pattern RESERVED_TOPLEVEL_PATTERN;
+	private final Pattern RESERVED_TOP_LEVEL_PATTERN;
+	private final Pattern RESERVED_TOP_LEVEL_NO_INDENT_PATTERN;
 	private final Pattern RESERVED_NEWLINE_PATTERN;
 	private final Pattern RESERVED_PLAIN_PATTERN;
 
@@ -81,7 +82,8 @@ public class Tokenizer {
 		this.BLOCK_COMMENT_PATTERN = Pattern.compile("^(/\\*(?s).*?(?:\\*/|$))");
 		this.LINE_COMMENT_PATTERN = Pattern.compile(RegexUtil.createLineCommentRegex(new JSLikeList<>(cfg.lineCommentTypes)));
 
-		this.RESERVED_TOPLEVEL_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedToplevelWords)));
+		this.RESERVED_TOP_LEVEL_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedTopLevelWords)));
+		this.RESERVED_TOP_LEVEL_NO_INDENT_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedTopLevelWordsNoIndent)));
 		this.RESERVED_NEWLINE_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedNewlineWords)));
 		this.RESERVED_PLAIN_PATTERN = Pattern.compile(RegexUtil.createReservedWordRegex(new JSLikeList<>(cfg.reservedWords)));
 
@@ -261,14 +263,15 @@ public class Tokenizer {
 		return Util.firstNotnull(
 						() -> this.getToplevelReservedToken(input),
 						() -> this.getNewlineReservedToken(input),
+						() -> this.getTopLevelReservedTokenNoIndent(input),
 						() -> this.getPlainReservedToken(input));
 	}
 
 	private Token getToplevelReservedToken(String input) {
 		return this.getTokenOnFirstMatch(
 						input,
-						TokenTypes.RESERVED_TOPLEVEL,
-						this.RESERVED_TOPLEVEL_PATTERN
+						TokenTypes.RESERVED_TOP_LEVEL,
+						this.RESERVED_TOP_LEVEL_PATTERN
 		);
 	}
 
@@ -277,6 +280,14 @@ public class Tokenizer {
 						input,
 						TokenTypes.RESERVED_NEWLINE,
 						this.RESERVED_NEWLINE_PATTERN
+		);
+	}
+
+	private Token getTopLevelReservedTokenNoIndent(String input) {
+		return this.getTokenOnFirstMatch(
+						input,
+						TokenTypes.RESERVED_TOP_LEVEL_NO_INDENT,
+						this.RESERVED_TOP_LEVEL_NO_INDENT_PATTERN
 		);
 	}
 
