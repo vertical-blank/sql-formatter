@@ -440,7 +440,7 @@ public class PlSqlFormatter extends AbstractFormatter {
 						.namedPlaceholderTypes(Collections.singletonList(":"))
 						.lineCommentTypes(Collections.singletonList("--"))
 						.specialWordChars(Arrays.asList("_", "$", "#", ".", "@"))
-						.build();
+						.operators(Arrays.asList("||", "**", "!=", ":=")).build();
 	}
 
 }

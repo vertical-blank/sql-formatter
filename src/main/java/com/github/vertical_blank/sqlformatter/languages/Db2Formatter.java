@@ -576,7 +576,9 @@ public class Db2Formatter extends AbstractFormatter {
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
 						.namedPlaceholderTypes(Collections.singletonList(":"))
 						.lineCommentTypes(Collections.singletonList("--"))
-						.specialWordChars(Arrays.asList("#", "@")).build();
+						.specialWordChars(Arrays.asList("#", "@"))
+						.operators(Arrays.asList("**", "!=", "!>", "!>", "||"))
+						.build();
 	}
 
 }

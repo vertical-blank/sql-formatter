@@ -336,7 +336,8 @@ public class MySqlFormatter extends AbstractFormatter {
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
 						.namedPlaceholderTypes(Collections.singletonList(":"))
 						.lineCommentTypes(Collections.singletonList("--"))
-						.specialWordChars(Arrays.asList("#", "@")).build();
+						.specialWordChars(Arrays.asList("#", "@"))
+						.operators(Arrays.asList(":=", "<<", ">>", "!=", "<>", "<=>", "&&", "||", "->", "->>")).build();
 	}
 
 }

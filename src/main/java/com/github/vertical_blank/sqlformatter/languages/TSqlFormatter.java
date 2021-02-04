@@ -254,7 +254,23 @@ public class TSqlFormatter extends AbstractFormatter {
 						.closeParens(Arrays.asList(")", "END"))
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
 						.namedPlaceholderTypes(Arrays.asList("@", ":"))
-						.lineCommentTypes(Arrays.asList("#", "--")).build();
+						.lineCommentTypes(Arrays.asList("#", "--"))
+						.operators(Arrays.asList(
+							">=",
+							"<=",
+							"<>",
+							"!=",
+							"!<",
+							"!>",
+							"+=",
+							"-=",
+							"*=",
+							"/=",
+							"%=",
+							"|=",
+							"&=",
+							"^=",
+							"::")).build();
 	}
 
 }

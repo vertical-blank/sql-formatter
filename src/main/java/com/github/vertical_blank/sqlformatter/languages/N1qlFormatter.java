@@ -244,7 +244,8 @@ public class N1qlFormatter extends AbstractFormatter {
 						.openParens(Arrays.asList("(", "[", "{"))
 						.closeParens(Arrays.asList(")", "]", "}"))
 						.namedPlaceholderTypes(Collections.singletonList("$"))
-						.lineCommentTypes(Arrays.asList("#", "--")).build();
+						.lineCommentTypes(Arrays.asList("#", "--"))
+						.operators(Arrays.asList("==", "!=")).build();
 	}
 
 }
