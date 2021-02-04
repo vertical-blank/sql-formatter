@@ -6,7 +6,8 @@ import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 public class DialectConfig {
     public final List<String> lineCommentTypes;
-    public final List<String> reservedToplevelWords;
+    public final List<String> reservedTopLevelWords;
+    public final List<String> reservedTopLevelWordsNoIndent;
     public final List<String> reservedNewlineWords;
     public final List<String> reservedWords;
     public final List<String> specialWordChars;
@@ -16,9 +17,10 @@ public class DialectConfig {
     public final List<String> indexedPlaceholderTypes;
     public final List<String> namedPlaceholderTypes;
 
-    DialectConfig(List<String> lineCommentTypes, List<String> reservedToplevelWords, List<String> reservedNewlineWords, List<String> reservedWords, List<String> specialWordChars, List<StringLiteral> stringTypes, List<String> openParens, List<String> closeParens, List<String> indexedPlaceholderTypes, List<String> namedPlaceholderTypes) {
+    DialectConfig(List<String> lineCommentTypes, List<String> reservedTopLevelWords, List<String> reservedNewlineWords, List<String> reservedTopLevelWordsNoIndent, List<String> reservedWords, List<String> specialWordChars, List<StringLiteral> stringTypes, List<String> openParens, List<String> closeParens, List<String> indexedPlaceholderTypes, List<String> namedPlaceholderTypes) {
         this.lineCommentTypes = lineCommentTypes;
-        this.reservedToplevelWords = reservedToplevelWords;
+        this.reservedTopLevelWords = reservedTopLevelWords;
+        this.reservedTopLevelWordsNoIndent = reservedTopLevelWordsNoIndent;
         this.reservedNewlineWords = reservedNewlineWords;
         this.reservedWords = reservedWords;
         this.specialWordChars = specialWordChars;
@@ -35,8 +37,9 @@ public class DialectConfig {
 
     public static class DialectConfigBuilder {
         private List<String> lineCommentTypes;
-        private List<String> reservedToplevelWords;
+        private List<String> reservedTopLevelWords;
         private List<String> reservedNewlineWords;
+        private List<String> reservedTopLevelWordsNoIndent;
         private List<String> reservedWords;
         private List<String> specialWordChars;
         private List<StringLiteral> stringTypes;
@@ -53,13 +56,18 @@ public class DialectConfig {
             return this;
         }
 
-        public DialectConfigBuilder reservedToplevelWords(List<String> reservedToplevelWords) {
-            this.reservedToplevelWords = reservedToplevelWords;
+        public DialectConfigBuilder reservedTopLevelWords(List<String> reservedTopLevelWords) {
+            this.reservedTopLevelWords = reservedTopLevelWords;
             return this;
         }
 
         public DialectConfigBuilder reservedNewlineWords(List<String> reservedNewlineWords) {
             this.reservedNewlineWords = reservedNewlineWords;
+            return this;
+        }
+
+        public DialectConfigBuilder reservedTopLevelWordsNoIndent(List<String> reservedTopLevelWordsNoIndent) {
+            this.reservedTopLevelWordsNoIndent = reservedTopLevelWordsNoIndent;
             return this;
         }
 
@@ -99,7 +107,7 @@ public class DialectConfig {
         }
 
         public DialectConfig build() {
-            return new DialectConfig(lineCommentTypes, reservedToplevelWords, reservedNewlineWords, reservedWords, specialWordChars, stringTypes, openParens, closeParens, indexedPlaceholderTypes, namedPlaceholderTypes);
+            return new DialectConfig(lineCommentTypes, reservedTopLevelWords, reservedNewlineWords, reservedTopLevelWordsNoIndent, reservedWords, specialWordChars, stringTypes, openParens, closeParens, indexedPlaceholderTypes, namedPlaceholderTypes);
         }
     }
 }
