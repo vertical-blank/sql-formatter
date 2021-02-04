@@ -16,8 +16,21 @@ public class DialectConfig {
     public final List<String> closeParens;
     public final List<String> indexedPlaceholderTypes;
     public final List<String> namedPlaceholderTypes;
+    public final List<String> operators;
 
-    DialectConfig(List<String> lineCommentTypes, List<String> reservedTopLevelWords, List<String> reservedNewlineWords, List<String> reservedTopLevelWordsNoIndent, List<String> reservedWords, List<String> specialWordChars, List<StringLiteral> stringTypes, List<String> openParens, List<String> closeParens, List<String> indexedPlaceholderTypes, List<String> namedPlaceholderTypes) {
+    DialectConfig(
+        List<String> lineCommentTypes,
+        List<String> reservedTopLevelWords,
+        List<String> reservedNewlineWords,
+        List<String> reservedTopLevelWordsNoIndent,
+        List<String> reservedWords,
+        List<String> specialWordChars,
+        List<StringLiteral> stringTypes,
+        List<String> openParens, 
+        List<String> closeParens, 
+        List<String> indexedPlaceholderTypes,
+        List<String> namedPlaceholderTypes,
+        List<String> operators) {
         this.lineCommentTypes = lineCommentTypes;
         this.reservedTopLevelWords = reservedTopLevelWords;
         this.reservedTopLevelWordsNoIndent = reservedTopLevelWordsNoIndent;
@@ -29,6 +42,7 @@ public class DialectConfig {
         this.closeParens = closeParens;
         this.indexedPlaceholderTypes = indexedPlaceholderTypes;
         this.namedPlaceholderTypes = namedPlaceholderTypes;
+        this.operators = operators;
     }
 
     public static DialectConfigBuilder builder() {
@@ -47,6 +61,7 @@ public class DialectConfig {
         private List<String> closeParens;
         private List<String> indexedPlaceholderTypes;
         private List<String> namedPlaceholderTypes;
+        private List<String> operators;
 
         DialectConfigBuilder() {
         }
@@ -106,8 +121,25 @@ public class DialectConfig {
             return this;
         }
 
+        public DialectConfigBuilder operators(List<String> operators) {
+            this.operators = operators;
+            return this;
+        }
+
         public DialectConfig build() {
-            return new DialectConfig(lineCommentTypes, reservedTopLevelWords, reservedNewlineWords, reservedTopLevelWordsNoIndent, reservedWords, specialWordChars, stringTypes, openParens, closeParens, indexedPlaceholderTypes, namedPlaceholderTypes);
+            return new DialectConfig(
+                lineCommentTypes,
+                reservedTopLevelWords,
+                reservedNewlineWords,
+                reservedTopLevelWordsNoIndent,
+                reservedWords,
+                specialWordChars,
+                stringTypes,
+                openParens,
+                closeParens,
+                indexedPlaceholderTypes,
+                namedPlaceholderTypes,
+                operators);
         }
     }
 }
