@@ -88,7 +88,7 @@ class InlineBlock {
 	// Reserved words that cause newlines, comments and semicolons
 	// are not allowed inside inline parentheses block
 	private boolean isForbiddenToken(Token token) {
-		return token.type == TokenTypes.RESERVED_TOPLEVEL ||
+		return token.type == TokenTypes.RESERVED_TOP_LEVEL ||
 						token.type == TokenTypes.RESERVED_NEWLINE ||
 //                originally `TokenTypes.LINE_COMMENT` but this symbol is not defined
 //                token.type == TokenTypes.LINE_COMMENT ||

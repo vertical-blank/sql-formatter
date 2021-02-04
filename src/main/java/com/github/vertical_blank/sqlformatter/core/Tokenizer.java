@@ -37,7 +37,7 @@ public class Tokenizer {
 
 	/**
 	 * @param cfg {String[]} cfg.reservedWords Reserved words in SQL
-	 *            {String[]} cfg.reservedToplevelWords Words that are set to new line separately
+	 *            {String[]} cfg.reservedTopLevelWords Words that are set to new line separately
 	 *            {String[]} cfg.reservedNewlineWords Words that are set to newline
 	 *            {String[]} cfg.stringTypes String types to enable: "", '', ``, [], N''
 	 *            {String[]} cfg.openParens Opening parentheses to enable, like (, [

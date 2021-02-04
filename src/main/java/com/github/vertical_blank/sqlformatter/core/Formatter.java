@@ -58,8 +58,11 @@ public class Formatter {
 				formattedQuery = this.formatLineComment(token, formattedQuery);
 			} else if (token.type == TokenTypes.BLOCK_COMMENT) {
 				formattedQuery = this.formatBlockComment(token, formattedQuery);
-			} else if (token.type == TokenTypes.RESERVED_TOPLEVEL) {
+			} else if (token.type == TokenTypes.RESERVED_TOP_LEVEL) {
 				formattedQuery = this.formatToplevelReservedWord(token, formattedQuery);
+				this.previousReservedWord = token;
+			} else if (token.type == TokenTypes.RESERVED_TOP_LEVEL_NO_INDENT) {
+				formattedQuery = this.formatTopLevelReservedWordNoIndent(token, formattedQuery);
 				this.previousReservedWord = token;
 			} else if (token.type == TokenTypes.RESERVED_NEWLINE) {
 				formattedQuery = this.formatNewlineReservedWord(token, formattedQuery);
@@ -100,6 +103,12 @@ public class Formatter {
 	private String indentComment(String comment) {
 		return comment.replaceAll("\n", "\n" + this.indentation.getIndent());
 	}
+
+  private String formatTopLevelReservedWordNoIndent(Token token, String query) {
+    this.indentation.decreaseTopLevel();
+    query = this.addNewline(query) + this.equalizeWhitespace(this.show(token));
+    return this.addNewline(query);
+  }
 
 	private String formatToplevelReservedWord(Token token, String query) {
 		this.indentation.decreaseTopLevel();
