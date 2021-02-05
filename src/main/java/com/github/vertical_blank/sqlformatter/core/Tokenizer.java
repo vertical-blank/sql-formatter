@@ -39,7 +39,7 @@ public class Tokenizer {
 	 * @param cfg {String[]} cfg.reservedWords Reserved words in SQL
 	 *            {String[]} cfg.reservedTopLevelWords Words that are set to new line separately
 	 *            {String[]} cfg.reservedNewlineWords Words that are set to newline
-	 *            {String[]} cfg.stringTypes String types to enable: "", '', ``, [], N''
+	 *            {String[]} cfg.stringTypes String types to enable: "", "", ``, [], N""
 	 *            {String[]} cfg.openParens Opening parentheses to enable, like (, [
 	 *            {String[]} cfg.closeParens Closing parentheses to enable, like ), ]
 	 *            {String[]} cfg.indexedPlaceholderTypes Prefixes for indexed placeholders, like ?
@@ -50,33 +50,11 @@ public class Tokenizer {
 	public Tokenizer(DialectConfig cfg) {
 		this.WHITESPACE_PATTERN = Pattern.compile("^(\\s+)");
 		this.NUMBER_PATTERN = Pattern.compile("^((-\\s*)?[0-9]+(\\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)\\b");
-		this.OPERATOR_PATTERN = Pattern.compile(RegexUtil.createOperatorRegex(new JSLikeList<>(Arrays.asList(
-			"!=",
-			"<<",
-			">>",
-			"<>",
-			"==",
-			"<=",
-			">=",
-			"!<",
-			"!>",
-			"||/",
-			"|/",
-			"||",
-			"::",
-			"->>",
-			"=>",
-			"->",
-			"~~*",
-			"~~",
-			"!~~*",
-			"!~~",
-			"~*",
-			"!~*",
-			"!~",
-			":=",
-			"@"
-		))));
+		this.OPERATOR_PATTERN = Pattern.compile(RegexUtil.createOperatorRegex(
+			new JSLikeList<>(Arrays.asList(
+				"<>",
+				"<=",
+				">=")).with(cfg.operators)));
 
 //        this.BLOCK_COMMENT_REGEX = /^(\/\*[^]*?(?:\*\/|$))/;
 		this.BLOCK_COMMENT_PATTERN = Pattern.compile("^(/\\*(?s).*?(?:\\*/|$))");

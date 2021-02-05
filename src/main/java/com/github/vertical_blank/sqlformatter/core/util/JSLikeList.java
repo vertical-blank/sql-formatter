@@ -27,6 +27,13 @@ public class JSLikeList<T> {
 		return this.tList.stream().map(Optional::ofNullable).map(x -> x.map(String::valueOf).orElse("")).collect(Collectors.joining(delimiter));
 	}
 
+	public JSLikeList<T> with(List<T> other) {
+		List<T> list = new ArrayList<>();
+		list.addAll(this.toList());
+		list.addAll(other);
+		return new JSLikeList<>(list);
+	}
+
 	public String join() {
 		return join(",");
 	}
