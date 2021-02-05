@@ -1,14 +1,13 @@
 package com.github.vertical_blank.sqlformatter;
 
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
-import com.github.vertical_blank.sqlformatter.languages.AbstractFormatter;
-import com.github.vertical_blank.sqlformatter.languages.Db2Formatter;
-import com.github.vertical_blank.sqlformatter.languages.N1qlFormatter;
-import com.github.vertical_blank.sqlformatter.languages.PlSqlFormatter;
-import com.github.vertical_blank.sqlformatter.languages.StandardSqlFormatter;
+import com.github.vertical_blank.sqlformatter.languages.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class SqlFormatter {
 	/**
@@ -46,19 +45,29 @@ public class SqlFormatter {
 		return of("sql");
 	}
 
+	private static final Map<String, Supplier<AbstractFormatter>> formatters;
+
+	static {
+		Map<String, Supplier<AbstractFormatter>> map = new HashMap<>();
+		map.put("db2", Db2Formatter::new);
+		map.put("mariadb", MariaDbFormatter::new);
+		map.put("mysql", MySqlFormatter::new);
+		map.put("n1ql", N1qlFormatter::new);
+		map.put("pl/sql", PlSqlFormatter::new);
+		map.put("plsql", PlSqlFormatter::new);
+		map.put("postgresql", PostgreSqlFormatter::new);
+		map.put("redshift", RedshiftFormatter::new);
+		map.put("spark", SparkSqlFormatter::new);
+		map.put("sql", StandardSqlFormatter::new);
+		map.put("tsql", TSqlFormatter::new);
+
+		formatters = map;
+	}
+
 	public static AbstractFormatter of(String name) {
-		switch (name) {
-			case "db2":
-				return new Db2Formatter();
-			case "n1ql":
-				return new N1qlFormatter();
-			case "pl/sql":
-				return new PlSqlFormatter();
-			case "sql":
-				return new StandardSqlFormatter();
-			default:
-				throw new RuntimeException("Unsupported SQL dialect: " + name);
-		}
+		return Optional.ofNullable(formatters.get(name))
+			.map(Supplier::get)
+			.orElseThrow(() -> new RuntimeException("Unsupported SQL dialect: " + name));
 	}
 
 }
