@@ -93,19 +93,30 @@ public class Tokenizer {
 
 		// Keep processing the string until it is empty
 		while (input.length() != 0) {
-			// Get the next token and the token type
-			token = this.getNextToken(input, token);
-			// Advance the string
-			input = input.substring(token.value.length());
+			// grab any preceding whitespace
+			String whitespaceBefore = this.getWhitespace(input);
+			input = input.substring(whitespaceBefore.length());
 
-			tokens.add(token);
+			if (input.length() != 0) {
+				// Get the next token and the token type
+				token = this.getNextToken(input, token);
+				// Advance the string
+				input = input.substring(token.value.length());
+
+				tokens.add(token);
+			}
 		}
 		return tokens;
 	}
 
+	private String getWhitespace(String input) {
+		String firstMatch = getFirstMatch(input, this.WHITESPACE_PATTERN);
+		return firstMatch != null ? firstMatch : "";
+	}
+
 	private Token getNextToken(String input, Token previousToken) {
 		return Util.firstNotnull(
-						() -> this.getWhitespaceToken(input),
+						// () -> this.getWhitespaceToken(input),
 						() -> this.getCommentToken(input),
 						() -> this.getStringToken(input),
 						() -> this.getOpenParenToken(input),
@@ -115,14 +126,6 @@ public class Tokenizer {
 						() -> this.getReservedWordToken(input, previousToken),
 						() -> this.getWordToken(input),
 						() -> this.getOperatorToken(input));
-	}
-
-	private Token getWhitespaceToken(String input) {
-		return this.getTokenOnFirstMatch(
-						input,
-						TokenTypes.WHITESPACE,
-						this.WHITESPACE_PATTERN
-		);
 	}
 
 	private Token getCommentToken(String input) {
@@ -285,7 +288,7 @@ public class Tokenizer {
 		);
 	}
 
-	private String getFirstMatch(String input, Pattern regex) {
+	private static String getFirstMatch(String input, Pattern regex) {
 		if (regex == null) {
 			return null;
 		}
@@ -299,10 +302,10 @@ public class Tokenizer {
 	}
 
 	private Token getTokenOnFirstMatch(String input, TokenTypes type, Pattern regex) {
-		String matches = getFirstMatch(input, regex);
+		String firstMatch = getFirstMatch(input, regex);
 
-		if (matches != null) {
-			return new Token(type, matches);
+		if (firstMatch != null) {
+			return new Token(type, firstMatch);
 		} else {
 			return null;
 		}

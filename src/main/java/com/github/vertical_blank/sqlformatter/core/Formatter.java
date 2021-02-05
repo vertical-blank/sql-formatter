@@ -52,9 +52,9 @@ public class Formatter {
 		for (Token token : this.tokens) {
 			this.index = ++_index;
 
-			if (token.type == TokenTypes.WHITESPACE) {
-				// ignore (we do our own whitespace formatting)
-			} else if (token.type == TokenTypes.LINE_COMMENT) {
+			// token = this.tokenOverride(token);
+
+			if (token.type == TokenTypes.LINE_COMMENT) {
 				formattedQuery = this.formatLineComment(token, formattedQuery);
 			} else if (token.type == TokenTypes.BLOCK_COMMENT) {
 				formattedQuery = this.formatBlockComment(token, formattedQuery);
@@ -135,12 +135,12 @@ public class Formatter {
 		// Take out the preceding space unless there was whitespace there in the original query
 		// or another opening parens or line comment
 		List<TokenTypes> preserveWhitespaceFor = Arrays.asList(
-						TokenTypes.WHITESPACE,
 						TokenTypes.OPEN_PAREN,
-						TokenTypes.LINE_COMMENT
+						TokenTypes.LINE_COMMENT,
+						TokenTypes.OPERATOR
 		);
 		if (!(this.previousToken().filter(t -> Util.nullToEmpty(preserveWhitespaceFor).contains(t.type)).isPresent())) {
-			query = Util.trimEnd(query);
+			query = this.trimSpacesEnd(query);
 		}
 		query += this.show(token);
 
@@ -170,7 +170,7 @@ public class Formatter {
 
 	// Commas start a new line (unless within inline parentheses or SQL "LIMIT" clause)
 	private String formatComma(Token token, String query) {
-		query = this.trimTrailingWhitespace(query) + this.show(token) + " ";
+		query = this.trimSpacesEnd(query) + this.show(token) + " ";
 
 		if (this.inlineBlock.isActive()) {
 			return query;
@@ -182,11 +182,11 @@ public class Formatter {
 	}
 
 	private String formatWithSpaceAfter(Token token, String query) {
-		return this.trimTrailingWhitespace(query) + this.show(token) + " ";
+		return this.trimSpacesEnd(query) + this.show(token) + " ";
 	}
 
 	private String formatWithoutSpaces(Token token, String query) {
-		return this.trimTrailingWhitespace(query) + this.show(token);
+		return this.trimSpacesEnd(query) + this.show(token);
 	}
 
 	private String formatWithSpaces(Token token, String query) {
@@ -194,7 +194,11 @@ public class Formatter {
 	}
 
 	private String formatQuerySeparator(Token token, String query) {
-		return this.trimTrailingWhitespace(query) + this.show(token) + "\n";
+		return this.trimSpacesEnd(query) + this.show(token) + "\n";
+	}
+
+	private String trimSpacesEnd(String val) {
+		return Util.trimSpacesEnd(val);
 	}
 
 	// Converts token to string (uppercasing it if needed)
@@ -215,24 +219,7 @@ public class Formatter {
 	}
 
 	private String addNewline(String query) {
-		return Util.trimEnd(query) + "\n" + this.indentation.getIndent();
-	}
-
-	private String trimTrailingWhitespace(String query) {
-		Optional<Token> token = this.previousNonWhitespaceToken();
-		if (token.filter(t -> t.type == TokenTypes.LINE_COMMENT).isPresent()) {
-			return Util.trimEnd(query) + "\n";
-		} else {
-			return Util.trimEnd(query);
-		}
-	}
-
-	private Optional<Token> previousNonWhitespaceToken() {
-		int n = 1;
-		while (this.previousToken(n).filter(t -> t.type == TokenTypes.WHITESPACE).isPresent()) {
-			n++;
-		}
-		return this.previousToken(n);
+		return Util.trimSpacesEnd(query) + "\n" + this.indentation.getIndent();
 	}
 
 	private Optional<Token> previousToken(int offset) {

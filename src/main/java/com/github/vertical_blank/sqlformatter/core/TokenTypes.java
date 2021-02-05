@@ -4,7 +4,6 @@ package com.github.vertical_blank.sqlformatter.core;
  * Constants for token types
  */
 public enum TokenTypes {
-	WHITESPACE,
 	WORD,
 	STRING,
 	RESERVED,
