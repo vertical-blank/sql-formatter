@@ -2,6 +2,7 @@ package com.github.vertical_blank.sqlformatter.core;
 
 import java.util.List;
 
+import com.github.vertical_blank.sqlformatter.core.util.Util;
 import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 public class DialectConfig {
@@ -31,18 +32,18 @@ public class DialectConfig {
         List<String> indexedPlaceholderTypes,
         List<String> namedPlaceholderTypes,
         List<String> operators) {
-        this.lineCommentTypes = lineCommentTypes;
-        this.reservedTopLevelWords = reservedTopLevelWords;
-        this.reservedTopLevelWordsNoIndent = reservedTopLevelWordsNoIndent;
-        this.reservedNewlineWords = reservedNewlineWords;
-        this.reservedWords = reservedWords;
-        this.specialWordChars = specialWordChars;
-        this.stringTypes = stringTypes;
-        this.openParens = openParens;
-        this.closeParens = closeParens;
-        this.indexedPlaceholderTypes = indexedPlaceholderTypes;
-        this.namedPlaceholderTypes = namedPlaceholderTypes;
-        this.operators = operators;
+        this.lineCommentTypes = Util.nullToEmpty(lineCommentTypes);
+        this.reservedTopLevelWords = Util.nullToEmpty(reservedTopLevelWords);
+        this.reservedTopLevelWordsNoIndent = Util.nullToEmpty(reservedTopLevelWordsNoIndent);
+        this.reservedNewlineWords = Util.nullToEmpty(reservedNewlineWords);
+        this.reservedWords = Util.nullToEmpty(reservedWords);
+        this.specialWordChars = Util.nullToEmpty(specialWordChars);
+        this.stringTypes = Util.nullToEmpty(stringTypes);
+        this.openParens = Util.nullToEmpty(openParens);
+        this.closeParens = Util.nullToEmpty(closeParens);
+        this.indexedPlaceholderTypes = Util.nullToEmpty(indexedPlaceholderTypes);
+        this.namedPlaceholderTypes = Util.nullToEmpty(namedPlaceholderTypes);
+        this.operators = Util.nullToEmpty(operators);
     }
 
     public static DialectConfigBuilder builder() {
