@@ -81,4 +81,8 @@ public class Indentation {
 			}
 		}
 	}
+
+  void resetIndentation() {
+    this.indentTypes.clear();
+  }
 }
