@@ -140,7 +140,7 @@ public class Formatter {
 						TokenTypes.OPERATOR
 		);
 		if (!(this.previousToken().filter(t -> Util.nullToEmpty(preserveWhitespaceFor).contains(t.type)).isPresent())) {
-			query = this.trimSpacesEnd(query);
+			query = Util.trimSpacesEnd(query);
 		}
 		query += this.show(token);
 
@@ -170,7 +170,7 @@ public class Formatter {
 
 	// Commas start a new line (unless within inline parentheses or SQL "LIMIT" clause)
 	private String formatComma(Token token, String query) {
-		query = this.trimSpacesEnd(query) + this.show(token) + " ";
+		query = Util.trimSpacesEnd(query) + this.show(token) + " ";
 
 		if (this.inlineBlock.isActive()) {
 			return query;
@@ -182,11 +182,11 @@ public class Formatter {
 	}
 
 	private String formatWithSpaceAfter(Token token, String query) {
-		return this.trimSpacesEnd(query) + this.show(token) + " ";
+		return Util.trimSpacesEnd(query) + this.show(token) + " ";
 	}
 
 	private String formatWithoutSpaces(Token token, String query) {
-		return this.trimSpacesEnd(query) + this.show(token);
+		return Util.trimSpacesEnd(query) + this.show(token);
 	}
 
 	private String formatWithSpaces(Token token, String query) {
@@ -194,11 +194,8 @@ public class Formatter {
 	}
 
 	private String formatQuerySeparator(Token token, String query) {
-		return this.trimSpacesEnd(query) + this.show(token) + "\n";
-	}
-
-	private String trimSpacesEnd(String val) {
-		return Util.trimSpacesEnd(val);
+    this.indentation.resetIndentation();
+		return Util.trimSpacesEnd(query) + this.show(token) + Util.repeat("\n", Optional.ofNullable(this.cfg.linesBetweenQueries).orElse(1));
 	}
 
 	// Converts token to string (uppercasing it if needed)
