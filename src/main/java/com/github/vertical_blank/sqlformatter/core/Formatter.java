@@ -33,6 +33,17 @@ public class Formatter {
 	}
 
 	/**
+   * Reprocess and modify a token based on parsed context.
+   *
+   * @param token The token to modify
+   * @return new token or the original
+   */
+  protected Token tokenOverride(Token token) {
+    // subclasses can override this to modify tokens during formatting
+    return token;
+  }
+
+	/**
 	 * Formats whitespaces in a SQL string to make it easier to read.
 	 *
 	 * @param query The SQL query string
@@ -52,7 +63,7 @@ public class Formatter {
 		for (Token token : this.tokens) {
 			this.index = ++_index;
 
-			// token = this.tokenOverride(token);
+			token = this.tokenOverride(token);
 
 			if (token.type == TokenTypes.LINE_COMMENT) {
 				formattedQuery = this.formatLineComment(token, formattedQuery);
