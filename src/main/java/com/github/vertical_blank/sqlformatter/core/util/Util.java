@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Util {
 
@@ -39,6 +41,10 @@ public class Util {
 			}
 		}
 		return Optional.empty();
+	}
+
+	public static String repeat(String s, int n) {
+		return Stream.generate(() -> s).limit(n).collect(Collectors.joining());
 	}
 
 }

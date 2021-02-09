@@ -6,15 +6,15 @@ class UtilTest {
 
     @Test
     void testTrimEnd() {
-        assert "" == Util.trimEnd(" ");
-        assert "" == Util.trimEnd("");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc ");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc\n");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc\r");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc\r\n");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc\r\n ");
-        assert " \r\nabc" == Util.trimEnd(" \r\nabc   \r\n  \n  ");
+        assert "" == Util.trimSpacesEnd(" ");
+        assert "" == Util.trimSpacesEnd("");
+        assert " \r\nabc" == Util.trimSpacesEnd(" \r\nabc");
+        assert " \r\nabc" == Util.trimSpacesEnd(" \r\nabc ");
+    }
+
+    @Test
+    void testRepeat() {
+        assert "a" * 4 == Util.repeat("a", 4)
     }
 
 }
