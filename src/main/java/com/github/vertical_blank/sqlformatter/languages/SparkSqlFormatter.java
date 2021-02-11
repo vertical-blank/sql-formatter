@@ -1,13 +1,17 @@
 package com.github.vertical_blank.sqlformatter.languages;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
+import com.github.vertical_blank.sqlformatter.core.FormatConfig;
+import com.github.vertical_blank.sqlformatter.core.Formatter;
+import com.github.vertical_blank.sqlformatter.core.Token;
+import com.github.vertical_blank.sqlformatter.core.TokenTypes;
 import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SparkSqlFormatter extends AbstractFormatter {
+public class SparkSqlFormatter extends Formatter {
 
 	private static final List<String> reservedWords = Arrays.asList(
 		"ALL",
@@ -239,7 +243,7 @@ public class SparkSqlFormatter extends AbstractFormatter {
 	);
 
 	@Override
-    DialectConfig dialectConfig() {
+	public DialectConfig dialectConfig() {
 		return DialectConfig.builder()
 						.reservedWords(reservedWords)
 						.reservedTopLevelWords(reservedTopLevelWords)
@@ -253,6 +257,33 @@ public class SparkSqlFormatter extends AbstractFormatter {
 						.lineCommentTypes(Collections.singletonList("--"))
 						.specialWordChars(Arrays.asList("#", "@"))
 						.operators(Arrays.asList("!=", "<=>", "&&", "||", "==")).build();
+	}
+
+	@Override
+	public Token tokenOverride(Token token) {
+		// Fix cases where names are ambiguously keywords or functions
+		if (Token.isWindow(token)) {
+			Token aheadToken = this.tokenLookAhead().get();
+			if (aheadToken != null && aheadToken.type == TokenTypes.OPEN_PAREN) {
+				// This is a function call, treat it as a reserved word
+				return new Token(TokenTypes.RESERVED, token.value);
+			}
+		}
+
+		// Fix cases where names are ambiguously keywords or properties
+		if (Token.isEnd(token)) {
+			Token backToken = this.tokenLookBehind().get();
+			if (backToken != null && backToken.type == TokenTypes.OPERATOR && backToken.value.equals(".")) {
+				// This is window().end (or similar) not CASE ... END
+				return new Token(TokenTypes.WORD, token.value);
+			}
+		}
+
+		return token;
+	}
+
+	public SparkSqlFormatter(FormatConfig cfg) {
+		super(cfg);
 	}
 
 }

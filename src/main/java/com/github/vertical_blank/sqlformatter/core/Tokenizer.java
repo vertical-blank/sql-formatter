@@ -87,7 +87,7 @@ public class Tokenizer {
 	 * @param input input The SQL string
 	 * @return {Object[]} tokens An array of tokens.
 	 */
-	List<Token> tokenize(String input) {
+	public JSLikeList<Token> tokenize(String input) {
 		List<Token> tokens = new ArrayList<>();
 		Token token = null;
 
@@ -103,10 +103,10 @@ public class Tokenizer {
 				// Advance the string
 				input = input.substring(token.value.length());
 
-				tokens.add(token);
+				tokens.add(new Token(token.type, token.value, token.regex, whitespaceBefore));
 			}
 		}
-		return tokens;
+		return new JSLikeList<>(tokens);
 	}
 
 	private String getWhitespace(String input) {
@@ -116,7 +116,6 @@ public class Tokenizer {
 
 	private Token getNextToken(String input, Token previousToken) {
 		return Util.firstNotnull(
-						// () -> this.getWhitespaceToken(input),
 						() -> this.getCommentToken(input),
 						() -> this.getStringToken(input),
 						() -> this.getOpenParenToken(input),

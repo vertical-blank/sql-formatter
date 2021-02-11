@@ -9,7 +9,7 @@ public class FormatConfig {
 	public final int maxColumnLength;
 	public final Params.Holder params;
 	public final boolean uppercase;
-	public final int linesBetweenQueries;
+	public final Integer linesBetweenQueries;
 
 	FormatConfig(String indent, int maxColumnLength, Params.Holder params, boolean uppercase, int linesBetweenQueries) {
 		this.indent = indent;
@@ -24,11 +24,11 @@ public class FormatConfig {
 	}
 
 	public static class FormatConfigBuilder {
-		private String indent;
+		private String indent = DEFAULT_INDENT;
 		private int maxColumnLength = DEFAULT_COLUMN_MAX_LENGTH;
 		private Params.Holder params;
 		private boolean uppercase;
-		private int linesBetweenQueries;
+		private Integer linesBetweenQueries;
 
 		FormatConfigBuilder() {
 		}

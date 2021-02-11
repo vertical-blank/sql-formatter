@@ -1,13 +1,15 @@
 package com.github.vertical_blank.sqlformatter.languages;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
+import com.github.vertical_blank.sqlformatter.core.FormatConfig;
+import com.github.vertical_blank.sqlformatter.core.Formatter;
 import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class StandardSqlFormatter extends AbstractFormatter {
+public class StandardSqlFormatter extends Formatter {
 
 	// https://jakewheat.github.io/sql-overview/sql-2008-foundation-grammar.html#reserved-word
 	private static final List<String> reservedWords = Arrays.asList(
@@ -367,7 +369,7 @@ public class StandardSqlFormatter extends AbstractFormatter {
 	);
 
 	@Override
-  public DialectConfig dialectConfig() {
+	public DialectConfig dialectConfig() {
 		return DialectConfig.builder()
 						.reservedWords(reservedWords)
 						.reservedTopLevelWords(reservedTopLevelWords)
@@ -379,6 +381,10 @@ public class StandardSqlFormatter extends AbstractFormatter {
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
 						.namedPlaceholderTypes(Arrays.asList("@", ":"))
 						.lineCommentTypes(Arrays.asList("#", "--")).build();
+	}
+
+	public StandardSqlFormatter(FormatConfig cfg) {
+		super(cfg);
 	}
 
 }

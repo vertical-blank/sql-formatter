@@ -1,13 +1,17 @@
 package com.github.vertical_blank.sqlformatter.languages;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
+import com.github.vertical_blank.sqlformatter.core.FormatConfig;
+import com.github.vertical_blank.sqlformatter.core.Formatter;
+import com.github.vertical_blank.sqlformatter.core.Token;
+import com.github.vertical_blank.sqlformatter.core.TokenTypes;
 import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class PlSqlFormatter extends AbstractFormatter {
+public class PlSqlFormatter extends Formatter {
 
 	private static final List<String> reservedWords = Arrays.asList(
 		"A",
@@ -427,7 +431,7 @@ public class PlSqlFormatter extends AbstractFormatter {
 	);
 
 	@Override
-    DialectConfig dialectConfig() {
+	public DialectConfig dialectConfig() {
 		return DialectConfig.builder()
 						.reservedWords(reservedWords)
 						.reservedTopLevelWords(reservedTopLevelWords)
@@ -441,6 +445,18 @@ public class PlSqlFormatter extends AbstractFormatter {
 						.lineCommentTypes(Collections.singletonList("--"))
 						.specialWordChars(Arrays.asList("_", "$", "#", ".", "@"))
 						.operators(Arrays.asList("||", "**", "!=", ":=")).build();
+	}
+
+	@Override
+	public Token tokenOverride(Token token) {
+		if (Token.isSet(token) && Token.isBy(super.previousReservedToken)) {
+			return new Token(TokenTypes.RESERVED, token.value);
+		}
+		return token;
+	}
+
+	public PlSqlFormatter(FormatConfig cfg) {
+		super(cfg);
 	}
 
 }

@@ -1,30 +1,28 @@
 package com.github.vertical_blank.sqlformatter.languages;
 
-import com.github.vertical_blank.sqlformatter.core.DialectConfig;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
 import com.github.vertical_blank.sqlformatter.core.Formatter;
 import com.github.vertical_blank.sqlformatter.core.Params;
-import com.github.vertical_blank.sqlformatter.core.Tokenizer;
 
-import java.util.List;
-import java.util.Map;
+public class AbstractFormatter implements Function<FormatConfig, Formatter> {
 
-import static com.github.vertical_blank.sqlformatter.core.FormatConfig.DEFAULT_INDENT;
+	Function<FormatConfig, Formatter> underlying;
 
-public abstract class AbstractFormatter {
+	public AbstractFormatter(Function<FormatConfig, Formatter> underlying) {
+		this.underlying = underlying;
+	}
 
-	abstract DialectConfig dialectConfig();
+	@Override
+	public Formatter apply(FormatConfig t) {
+		return underlying.apply(t);
+	}
 
-	/**
-	 * Formats DB2 query to make it easier to read
-	 *
-	 * @param query query string
-	 * @param cfg FormatConfig
-	 * @return formatted string
-	 */
 	public String format(String query, FormatConfig cfg) {
-		Tokenizer tokenizer = new Tokenizer(this.dialectConfig());
-		return new Formatter(cfg, tokenizer).format(query);
+		return this.apply(cfg).format(query);
 	}
 
 	public String format(String query, String indent, List<?> params) {
@@ -36,7 +34,11 @@ public abstract class AbstractFormatter {
 										.build());
 	}
 	public String format(String query, List<?> params) {
-		return format(query, DEFAULT_INDENT, params);
+		return format(
+						query,
+						FormatConfig.builder()
+										.params(Params.Holder.of(params))
+										.build());
 	}
 
 	public String format(String query, String indent, Map<String, ?> params) {
@@ -48,7 +50,11 @@ public abstract class AbstractFormatter {
 										.build());
 	}
 	public String format(String query, Map<String, ?> params) {
-		return format(query, DEFAULT_INDENT, params);
+		return format(
+						query,
+						FormatConfig.builder()
+										.params(Params.Holder.of(params))
+										.build());
 	}
 
 	public String format(String query, String indent) {
@@ -59,8 +65,9 @@ public abstract class AbstractFormatter {
 										.build());
 	}
 	public String format(String query) {
-		return format(query, DEFAULT_INDENT);
+		return format(
+						query,
+						FormatConfig.builder().build());
 	}
-
 
 }

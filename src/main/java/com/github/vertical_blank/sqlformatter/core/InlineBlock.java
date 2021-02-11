@@ -3,6 +3,8 @@ package com.github.vertical_blank.sqlformatter.core;
 
 import java.util.List;
 
+import com.github.vertical_blank.sqlformatter.core.util.JSLikeList;
+
 /**
  * Bookkeeper for inline blocks.
  * <p>
@@ -27,7 +29,7 @@ class InlineBlock {
 	 * @param tokens Array of all tokens
 	 * @param index  Current token position
 	 */
-	void beginIfPossible(List<Token> tokens, int index) {
+	void beginIfPossible(JSLikeList<Token> tokens, int index) {
 		if (this.level == 0 && this.isInlineBlock(tokens, index)) {
 			this.level = 1;
 		} else if (this.level > 0) {
@@ -56,12 +58,12 @@ class InlineBlock {
 
 	// Check if this should be an inline parentheses block
 	// Examples are "NOW()", "COUNT(*)", "int(10)", key(`somecolumn`), DECIMAL(7,2)
-	private boolean isInlineBlock(List<Token> tokens, int index) {
+	private boolean isInlineBlock(JSLikeList<Token> tokens, int index) {
 		int length = 0;
 		int level = 0;
 
 		for (int i = index; i < tokens.size(); i++) {
-			Token token = tokens.get(i);
+			Token token = tokens.get(i).get();
 			length += token.value.length();
 
 			// Overran max length

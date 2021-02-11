@@ -1,42 +1,44 @@
 package com.github.vertical_blank.sqlformatter.core;
 
+import com.github.vertical_blank.sqlformatter.core.util.JSLikeList;
 import com.github.vertical_blank.sqlformatter.core.util.Util;
+import com.github.vertical_blank.sqlformatter.languages.DialectConfigurator;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Set;
 
-public class Formatter {
+public abstract class Formatter implements DialectConfigurator {
 	private final FormatConfig cfg;
 	private final Indentation indentation;
 	private final InlineBlock inlineBlock;
 	private final Params params;
-	private final Tokenizer tokenizer;
-	private Token previousReservedWord;
-	private List<Token> tokens;
+	protected Token previousReservedToken;
+	private JSLikeList<Token> tokens;
 	private int index;
 
 	/**
 	 * @param cfg       cfg.indent cfg.params
 	 * @param tokenizer Tokenizer
 	 */
-	public Formatter(FormatConfig cfg, Tokenizer tokenizer) {
+	public Formatter(FormatConfig cfg) {
 		this.cfg = cfg;
 		this.indentation = new Indentation(cfg.indent);
 		this.inlineBlock = new InlineBlock(cfg.maxColumnLength);
 		this.params = new Params(cfg.params);
-		this.tokenizer = tokenizer;
-		this.previousReservedWord = null;
-		this.tokens = Collections.emptyList();
+		this.previousReservedToken = null;
 		this.index = 0;
 	}
 
-	/**
+	public Tokenizer tokenizer() {
+		return new Tokenizer(this.dialectConfig());
+	}
+
+  /**
    * Reprocess and modify a token based on parsed context.
    *
    * @param token The token to modify
-   * @return new token or the original
+   * @return token
    */
   protected Token tokenOverride(Token token) {
     // subclasses can override this to modify tokens during formatting
@@ -50,7 +52,7 @@ public class Formatter {
 	 * @return formatted query
 	 */
 	public String format(String query) {
-		this.tokens = this.tokenizer.tokenize(query);
+		this.tokens = this.tokenizer().tokenize(query);
 		String formattedQuery = this.getFormattedQueryFromTokens();
 
 		return formattedQuery.trim();
@@ -71,16 +73,16 @@ public class Formatter {
 				formattedQuery = this.formatBlockComment(token, formattedQuery);
 			} else if (token.type == TokenTypes.RESERVED_TOP_LEVEL) {
 				formattedQuery = this.formatToplevelReservedWord(token, formattedQuery);
-				this.previousReservedWord = token;
+				this.previousReservedToken = token;
 			} else if (token.type == TokenTypes.RESERVED_TOP_LEVEL_NO_INDENT) {
 				formattedQuery = this.formatTopLevelReservedWordNoIndent(token, formattedQuery);
-				this.previousReservedWord = token;
+				this.previousReservedToken = token;
 			} else if (token.type == TokenTypes.RESERVED_NEWLINE) {
 				formattedQuery = this.formatNewlineReservedWord(token, formattedQuery);
-				this.previousReservedWord = token;
+				this.previousReservedToken = token;
 			} else if (token.type == TokenTypes.RESERVED) {
 				formattedQuery = this.formatWithSpaces(token, formattedQuery);
-				this.previousReservedWord = token;
+				this.previousReservedToken = token;
 			} else if (token.type == TokenTypes.OPEN_PAREN) {
 				formattedQuery = this.formatOpeningParentheses(token, formattedQuery);
 			} else if (token.type == TokenTypes.CLOSE_PAREN) {
@@ -133,6 +135,9 @@ public class Formatter {
 	}
 
 	private String formatNewlineReservedWord(Token token, String query) {
+		if (Token.isAnd(token) && Token.isBetween(this.tokenLookBehind(2))) {
+			return this.formatWithSpaces(token, query);
+		}
 		return this.addNewline(query) + this.equalizeWhitespace(this.show(token)) + " ";
 	}
 
@@ -145,12 +150,15 @@ public class Formatter {
 	private String formatOpeningParentheses(Token token, String query) {
 		// Take out the preceding space unless there was whitespace there in the original query
 		// or another opening parens or line comment
-		List<TokenTypes> preserveWhitespaceFor = Arrays.asList(
+		Set<TokenTypes> preserveWhitespaceFor = EnumSet.of(
 						TokenTypes.OPEN_PAREN,
 						TokenTypes.LINE_COMMENT,
 						TokenTypes.OPERATOR
 		);
-		if (!(this.previousToken().filter(t -> Util.nullToEmpty(preserveWhitespaceFor).contains(t.type)).isPresent())) {
+		if (
+			token.whitespaceBefore.length() == 0 &&
+			!this.tokenLookBehind().map(t -> preserveWhitespaceFor.contains(t.type)).orElse(false)
+		) {
 			query = Util.trimSpacesEnd(query);
 		}
 		query += this.show(token);
@@ -185,7 +193,7 @@ public class Formatter {
 
 		if (this.inlineBlock.isActive()) {
 			return query;
-		} else if (this.previousReservedWord != null && this.previousReservedWord.value.matches("(?i)^LIMIT$")) {
+		} else if (Token.isLimit(this.previousReservedToken)) {
 			return query;
 		} else {
 			return this.addNewline(query);
@@ -205,7 +213,7 @@ public class Formatter {
 	}
 
 	private String formatQuerySeparator(Token token, String query) {
-    this.indentation.resetIndentation();
+		this.indentation.resetIndentation();
 		return Util.trimSpacesEnd(query) + this.show(token) + Util.repeat("\n", Optional.ofNullable(this.cfg.linesBetweenQueries).orElse(1));
 	}
 
@@ -227,18 +235,26 @@ public class Formatter {
 	}
 
 	private String addNewline(String query) {
-		return Util.trimSpacesEnd(query) + "\n" + this.indentation.getIndent();
-	}
-
-	private Optional<Token> previousToken(int offset) {
-		if (this.index - offset < 0) {
-			return Optional.empty();
-		} else {
-			return Optional.ofNullable(this.tokens.get(this.index - offset));
+		query = Util.trimSpacesEnd(query);
+		if (!query.endsWith("\n")) {
+		  query += "\n";
 		}
+		return query + this.indentation.getIndent();
 	}
 
-	private Optional<Token> previousToken() {
-		return this.previousToken(1);
-	}
+  protected Optional<Token> tokenLookBehind() {
+    return this.tokenLookBehind(1);
+  }
+
+  protected Optional<Token> tokenLookBehind(int n) {
+    return this.tokens.get(this.index - n);
+  }
+
+  protected Optional<Token> tokenLookAhead() {
+    return this.tokenLookAhead(1);
+  }
+
+  protected Optional<Token> tokenLookAhead(int n) {
+    return this.tokens.get(this.index + n);
+  }
 }
