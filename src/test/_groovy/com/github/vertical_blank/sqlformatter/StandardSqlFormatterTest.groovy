@@ -220,19 +220,6 @@ class StandardSqlFormatterTest extends FormatterTestBase {
     }
 
     @Test
-    void "formats SELECT query with CROSS APPLY"() {
-        String result = formatWithLang("SELECT a, b FROM t CROSS APPLY fn(t.id)")
-        expect(result).toBe(
-                "SELECT\n" +
-                        "  a,\n" +
-                        "  b\n" +
-                        "FROM\n" +
-                        "  t\n" +
-                        "  CROSS APPLY fn(t.id)"
-        )
-    }
-
-    @Test
     void "formats simple SELECT"() {
         String result = formatWithLang("SELECT N, M FROM t")
         expect(result).toBe(

@@ -64,17 +64,6 @@ abstract class FormatterTestBase {
     }
 
     @Test
-    void "formats simple SET SCHEMA queries"() {
-        String result = formatWithLang("SET SCHEMA tetrisdb; SET CURRENT SCHEMA bingodb;")
-        expect(result).toBe(
-                "SET SCHEMA\n" +
-                        "  tetrisdb;\n" +
-                        "SET CURRENT SCHEMA\n" +
-                        "  bingodb;"
-        )
-    }
-
-    @Test
     void "formats simple SELECT query"() {
         String result = formatWithLang("SELECT count(*),Column1 FROM Table1;")
         expect(result).toBe(

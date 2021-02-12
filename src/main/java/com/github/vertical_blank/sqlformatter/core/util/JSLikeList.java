@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.github.vertical_blank.sqlformatter.core.Token;
-
 public class JSLikeList<T> implements Iterable<T> {
 
 	private List<T> tList;
