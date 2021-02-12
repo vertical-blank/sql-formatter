@@ -294,7 +294,7 @@ public class Tokenizer {
 
 		Matcher matcher = regex.matcher(input);
 		if (matcher.find()) {
-			return matcher.group();
+			return matcher.group(1);
 		} else {
 			return null;
 		}
