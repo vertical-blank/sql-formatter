@@ -1,7 +1,7 @@
 # sql-formatter
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.vertical-blank/sql-formatter.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.vertical-blank%22%20AND%20a:%22sql-formatter%22)
-![travis](https://api.travis-ci.org/vertical-blank/sql-formatter.svg?branch=master)
+![Java CI with Maven](https://github.com/vertical-blank/sql-formatter/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![codecov](https://codecov.io/gh/vertical-blank/sql-formatter/branch/master/graph/badge.svg)](https://codecov.io/gh/vertical-blank/sql-formatter)
 
 Java port of great SQL formatter <https://github.com/zeroturnaround/sql-formatter>.
