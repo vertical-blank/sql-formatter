@@ -6,17 +6,17 @@ import java.util.List;
 /**
  * Bookkeeper for inline blocks.
  * <p>
- * Inline blocks are parenthized expressions that are shorter than INLINE_MAX_LENGTH.
+ * Inline blocks are parenthized expressions that are shorter than maxColumnLength.
  * These blocks are formatted on a single line, unlike longer parenthized
  * expressions where open-parenthesis causes newline and increase of indentation.
  */
 class InlineBlock {
 
-	private static final int INLINE_MAX_LENGTH = 50;
-
 	private int level;
+	private final int maxColumnLength;
 
-	InlineBlock() {
+	InlineBlock(int maxColumnLength) {
+		this.maxColumnLength = maxColumnLength;
 		this.level = 0;
 	}
 
@@ -65,7 +65,7 @@ class InlineBlock {
 			length += token.value.length();
 
 			// Overran max length
-			if (length > INLINE_MAX_LENGTH) {
+			if (length > maxColumnLength) {
 				return false;
 			}
 
