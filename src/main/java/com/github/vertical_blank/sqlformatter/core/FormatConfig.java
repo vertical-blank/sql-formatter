@@ -32,6 +32,12 @@ public class FormatConfig {
 			return this;
 		}
 
+
+		public FormatConfigBuilder maxColumnLength(int maxColumnLength) {
+			this.maxColumnLength = maxColumnLength;
+			return this;
+		}
+
 		public FormatConfigBuilder params(Params.Holder params) {
 			this.params = params;
 			return this;
