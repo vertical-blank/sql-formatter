@@ -11,7 +11,7 @@ public class FormatConfig {
 	public final boolean uppercase;
 	public final Integer linesBetweenQueries;
 
-	FormatConfig(String indent, int maxColumnLength, Params.Holder params, boolean uppercase, int linesBetweenQueries) {
+	FormatConfig(String indent, int maxColumnLength, Params.Holder params, boolean uppercase, Integer linesBetweenQueries) {
 		this.indent = indent;
 		this.maxColumnLength = maxColumnLength;
 		this.params = params;
