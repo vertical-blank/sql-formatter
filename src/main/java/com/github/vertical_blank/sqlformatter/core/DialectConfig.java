@@ -1,6 +1,9 @@
 package com.github.vertical_blank.sqlformatter.core;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.vertical_blank.sqlformatter.core.util.Util;
 import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
@@ -44,6 +47,116 @@ public class DialectConfig {
         this.indexedPlaceholderTypes = Util.nullToEmpty(indexedPlaceholderTypes);
         this.namedPlaceholderTypes = Util.nullToEmpty(namedPlaceholderTypes);
         this.operators = Util.nullToEmpty(operators);
+    }
+
+    private <T> List<T> concat(List<T> l1, List<T> l2) {
+        return Stream.of(l1, l2).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public DialectConfig plusLineCommentTypes(String ... lineCommentTypes) {
+        return this.plusLineCommentTypes(Arrays.asList(lineCommentTypes));
+    }
+    public DialectConfig plusLineCommentTypes(List<String> lineCommentTypes) {
+        return this.toBuilder().lineCommentTypes(concat(this.lineCommentTypes, lineCommentTypes)).build();
+    }
+
+    public DialectConfig plusReservedTopLevelWords(String ... reservedTopLevelWords) {
+        return this.plusReservedTopLevelWords(Arrays.asList(reservedTopLevelWords));
+    }
+    public DialectConfig plusReservedTopLevelWords(List<String> reservedTopLevelWords) {
+        return this.toBuilder().reservedTopLevelWords(
+            concat(this.reservedTopLevelWords, reservedTopLevelWords)).build();
+    }
+
+    public DialectConfig plusReservedNewlineWords(String ... reservedNewlineWords) {
+        return this.plusReservedNewlineWords(Arrays.asList(reservedNewlineWords));
+    }
+    public DialectConfig plusReservedNewlineWords(List<String> reservedNewlineWords) {
+        return this.toBuilder().reservedNewlineWords(
+            concat(this.reservedNewlineWords, reservedNewlineWords)).build();
+    }
+
+    public DialectConfig plusReservedTopLevelWordsNoIndent(String ... reservedTopLevelWordsNoIndent) {
+        return this.plusReservedTopLevelWordsNoIndent(Arrays.asList(reservedTopLevelWordsNoIndent));
+    }
+    public DialectConfig plusReservedTopLevelWordsNoIndent(List<String> reservedTopLevelWordsNoIndent) {
+        return this.toBuilder().reservedTopLevelWordsNoIndent(
+            concat(this.reservedTopLevelWordsNoIndent, reservedTopLevelWordsNoIndent)).build();
+    }
+
+    public DialectConfig plusReservedWords(String ... reservedWords) {
+        return this.plusReservedWords(Arrays.asList(reservedWords));
+    }
+    public DialectConfig plusReservedWords(List<String> reservedWords) {
+        return this.toBuilder().reservedWords(concat(this.reservedWords, reservedWords)).build();
+    }
+
+    public DialectConfig plusSpecialWordChars(String ... specialWordChars) {
+        return this.plusSpecialWordChars(Arrays.asList(specialWordChars));
+    }
+    public DialectConfig plusSpecialWordChars(List<String> specialWordChars) {
+        return this.toBuilder().specialWordChars(concat(this.specialWordChars, specialWordChars)).build();
+    }
+
+    public DialectConfig plusStringTypes(StringLiteral ... stringTypes) {
+        return this.plusStringTypes(Arrays.asList(stringTypes));
+    }
+    public DialectConfig plusStringTypes(List<StringLiteral> stringTypes) {
+        return this.toBuilder().stringTypes(concat(this.stringTypes, stringTypes)).build();
+    }
+
+    public DialectConfig plusOpenParens(String ... openParens) {
+        return this.plusOpenParens(Arrays.asList(openParens));
+    }
+    public DialectConfig plusOpenParens(List<String> openParens) {
+        return this.toBuilder().openParens(
+            concat(this.openParens, openParens)).build();
+    }
+
+    public DialectConfig plusCloseParens(String ... closeParens) {
+        return this.plusCloseParens(Arrays.asList(closeParens));
+    }
+    public DialectConfig plusCloseParens(List<String> closeParens) {
+        return this.toBuilder().closeParens(concat(this.closeParens, closeParens)).build();
+    }
+
+    public DialectConfig plusIndexedPlaceholderTypes(String ... indexedPlaceholderTypes) {
+        return this.plusIndexedPlaceholderTypes(Arrays.asList(indexedPlaceholderTypes));
+    }
+    public DialectConfig plusIndexedPlaceholderTypes(List<String> indexedPlaceholderTypes) {
+        return this.toBuilder().indexedPlaceholderTypes(
+            concat(this.indexedPlaceholderTypes, indexedPlaceholderTypes)).build();
+    }
+
+    public DialectConfig plusNamedPlaceholderTypes(String ... namedPlaceholderTypes) {
+        return this.plusNamedPlaceholderTypes(Arrays.asList(namedPlaceholderTypes));
+    }
+    public DialectConfig plusNamedPlaceholderTypes(List<String> namedPlaceholderTypes) {
+        return this.toBuilder().namedPlaceholderTypes(
+            concat(this.namedPlaceholderTypes, namedPlaceholderTypes)).build();
+    }
+
+    public DialectConfig plusOperators(String ... operators) {
+        return this.plusOperators(Arrays.asList(operators));
+    }
+    public DialectConfig plusOperators(List<String> operators) {
+        return this.toBuilder().operators(concat(this.operators, operators)).build();
+    }
+
+    public DialectConfigBuilder toBuilder() {
+        return DialectConfig.builder()
+            .reservedWords(this.reservedWords)
+            .reservedTopLevelWords(this.reservedTopLevelWords)
+            .reservedTopLevelWordsNoIndent(this.reservedTopLevelWordsNoIndent)
+            .reservedNewlineWords(this.reservedNewlineWords)
+            .stringTypes(this.stringTypes)
+            .openParens(this.openParens)
+            .closeParens(this.closeParens)
+            .indexedPlaceholderTypes(this.indexedPlaceholderTypes)
+            .namedPlaceholderTypes(this.namedPlaceholderTypes)
+            .lineCommentTypes(this.lineCommentTypes)
+            .specialWordChars(this.specialWordChars)
+            .operators(this.operators);
     }
 
     public static DialectConfigBuilder builder() {
