@@ -1,7 +1,7 @@
 package com.github.vertical_blank.sqlformatter;
 
+import com.github.vertical_blank.sqlformatter.core.AbstractFormatter;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
-import com.github.vertical_blank.sqlformatter.core.Formatter;
 import com.github.vertical_blank.sqlformatter.core.Params;
 import com.github.vertical_blank.sqlformatter.languages.*;
 
@@ -58,14 +58,14 @@ public class SqlFormatter {
 		return format(query, FormatConfig.builder().build());
 	}
 
-	public static AbstractFormatter standard() {
+	public static Formatter standard() {
 		return of("sql");
 	}
 
-	private static final Map<String, Function<FormatConfig, Formatter>> formatters;
+	private static final Map<String, Function<FormatConfig, AbstractFormatter>> formatters;
 
 	static {
-		Map<String, Function<FormatConfig, Formatter>> map = new HashMap<>();
+		Map<String, Function<FormatConfig, AbstractFormatter>> map = new HashMap<>();
 		map.put("db2", Db2Formatter::new);
 		map.put("mariadb", MariaDbFormatter::new);
 		map.put("mysql", MySqlFormatter::new);
@@ -81,9 +81,9 @@ public class SqlFormatter {
 		formatters = map;
 	}
 
-	public static AbstractFormatter of(String name) {
+	public static Formatter of(String name) {
 		return Optional.ofNullable(formatters.get(name))
-			.map(AbstractFormatter::new)
+			.map(Formatter::new)
 			.orElseThrow(() -> new RuntimeException("Unsupported SQL dialect: " + name));
 	}
 

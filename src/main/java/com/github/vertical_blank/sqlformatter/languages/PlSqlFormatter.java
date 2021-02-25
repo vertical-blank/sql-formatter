@@ -2,7 +2,7 @@ package com.github.vertical_blank.sqlformatter.languages;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
-import com.github.vertical_blank.sqlformatter.core.Formatter;
+import com.github.vertical_blank.sqlformatter.core.AbstractFormatter;
 import com.github.vertical_blank.sqlformatter.core.Token;
 import com.github.vertical_blank.sqlformatter.core.TokenTypes;
 import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class PlSqlFormatter extends Formatter {
+public class PlSqlFormatter extends AbstractFormatter {
 
 	private static final List<String> reservedWords = Arrays.asList(
 		"A",

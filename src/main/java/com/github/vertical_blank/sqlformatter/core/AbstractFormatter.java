@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 
-public abstract class Formatter implements DialectConfigurator {
+public abstract class AbstractFormatter implements DialectConfigurator {
 	private final FormatConfig cfg;
 	private final Indentation indentation;
 	private final InlineBlock inlineBlock;
@@ -21,7 +21,7 @@ public abstract class Formatter implements DialectConfigurator {
 	 * @param cfg       cfg.indent cfg.params
 	 * @param tokenizer Tokenizer
 	 */
-	public Formatter(FormatConfig cfg) {
+	public AbstractFormatter(FormatConfig cfg) {
 		this.cfg = cfg;
 		this.indentation = new Indentation(cfg.indent);
 		this.inlineBlock = new InlineBlock(cfg.maxColumnLength);

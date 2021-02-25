@@ -7,29 +7,29 @@ import java.util.function.UnaryOperator;
 
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
-import com.github.vertical_blank.sqlformatter.core.Formatter;
+import com.github.vertical_blank.sqlformatter.core.AbstractFormatter;
 import com.github.vertical_blank.sqlformatter.core.Params;
 
-public class AbstractFormatter implements Function<FormatConfig, Formatter> {
+public class Formatter implements Function<FormatConfig, AbstractFormatter> {
 
-	private final Function<FormatConfig, Formatter> underlying;
+	private final Function<FormatConfig, AbstractFormatter> underlying;
 
-	public AbstractFormatter(Function<FormatConfig, Formatter> underlying) {
+	public Formatter(Function<FormatConfig, AbstractFormatter> underlying) {
 		this.underlying = underlying;
 	}
 
 	@Override
-	public Formatter apply(FormatConfig t) {
+	public AbstractFormatter apply(FormatConfig t) {
 		return underlying.apply(t);
 	}
 
-	public AbstractFormatter extend(UnaryOperator<DialectConfig> operator) {
-		return new AbstractFormatter(cfg -> 
-			new Formatter(cfg) {
+	public Formatter extend(UnaryOperator<DialectConfig> operator) {
+		return new Formatter(cfg -> 
+			new AbstractFormatter(cfg) {
 				@Override
 				public DialectConfig dialectConfig() {
 					return operator.apply(
-						AbstractFormatter.this.underlying.apply(cfg).dialectConfig());
+						Formatter.this.underlying.apply(cfg).dialectConfig());
 				}
 			}
 		);

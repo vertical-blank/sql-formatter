@@ -1,8 +1,5 @@
 package com.github.vertical_blank.sqlformatter.core;
 
-
-import java.util.List;
-
 import com.github.vertical_blank.sqlformatter.core.util.JSLikeList;
 
 /**
