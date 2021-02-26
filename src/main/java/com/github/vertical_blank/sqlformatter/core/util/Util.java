@@ -46,6 +46,10 @@ public class Util {
 	public static String repeat(String s, int n) {
 		return Stream.generate(() -> s).limit(n).collect(Collectors.joining());
 	}
+	
+	public static <T> List<T> concat(List<T> l1, List<T> l2) {
+		return Stream.of(l1, l2).flatMap(List::stream).collect(Collectors.toList());
+}
 
 }
 
