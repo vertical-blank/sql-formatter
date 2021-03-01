@@ -30,7 +30,7 @@ public class RegexUtil {
 	}
 
 	public static String createReservedWordRegex(JSLikeList<String> reservedWords) {
-		String reservedWordsPattern = reservedWords.join("|").replaceAll(" ", "\\\\s+");
+		String reservedWordsPattern = new JSLikeList<>(Util.sortByLengthDesc(reservedWords.toList())).join("|").replaceAll(" ", "\\\\s+");
 		return "(?i)" + "^(" + reservedWordsPattern + ")\\b";
 	}
 
