@@ -35,7 +35,8 @@ public class RegexUtil {
 	}
 
 	public static String createWordRegex(JSLikeList<String> specialChars) {
-		return "^([\\w" + specialChars.join("") + "]+)";
+		return
+			"^([\\p{IsAlphabetic}\\p{Mc}\\p{Me}\\p{Mn}\\p{Nd}\\p{Pc}\\p{IsJoin_Control}" + specialChars.join("") + "]+)";
 	}
 
 	public static String createStringRegex(JSLikeList<StringLiteral> stringTypes) {
