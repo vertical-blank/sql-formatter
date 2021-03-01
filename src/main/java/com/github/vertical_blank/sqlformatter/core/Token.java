@@ -9,13 +9,18 @@ public class Token {
 	public final String value;
 	public final String regex;
 	public final String whitespaceBefore;
-	String key;
+	public final String key;
 
-	public Token(TokenTypes type, String value, String regex, String whitespaceBefore) {
+	public Token(TokenTypes type, String value, String regex, String whitespaceBefore, String key) {
 		this.type = type;
 		this.value = value;
 		this.regex = regex;
 		this.whitespaceBefore = whitespaceBefore;
+		this.key = key;
+	}
+
+	public Token(TokenTypes type, String value, String regex, String whitespaceBefore) {
+		this(type, value, regex, null, null);
 	}
 
 	public Token(TokenTypes type, String value, String regex) {
@@ -26,9 +31,17 @@ public class Token {
 		this(type, value, null, null);
 	}
 
+	public Token withWhitespaceBefore(String whitespaceBefore) {
+		return new Token(this.type, this.value, this.regex, whitespaceBefore, this.key);
+	}
+
+	public Token withKey(String key) {
+		return new Token(this.type, this.value, this.regex, this.whitespaceBefore, key);
+	}
+
 	@Override
 	public String toString() {
-		return "type: " + type + ", value: [" + value + "], regex: /" + regex + "/";
+		return "type: " + type + ", value: [" + value + "], regex: /" + regex + "/" + ", key: " + key;
 	}
 
 	private static final Pattern AND = Pattern.compile("^AND$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
