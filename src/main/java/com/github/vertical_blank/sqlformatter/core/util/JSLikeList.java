@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JSLikeList<T> implements Iterable<T> {
 
@@ -57,6 +58,10 @@ public class JSLikeList<T> implements Iterable<T> {
 	@Override
 	public Iterator<T> iterator() {
 		return this.tList.iterator();
+	}
+
+	public Stream<T> stream() {
+		return this.tList.stream();
 	}
 
 	public int size() {
