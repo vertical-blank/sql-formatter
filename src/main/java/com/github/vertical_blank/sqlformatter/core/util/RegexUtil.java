@@ -50,14 +50,7 @@ public class RegexUtil {
 	// 4. single quoted string using '' or \' to escape
 	// 5. national character quoted string using N'' or N\' to escape
 	public static String createStringPattern(JSLikeList<StringLiteral> stringTypes) {
-		Map<StringLiteral, String> patterns = new EnumMap<>(StringLiteral.class);
-		patterns.put(StringLiteral.BackQuote, "((`[^`]*($|`))+)");
-		patterns.put(StringLiteral.Bracket, "((\\[[^\\]]*($|\\]))(\\][^\\]]*($|\\]))*)");
-		patterns.put(StringLiteral.DoubleQuote, "((\"[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*(\"|$))+)");
-		patterns.put(StringLiteral.SingleQuote, "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)");
-		patterns.put(StringLiteral.NSingleQuote, "((N'[^N'\\\\]*(?:\\\\.[^N'\\\\]*)*('|$))+)");
-
-		return stringTypes.map(patterns::get).join("|");
+		return stringTypes.map(StringLiteral.regexMap::get).join("|");
 	}
 
 	public static String createParenRegex(JSLikeList<String> parens) {
