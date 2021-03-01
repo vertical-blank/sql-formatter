@@ -56,5 +56,9 @@ public class Util {
 		return strings.stream().sorted(Comparator.comparingInt(String::length).reversed()).collect(Collectors.toList());
 	}
 
+	public static JSLikeList<String> sortByLengthDesc(JSLikeList<String> strings) {
+		return new JSLikeList<>(strings.stream().sorted(Comparator.comparingInt(String::length).reversed()).collect(Collectors.toList()));
+	}
+
 }
 
