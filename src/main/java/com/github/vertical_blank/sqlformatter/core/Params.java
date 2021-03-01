@@ -54,6 +54,11 @@ public class Params {
 		public Object getByName(String key) {
 			return this.params.get(key);
 		}
+
+		@Override
+		public String toString() {
+			return this.params.toString();
+		}
 	}
 
 	public static class IndexedParamHolder implements Holder {
@@ -75,6 +80,11 @@ public class Params {
 		@Override
 		public Object getByName(String key) {
 			return null;
+		}
+
+		@Override
+		public String toString() {
+			return this.params.toString();
 		}
 	}
 
@@ -120,5 +130,10 @@ public class Params {
 		} else {
 			return params.get();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(this.params);
 	}
 }
