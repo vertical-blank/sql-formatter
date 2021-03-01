@@ -1,6 +1,7 @@
 package com.github.vertical_blank.sqlformatter.core.util;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -49,7 +50,11 @@ public class Util {
 	
 	public static <T> List<T> concat(List<T> l1, List<T> l2) {
 		return Stream.of(l1, l2).flatMap(List::stream).collect(Collectors.toList());
-}
+	}
+
+	public static List<String> sortByLengthDesc(List<String> strings) {
+		return strings.stream().sorted(Comparator.comparingInt(String::length).reversed()).collect(Collectors.toList());
+	}
 
 }
 
