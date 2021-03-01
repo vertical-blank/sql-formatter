@@ -103,7 +103,7 @@ public class Tokenizer {
 				// Advance the string
 				input = input.substring(token.value.length());
 
-				tokens.add(new Token(token.type, token.value, token.regex, whitespaceBefore));
+				tokens.add(token.withWhitespaceBefore(whitespaceBefore));
 			}
 		}
 		return new JSLikeList<>(tokens);
@@ -207,7 +207,7 @@ public class Tokenizer {
 	private Token getPlaceholderTokenWithKey(String input, Pattern regex, java.util.function.Function<String, String> parseKey) {
 		Token token = this.getTokenOnFirstMatch(input, TokenTypes.PLACEHOLDER, regex);
 		if (token != null) {
-			token.key = parseKey.apply(token.value);
+			return token.withKey(parseKey.apply(token.value));
 		}
 		return token;
 	}
