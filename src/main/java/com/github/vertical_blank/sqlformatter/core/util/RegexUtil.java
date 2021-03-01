@@ -1,7 +1,5 @@
 package com.github.vertical_blank.sqlformatter.core.util;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,7 +17,7 @@ public class RegexUtil {
 	}
 
 	public static String createOperatorRegex(JSLikeList<String> multiLetterOperators) {
-		return String.format("^(%s|.)", multiLetterOperators.map(RegexUtil::escapeRegExp).join("|"));
+		return String.format("^(%s|.)", Util.sortByLengthDesc(multiLetterOperators).map(RegexUtil::escapeRegExp).join("|"));
 	}
 
 	public static String createLineCommentRegex(JSLikeList<String> lineCommentTypes) {
@@ -30,7 +28,7 @@ public class RegexUtil {
 	}
 
 	public static String createReservedWordRegex(JSLikeList<String> reservedWords) {
-		String reservedWordsPattern = new JSLikeList<>(Util.sortByLengthDesc(reservedWords.toList())).join("|").replaceAll(" ", "\\\\s+");
+		String reservedWordsPattern = Util.sortByLengthDesc(reservedWords).join("|").replaceAll(" ", "\\\\s+");
 		return "(?i)" + "^(" + reservedWordsPattern + ")\\b";
 	}
 
