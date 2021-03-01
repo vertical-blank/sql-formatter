@@ -319,12 +319,12 @@ public class MariaDbFormatter extends AbstractFormatter {
 						.reservedTopLevelWordsNoIndent(reservedTopLevelWordsNoIndent)
 						.reservedNewlineWords(reservedNewlineWords)
 						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Bracket))
-						.openParens(Collections.singletonList("("))
-						.closeParens(Collections.singletonList(")"))
+						.openParens(Arrays.asList("(", "CASE"))
+						.closeParens(Arrays.asList(")", "END"))
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
-						.namedPlaceholderTypes(Collections.singletonList(":"))
-						.lineCommentTypes(Collections.singletonList("--"))
-						.specialWordChars(Arrays.asList("#", "@"))
+						.namedPlaceholderTypes(Collections.emptyList())
+						.lineCommentTypes(Arrays.asList("--", "#"))
+						.specialWordChars(Arrays.asList("@"))
 						.operators(Arrays.asList(":=", "<<", ">>", "!=", "<>", "<=>", "&&", "||")).build();
 	}
 
