@@ -15,9 +15,6 @@ object StandardSqlFormatterTest: Spek({
   val formatter = SqlFormatter.standard()
 
   describe("StandardSqlFormatter") { with(formatter) {
-
-    println(format(",SELECT"))
-
     behavesLikeSqlFormatter(formatter);
     supportsCase(formatter);
     supportsCreateTable(formatter);

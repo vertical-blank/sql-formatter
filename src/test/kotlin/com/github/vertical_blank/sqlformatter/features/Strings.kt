@@ -70,7 +70,6 @@ fun Suite.supportsStrings(formatter: SqlFormatter.Formatter, stringTypes: List<S
 
   if (stringTypes.contains(StringLiteral.NSingleQuote)) {
     it("supports T-SQL unicode strings") {
-      println(formatter.tokenize("N'foo JOIN bar'"))
       expect(format("N'foo JOIN bar'")).toBe("N'foo JOIN bar'");
       expect(format("N'foo \\' JOIN bar'")).toBe("N'foo \\' JOIN bar'");
     }
