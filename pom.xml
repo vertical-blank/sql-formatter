@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.vertical-blank</groupId>
   <artifactId>sql-formatter</artifactId>
@@ -56,19 +55,12 @@
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-      <version>3.0.7</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.openjdk.jmh</groupId>
       <artifactId>jmh-generator-annprocess</artifactId>
       <version>1.19</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -102,10 +94,10 @@
     </dependency>
 
     <dependency>
-        <groupId>org.amshove.kluent</groupId>
-        <artifactId>kluent</artifactId>
-        <version>1.65</version>
-        <scope>test</scope>
+      <groupId>org.amshove.kluent</groupId>
+      <artifactId>kluent</artifactId>
+      <version>1.65</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
@@ -171,36 +163,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
-        <configuration>
-          <excludes>
-            <exclude/>
-          </excludes>
-          <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
-            <disable>false</disable>
-            <version>3.0</version>
-            <usePhrasedFileName>false</usePhrasedFileName>
-            <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
-            <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
-            <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
-          </statelessTestsetReporter>
-          <consoleOutputReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
-            <disable>false</disable>
-            <encoding>UTF-8</encoding>
-            <usePhrasedFileName>false</usePhrasedFileName>
-          </consoleOutputReporter>
-          <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
-            <disable>false</disable>
-            <usePhrasedFileName>false</usePhrasedFileName>
-            <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
-            <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
-          </statelessTestsetInfoReporter>
-        </configuration>
-      </plugin>
-
-      <plugin>
         <groupId>de.sormuras.junit</groupId>
         <artifactId>junit-platform-maven-plugin</artifactId>
         <version>1.1.0</version>
@@ -219,37 +181,37 @@
       </plugin>
 
       <plugin>
-          <artifactId>kotlin-maven-plugin</artifactId>
-          <groupId>org.jetbrains.kotlin</groupId>
-          <version>${kotlin.version}</version>
-          <executions>
-              <execution>
-                  <id>test-compile</id>
-                  <phase>test-compile</phase>
-                  <goals>
-                      <goal>test-compile</goal>
-                  </goals>
-              </execution>
-          </executions>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.0.0</version>
-          <executions>
-              <execution>
-                  <phase>generate-test-sources</phase>
-                  <goals>
-                      <goal>add-test-source</goal>
-                  </goals>
-                  <configuration>
-                      <sources>
-                          <source>src/test/kotlin</source>
-                      </sources>
-                  </configuration>
-              </execution>
-          </executions>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/test/kotlin</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
@@ -257,18 +219,27 @@
         <artifactId>spotless-maven-plugin</artifactId>
         <version>2.7.0</version>
         <configuration>
-            <java>
-                <includes>
-                    <include>src/main/java/**/*.java</include>
-                    <include>src/test/java/**/*.java</include>
-                </includes>
-                <googleJavaFormat>
-                    <style>GOOGLE</style>
-                </googleJavaFormat>
-            </java>
+          <java>
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+            </includes>
+            <googleJavaFormat>
+              <style></style>
+            </googleJavaFormat>
+          </java>
+          <kotlin>
+            <includes>
+              <include>src/test/kotlin/**/*.kt</include>
+            </includes>
+            <ktfmt>
+              <version>0.21</version>
+              <style>DEFAULT</style>
+            </ktfmt>
+          </kotlin>
         </configuration>
         <executions>
-            <!-- <execution>
+          <!-- <execution>
                 <phase>compile</phase>
                 <id>google-check-style</id>
                 <goals>

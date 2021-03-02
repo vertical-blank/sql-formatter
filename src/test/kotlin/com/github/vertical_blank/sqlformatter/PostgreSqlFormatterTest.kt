@@ -1,102 +1,115 @@
 package com.github.vertical_blank.sqlformatter
 
-import com.github.vertical_blank.sqlformatter.core.FormatConfig
-
+import com.github.vertical_blank.sqlformatter.enums.StringLiteral
+import com.github.vertical_blank.sqlformatter.features.supportsAlterTable
+import com.github.vertical_blank.sqlformatter.features.supportsBetween
+import com.github.vertical_blank.sqlformatter.features.supportsCase
+import com.github.vertical_blank.sqlformatter.features.supportsCreateTable
+import com.github.vertical_blank.sqlformatter.features.supportsJoin
+import com.github.vertical_blank.sqlformatter.features.supportsOperators
+import com.github.vertical_blank.sqlformatter.features.supportsSchema
+import com.github.vertical_blank.sqlformatter.features.supportsStrings
+import com.github.vertical_blank.sqlformatter.languages.Dialect
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import kotlin.test.assertTrue
-import kotlin.test.assertEquals
-import org.amshove.kluent.*
-import com.github.vertical_blank.sqlformatter.features.*
-import com.github.vertical_blank.sqlformatter.languages.Dialect
 
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral
+object PostgreSqlFormatterTest :
+    Spek({
+      val formatter = SqlFormatter.of(Dialect.PostgreSql)
 
-object PostgreSqlFormatterTest: Spek({
-  val formatter = SqlFormatter.of(Dialect.PostgreSql)
+      describe("PostgreSqlFormatter") {
+        with(formatter) {
+          behavesLikeSqlFormatter(formatter)
+          supportsCase(formatter)
+          supportsCreateTable(formatter)
+          supportsAlterTable(formatter)
+          supportsStrings(
+              formatter,
+              listOf(
+                  StringLiteral.DoubleQuote,
+                  StringLiteral.SingleQuote,
+                  StringLiteral.UDoubleQuote,
+                  StringLiteral.USingleQuote,
+                  StringLiteral.Dollar))
+          supportsBetween(formatter)
+          supportsSchema(formatter)
+          supportsOperators(
+              formatter,
+              listOf(
+                  "%",
+                  "^",
+                  "!",
+                  "!!",
+                  "@",
+                  "!=",
+                  "&",
+                  "|",
+                  "~",
+                  "#",
+                  "<<",
+                  ">>",
+                  "||/",
+                  "|/",
+                  "::",
+                  "->>",
+                  "->",
+                  "~~*",
+                  "~~",
+                  "!~~*",
+                  "!~~",
+                  "~*",
+                  "!~*",
+                  "!~",
+              ))
+          supportsJoin(formatter)
 
-  describe("PostgreSqlFormatter") { with(formatter) {
-    behavesLikeSqlFormatter(formatter);
-    supportsCase(formatter);
-    supportsCreateTable(formatter);
-    supportsAlterTable(formatter);
-    supportsStrings(formatter, listOf(StringLiteral.DoubleQuote,StringLiteral.SingleQuote, StringLiteral.UDoubleQuote, StringLiteral.USingleQuote, StringLiteral.Dollar));
-    supportsBetween(formatter);
-    supportsSchema(formatter);
-    supportsOperators(formatter, listOf(
-      "%",
-      "^",
-      "!",
-      "!!",
-      "@",
-      "!=",
-      "&",
-      "|",
-      "~",
-      "#",
-      "<<",
-      ">>",
-      "||/",
-      "|/",
-      "::",
-      "->>",
-      "->",
-      "~~*",
-      "~~",
-      "!~~*",
-      "!~~",
-      "~*",
-      "!~*",
-      "!~",
-    ));
-    supportsJoin(formatter);
-
-    it("supports \$n placeholders") {
-      val result = format("SELECT \$1, \$2 FROM tbl");
-      expect(result).toBe("""
+          it("supports \$n placeholders") {
+            val result = format("SELECT \$1, \$2 FROM tbl")
+            expect(result)
+                .toBe(
+                    """
         SELECT
           $1,
           $2
         FROM
           tbl
-      """.trimIndent());
-    }
-  
-    it("replaces \$n placeholders with param values") {
-      val result = format(
-        "SELECT \$1, \$2 FROM tbl", 
-        mapOf(
-          "1" to """"variable value"""",
-          "2" to """"blah""""
-        ))
-      expect(result).toBe("""
+                    """.trimIndent())
+          }
+
+          it("replaces \$n placeholders with param values") {
+            val result =
+                format(
+                    "SELECT \$1, \$2 FROM tbl",
+                    mapOf("1" to """"variable value"""", "2" to """"blah""""))
+            expect(result)
+                .toBe(
+                    """
         SELECT
           "variable value",
           "blah"
         FROM
           tbl
-      """.trimIndent());
-    }
-  
-    it("supports :name placeholders") {
-      expect(format("foo = :bar")).toBe("foo = :bar");
-    }
-  
-    it("replaces :name placeholders with param values") {
-      expect(
-        format(
-          """foo = :bar AND :"field" = 10 OR col = :'val'""", 
-          mapOf(
-            "bar" to "'Hello'",
-            "field" to "some_col",
-            "val" to 7,
-          ))
-      ).toBe("""
+                    """.trimIndent())
+          }
+
+          it("supports :name placeholders") { expect(format("foo = :bar")).toBe("foo = :bar") }
+
+          it("replaces :name placeholders with param values") {
+            expect(
+                    format(
+                        """foo = :bar AND :"field" = 10 OR col = :'val'""",
+                        mapOf(
+                            "bar" to "'Hello'",
+                            "field" to "some_col",
+                            "val" to 7,
+                        )))
+                .toBe(
+                    """
         foo = 'Hello'
         AND some_col = 10
         OR col = 7
-      """.trimIndent());
-    }
-  }}
-
-})
+                    """.trimIndent())
+          }
+        }
+      }
+    })

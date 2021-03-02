@@ -4,6 +4,5 @@ import com.github.vertical_blank.sqlformatter.core.DialectConfig;
 
 public interface DialectConfigurator {
 
-	abstract DialectConfig dialectConfig();
-
+  abstract DialectConfig dialectConfig();
 }

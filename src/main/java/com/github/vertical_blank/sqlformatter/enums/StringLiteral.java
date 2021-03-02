@@ -25,13 +25,12 @@ public enum StringLiteral {
   Dollar("((?<tag>\\$\\w*\\$)[\\s\\S]*?(?:\\k<tag>|$))"),
   ;
 
-  public static final Map<StringLiteral, String> regexMap = Arrays.stream(StringLiteral.values())
-    .collect(Collectors.toMap(e -> e, e -> e.regex));
+  public static final Map<StringLiteral, String> regexMap =
+      Arrays.stream(StringLiteral.values()).collect(Collectors.toMap(e -> e, e -> e.regex));
 
   public final String regex;
 
   StringLiteral(String regex) {
     this.regex = regex;
   }
-
 }
