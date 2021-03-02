@@ -254,9 +254,10 @@ public class TSqlFormatter extends AbstractFormatter {
 						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.NSingleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Bracket))
 						.openParens(Arrays.asList("(", "CASE"))
 						.closeParens(Arrays.asList(")", "END"))
-						.indexedPlaceholderTypes(Collections.singletonList("?"))
-						.namedPlaceholderTypes(Arrays.asList("@", ":"))
-						.lineCommentTypes(Arrays.asList("#", "--"))
+						.indexedPlaceholderTypes(Collections.emptyList())
+						.namedPlaceholderTypes(Arrays.asList("@"))
+						.lineCommentTypes(Collections.singletonList("--"))
+						.specialWordChars(Arrays.asList("#", "@"))
 						.operators(Arrays.asList(
 							">=",
 							"<=",
