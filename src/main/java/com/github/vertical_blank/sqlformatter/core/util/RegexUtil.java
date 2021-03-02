@@ -28,6 +28,9 @@ public class RegexUtil {
 	}
 
 	public static String createReservedWordRegex(JSLikeList<String> reservedWords) {
+		if (reservedWords.isEmpty()) {
+			return "^\b$";
+		}
 		String reservedWordsPattern = Util.sortByLengthDesc(reservedWords).join("|").replaceAll(" ", "\\\\s+");
 		return "(?i)" + "^(" + reservedWordsPattern + ")\\b";
 	}
