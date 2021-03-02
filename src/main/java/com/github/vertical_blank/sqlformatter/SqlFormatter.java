@@ -1,15 +1,15 @@
 package com.github.vertical_blank.sqlformatter;
 
 import com.github.vertical_blank.sqlformatter.core.AbstractFormatter;
+import com.github.vertical_blank.sqlformatter.core.DialectConfig;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
 import com.github.vertical_blank.sqlformatter.core.Params;
 import com.github.vertical_blank.sqlformatter.languages.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class SqlFormatter {
 	/**
@@ -21,70 +21,115 @@ public class SqlFormatter {
 	 * @return {String}
 	 */
 	public static String format(String query, FormatConfig cfg) {
-		return standard().apply(cfg).format(query);
+		return standard().format(query, cfg);
 	}
 
 	public static String format(String query, String indent, List<?> params) {
-		return format(
-			query, 
-			FormatConfig.builder()
-				.indent(indent)
-				.params(Params.Holder.of(params))
-				.build());
+		return standard().format(query, indent, params);
 	}
 	public static String format(String query, List<?> params) {
-		return format(query,
-			FormatConfig.builder()
-				.params(Params.Holder.of(params))
-				.build());
+		return standard().format(query, params);
 	}
 	public static String format(String query, String indent, Map<String, ?> params) {
-		return format(query, FormatConfig.builder()
-			.indent(indent)
-			.params(Params.Holder.of(params))
-			.build());
+		return standard().format(query, indent, params);
 	}
 	public static String format(String query, Map<String, ?> params) {
-		return format(query, FormatConfig.builder()
-			.params(Params.Holder.of(params))
-			.build());
+		return standard().format(query, params);
 	}
 	public static String format(String query, String indent) {
-		return format(query, FormatConfig.builder()
-		.indent(indent)
-		.build());
+		return standard().format(query, indent);
 	}
 	public static String format(String query) {
-		return format(query, FormatConfig.builder().build());
+		return standard().format(query);
+	}
+
+	public Formatter modify(UnaryOperator<DialectConfig> operator) {
+		return standard().modify(operator);
 	}
 
 	public static Formatter standard() {
-		return of("sql");
-	}
-
-	private static final Map<String, Function<FormatConfig, AbstractFormatter>> formatters;
-
-	static {
-		Map<String, Function<FormatConfig, AbstractFormatter>> map = new HashMap<>();
-		map.put("db2", Db2Formatter::new);
-		map.put("mariadb", MariaDbFormatter::new);
-		map.put("mysql", MySqlFormatter::new);
-		map.put("n1ql", N1qlFormatter::new);
-		map.put("pl/sql", PlSqlFormatter::new);
-		map.put("plsql", PlSqlFormatter::new);
-		map.put("postgresql", PostgreSqlFormatter::new);
-		map.put("redshift", RedshiftFormatter::new);
-		map.put("spark", SparkSqlFormatter::new);
-		map.put("sql", StandardSqlFormatter::new);
-		map.put("tsql", TSqlFormatter::new);
-
-		formatters = map;
+		return of(Dialect.StandardSql);
 	}
 
 	public static Formatter of(String name) {
-		return Optional.ofNullable(formatters.get(name))
+		return Dialect.nameOf(name)
 			.map(Formatter::new)
 			.orElseThrow(() -> new RuntimeException("Unsupported SQL dialect: " + name));
 	}
 
+	public static Formatter of(Dialect dialect) {
+		return new Formatter(dialect);
+	}
+
+	public static class Formatter {
+
+		private final Function<FormatConfig, AbstractFormatter> underlying;
+
+		private Formatter(Function<FormatConfig, AbstractFormatter> underlying) {
+			this.underlying = underlying;
+		}
+		private Formatter(Dialect dialect) {
+			this(dialect.func);
+		}
+
+		public String format(String query, FormatConfig cfg) {
+			return this.underlying.apply(cfg).format(query);
+		}
+
+		public String format(String query, String indent, List<?> params) {
+			return format(
+							query,
+							FormatConfig.builder()
+											.indent(indent)
+											.params(Params.Holder.of(params))
+											.build());
+		}
+		public String format(String query, List<?> params) {
+			return format(
+							query,
+							FormatConfig.builder()
+											.params(Params.Holder.of(params))
+											.build());
+		}
+
+		public String format(String query, String indent, Map<String, ?> params) {
+			return format(
+							query,
+							FormatConfig.builder()
+											.indent(indent)
+											.params(Params.Holder.of(params))
+											.build());
+		}
+		public String format(String query, Map<String, ?> params) {
+			return format(
+							query,
+							FormatConfig.builder()
+											.params(Params.Holder.of(params))
+											.build());
+		}
+
+		public String format(String query, String indent) {
+			return format(
+							query,
+							FormatConfig.builder()
+											.indent(indent)
+											.build());
+		}
+		public String format(String query) {
+			return format(
+							query,
+							FormatConfig.builder().build());
+		}
+
+		public Formatter modify(UnaryOperator<DialectConfig> operator) {
+			return new Formatter(cfg -> 
+				new AbstractFormatter(cfg) {
+					@Override
+					public DialectConfig dialectConfig() {
+						return operator.apply(Formatter.this.underlying.apply(cfg).dialectConfig());
+					}
+				}
+			);
+		}
+	}
 }
