@@ -21,6 +21,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -e -B package --file pom.xml
     - name: Codecov
       uses: codecov/codecov-action@v1.0.15
