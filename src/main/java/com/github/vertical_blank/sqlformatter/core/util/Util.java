@@ -58,10 +58,6 @@ public class Util {
 		return Stream.of(l1, l2).flatMap(List::stream).collect(Collectors.toList());
 	}
 
-	public static List<String> sortByLengthDesc(List<String> strings) {
-		return strings.stream().sorted(Comparator.comparingInt(String::length).reversed()).collect(Collectors.toList());
-	}
-
 	public static JSLikeList<String> sortByLengthDesc(JSLikeList<String> strings) {
 		return new JSLikeList<>(strings.stream().sorted(Comparator.comparingInt(String::length).reversed()).collect(Collectors.toList()));
 	}
