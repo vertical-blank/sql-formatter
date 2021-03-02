@@ -30,7 +30,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <kotlin.version>1.4.30</kotlin.version>
+    <kotlin.version>1.4.31</kotlin.version>
+    <spek_version>2.0.15</spek_version>
   </properties>
 
   <dependencyManagement>
@@ -67,6 +68,46 @@
       <version>1.19</version>
       <scope>test</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spekframework.spek2</groupId>
+      <artifactId>spek-dsl-jvm</artifactId>
+      <version>${spek_version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spekframework.spek2</groupId>
+      <artifactId>spek-runner-junit5</artifactId>
+      <version>${spek_version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
+      <version>1.1.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.amshove.kluent</groupId>
+        <artifactId>kluent</artifactId>
+        <version>1.65</version>
+        <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -79,21 +120,6 @@
     </extensions>
 
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.12.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <!-- <goal>addSources</goal> -->
-              <goal>addTestSources</goal>
-              <!-- <goal>compile</goal> -->
-              <goal>compileTests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -190,6 +216,40 @@
             </additionalOptions>
           </javaOptions>
         </configuration>
+      </plugin>
+
+      <plugin>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <version>${kotlin.version}</version>
+          <executions>
+              <execution>
+                  <id>test-compile</id>
+                  <phase>test-compile</phase>
+                  <goals>
+                      <goal>test-compile</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+              <execution>
+                  <phase>generate-test-sources</phase>
+                  <goals>
+                      <goal>add-test-source</goal>
+                  </goals>
+                  <configuration>
+                      <sources>
+                          <source>src/test/kotlin</source>
+                      </sources>
+                  </configuration>
+              </execution>
+          </executions>
       </plugin>
 
       <plugin>
