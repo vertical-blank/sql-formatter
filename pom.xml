@@ -172,8 +172,6 @@
           <javaOptions>
             <inheritIO>true</inheritIO>
             <additionalOptions>
-              <additionalOption>--show-version</additionalOption>
-              <additionalOption>--show-module-resolution</additionalOption>
               <jacoco>${jacoco.java.option}</jacoco>
             </additionalOptions>
           </javaOptions>
