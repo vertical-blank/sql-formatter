@@ -382,11 +382,11 @@ public class RedshiftFormatter extends AbstractFormatter {
 						.reservedTopLevelWords(reservedTopLevelWords)
 						.reservedTopLevelWordsNoIndent(reservedTopLevelWordsNoIndent)
 						.reservedNewlineWords(reservedNewlineWords)
-						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Bracket))
+						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote))
 						.openParens(Collections.singletonList("("))
 						.closeParens(Collections.singletonList(")"))
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
-						.namedPlaceholderTypes(Collections.singletonList(":"))
+						.namedPlaceholderTypes(Arrays.asList("@", "#", "$"))
 						.lineCommentTypes(Collections.singletonList("--"))
 						.specialWordChars(Arrays.asList("#", "@"))
 						.operators(Arrays.asList("|/", "||/", "<<", ">>", "!=", "||")).build();

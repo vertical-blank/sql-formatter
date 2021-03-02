@@ -375,12 +375,12 @@ public class StandardSqlFormatter extends AbstractFormatter {
 						.reservedTopLevelWords(reservedTopLevelWords)
 						.reservedTopLevelWordsNoIndent(reservedTopLevelWordsNoIndent)
 						.reservedNewlineWords(reservedNewlineWords)
-						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.NSingleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Bracket))
+						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote))
 						.openParens(Arrays.asList("(", "CASE"))
 						.closeParens(Arrays.asList(")", "END"))
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
-						.namedPlaceholderTypes(Arrays.asList("@", ":"))
-						.lineCommentTypes(Arrays.asList("#", "--")).build();
+						.namedPlaceholderTypes(Collections.emptyList())
+						.lineCommentTypes(Arrays.asList("--")).build();
 	}
 
 	public StandardSqlFormatter(FormatConfig cfg) {

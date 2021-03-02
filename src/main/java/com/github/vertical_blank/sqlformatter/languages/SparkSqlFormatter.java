@@ -249,13 +249,12 @@ public class SparkSqlFormatter extends AbstractFormatter {
 						.reservedTopLevelWords(reservedTopLevelWords)
 						.reservedTopLevelWordsNoIndent(reservedTopLevelWordsNoIndent)
 						.reservedNewlineWords(reservedNewlineWords)
-						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Bracket))
-						.openParens(Collections.singletonList("("))
-						.closeParens(Collections.singletonList(")"))
+						.stringTypes(Arrays.asList(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote, StringLiteral.Brace))
+						.openParens(Arrays.asList("(", "CASE"))
+						.closeParens(Arrays.asList(")", "END"))
 						.indexedPlaceholderTypes(Collections.singletonList("?"))
-						.namedPlaceholderTypes(Collections.singletonList(":"))
+						.namedPlaceholderTypes(Collections.singletonList("$"))
 						.lineCommentTypes(Collections.singletonList("--"))
-						.specialWordChars(Arrays.asList("#", "@"))
 						.operators(Arrays.asList("!=", "<=>", "&&", "||", "==")).build();
 	}
 
