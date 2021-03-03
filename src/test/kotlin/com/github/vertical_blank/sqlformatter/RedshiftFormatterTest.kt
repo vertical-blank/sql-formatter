@@ -10,6 +10,7 @@ import com.github.vertical_blank.sqlformatter.features.supportsSchema
 import com.github.vertical_blank.sqlformatter.features.supportsStrings
 import com.github.vertical_blank.sqlformatter.languages.Dialect
 import org.spekframework.spek2.Spek
+import org.spekframework.spek2.dsl.Skip
 import org.spekframework.spek2.style.specification.describe
 
 object RedshiftFormatterTest :
@@ -76,7 +77,7 @@ object RedshiftFormatterTest :
                     """.trimIndent())
           }
 
-          xit("formats DISTKEY and SORTKEY after CREATE TABLE") {
+          it("formats DISTKEY and SORTKEY after CREATE TABLE", skip = Skip.Yes()) {
             expect(
                     format(
                         "CREATE TABLE items (a INT PRIMARY KEY, b TEXT, c INT NOT NULL, d INT NOT NULL) DISTKEY(created_at) SORTKEY(created_at);"))
