@@ -1,5 +1,8 @@
 package com.github.vertical_blank.sqlformatter.core;
 
+import java.util.List;
+import java.util.Map;
+
 /** Configurations for formatting. */
 public class FormatConfig {
 
@@ -69,6 +72,22 @@ public class FormatConfig {
     public FormatConfigBuilder params(Params.Holder params) {
       this.params = params;
       return this;
+    }
+
+    /**
+     * @param params Collection of params for placeholder replacement
+     * @return This
+     */
+    public FormatConfigBuilder params(Map<String, ?> params) {
+      return this.params(Params.Holder.of(params));
+    }
+
+    /**
+     * @param params Collection of params for placeholder replacement
+     * @return This
+     */
+    public FormatConfigBuilder params(List<?> params) {
+      return this.params(Params.Holder.of(params));
     }
 
     /**
