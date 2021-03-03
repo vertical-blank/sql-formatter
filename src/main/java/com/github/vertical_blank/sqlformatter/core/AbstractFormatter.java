@@ -142,13 +142,14 @@ public abstract class AbstractFormatter implements DialectConfigurator {
     return string.replaceAll("\\s+", " ");
   }
 
+  private static final Set<TokenTypes> preserveWhitespaceFor =
+      EnumSet.of(TokenTypes.OPEN_PAREN, TokenTypes.LINE_COMMENT, TokenTypes.OPERATOR);
+
   // Opening parentheses increase the block indent level and start a new line
   private String formatOpeningParentheses(Token token, String query) {
     // Take out the preceding space unless there was whitespace there in the original query
     // or another opening parens or line comment
-    Set<TokenTypes> preserveWhitespaceFor =
-        EnumSet.of(TokenTypes.OPEN_PAREN, TokenTypes.LINE_COMMENT, TokenTypes.OPERATOR);
-    if (token.whitespaceBefore.length() == 0
+    if (token.whitespaceBefore.isEmpty()
         && !this.tokenLookBehind().map(t -> preserveWhitespaceFor.contains(t.type)).orElse(false)) {
       query = Util.trimSpacesEnd(query);
     }
