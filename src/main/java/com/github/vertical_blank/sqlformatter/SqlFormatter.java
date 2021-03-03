@@ -47,7 +47,7 @@ public class SqlFormatter {
     return standard().format(query);
   }
 
-  public Formatter modify(UnaryOperator<DialectConfig> operator) {
+  public static Formatter modify(UnaryOperator<DialectConfig> operator) {
     return standard().modify(operator);
   }
 
