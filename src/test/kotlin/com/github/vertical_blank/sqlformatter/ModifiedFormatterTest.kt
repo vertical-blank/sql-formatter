@@ -10,7 +10,7 @@ object ModifiedFormatterTest :
           {
             val result =
                 SqlFormatter.standard()
-                    .modify { it.plusOperators("=>") }
+                    .extend { it.plusOperators("=>") }
                     .format("SELECT * FROM TABLE WHERE A => 4")
             expect(result)
                 .toBe(
@@ -27,7 +27,7 @@ object ModifiedFormatterTest :
         it("With := operator") {
           val result =
               SqlFormatter.standard()
-                  .modify { it.plusOperators(":=") }
+                  .extend { it.plusOperators(":=") }
                   .format("SELECT * FROM TABLE WHERE A := 4")
           expect(result)
               .toBe(

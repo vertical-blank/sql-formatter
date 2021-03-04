@@ -64,7 +64,7 @@ public class SqlFormatterTest {
   @Test
   public void withFatArrow() {
     String format =
-        SqlFormatter.modify(config -> config.plusOperators("=>"))
+        SqlFormatter.extend(config -> config.plusOperators("=>"))
             .format("SELECT * FROM tbl WHERE foo => '123'");
     assertEquals(
         format, "SELECT\n" + "  *\n" + "FROM\n" + "  tbl\n" + "WHERE\n" + "  foo => '123'");
