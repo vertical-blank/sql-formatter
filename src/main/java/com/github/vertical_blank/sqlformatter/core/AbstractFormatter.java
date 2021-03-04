@@ -143,7 +143,11 @@ public abstract class AbstractFormatter implements DialectConfigurator {
   }
 
   private static final Set<TokenTypes> preserveWhitespaceFor =
-      EnumSet.of(TokenTypes.OPEN_PAREN, TokenTypes.LINE_COMMENT, TokenTypes.OPERATOR);
+      EnumSet.of(
+          TokenTypes.OPEN_PAREN,
+          TokenTypes.LINE_COMMENT,
+          TokenTypes.OPERATOR,
+          TokenTypes.RESERVED_NEWLINE);
 
   // Opening parentheses increase the block indent level and start a new line
   private String formatOpeningParentheses(Token token, String query) {
