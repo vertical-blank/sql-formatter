@@ -237,13 +237,12 @@
           </kotlin>
         </configuration>
         <executions>
-          <!-- <execution>
-                <phase>compile</phase>
-                <id>google-check-style</id>
-                <goals>
-                    <goal>check</goal>
-                </goals>
-            </execution> -->
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            </execution>
         </executions>
       </plugin>
 
