@@ -150,7 +150,9 @@ public abstract class AbstractFormatter implements DialectConfigurator {
     // Take out the preceding space unless there was whitespace there in the original query
     // or another opening parens or line comment
     if (token.whitespaceBefore.isEmpty()
-        && !this.tokenLookBehind().map(t -> preserveWhitespaceFor.contains(t.type)).orElse(false)) {
+        && !Optional.ofNullable(this.tokenLookBehind())
+            .map(t -> preserveWhitespaceFor.contains(t.type))
+            .orElse(false)) {
       query = Util.trimSpacesEnd(query);
     }
     query += this.show(token);
@@ -234,19 +236,19 @@ public abstract class AbstractFormatter implements DialectConfigurator {
     return query + this.indentation.getIndent();
   }
 
-  protected Optional<Token> tokenLookBehind() {
+  protected Token tokenLookBehind() {
     return this.tokenLookBehind(1);
   }
 
-  protected Optional<Token> tokenLookBehind(int n) {
+  protected Token tokenLookBehind(int n) {
     return this.tokens.get(this.index - n);
   }
 
-  protected Optional<Token> tokenLookAhead() {
+  protected Token tokenLookAhead() {
     return this.tokenLookAhead(1);
   }
 
-  protected Optional<Token> tokenLookAhead(int n) {
+  protected Token tokenLookAhead(int n) {
     return this.tokens.get(this.index + n);
   }
 }

@@ -47,14 +47,14 @@ public class JSLikeList<T> implements Iterable<T> {
     return this.tList == null || this.tList.isEmpty();
   }
 
-  public Optional<T> get(int index) {
+  public T get(int index) {
     if (index < 0) {
-      return Optional.empty();
+      return null;
     }
     if (tList.size() <= index) {
-      return Optional.empty();
+      return null;
     }
-    return Optional.of(this.tList.get(index));
+    return this.tList.get(index);
   }
 
   @Override

@@ -261,7 +261,7 @@ public class SparkSqlFormatter extends AbstractFormatter {
   public Token tokenOverride(Token token) {
     // Fix cases where names are ambiguously keywords or functions
     if (Token.isWindow(token)) {
-      Token aheadToken = this.tokenLookAhead().get();
+      Token aheadToken = this.tokenLookAhead();
       if (aheadToken != null && aheadToken.type == TokenTypes.OPEN_PAREN) {
         // This is a function call, treat it as a reserved word
         return new Token(TokenTypes.RESERVED, token.value);
@@ -270,7 +270,7 @@ public class SparkSqlFormatter extends AbstractFormatter {
 
     // Fix cases where names are ambiguously keywords or properties
     if (Token.isEnd(token)) {
-      Token backToken = this.tokenLookBehind().get();
+      Token backToken = this.tokenLookBehind();
       if (backToken != null
           && backToken.type == TokenTypes.OPERATOR
           && backToken.value.equals(".")) {

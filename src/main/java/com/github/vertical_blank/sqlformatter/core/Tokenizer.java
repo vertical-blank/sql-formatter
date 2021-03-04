@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tokenizer {
-  private final Pattern WHITESPACE_PATTERN;
+  // private final Pattern WHITESPACE_PATTERN;
   private final Pattern NUMBER_PATTERN;
   private final Pattern OPERATOR_PATTERN;
 
@@ -44,7 +44,7 @@ public class Tokenizer {
    *     Special chars that can be found inside of words, like @ and #
    */
   public Tokenizer(DialectConfig cfg) {
-    this.WHITESPACE_PATTERN = Pattern.compile("^(\\s+)");
+    // this.WHITESPACE_PATTERN = Pattern.compile("^(\\s+)");
     this.NUMBER_PATTERN =
         Pattern.compile(
             "^((-\\s*)?[0-9]+(\\.[0-9]+)?([eE]-?[0-9]+(\\.[0-9]+)?)?|0x[0-9a-fA-F]+|0b[01]+)\\b");
@@ -103,12 +103,13 @@ public class Tokenizer {
     Token token = null;
 
     // Keep processing the string until it is empty
-    while (input.length() != 0) {
+    while (!input.isEmpty()) {
       // grab any preceding whitespace
-      String whitespaceBefore = this.getWhitespace(input);
-      input = input.substring(whitespaceBefore.length());
+      String[] findBeforeWhitespace = findBeforeWhitespace(input);
+      String whitespaceBefore = findBeforeWhitespace[0];
+      input = findBeforeWhitespace[1];
 
-      if (input.length() != 0) {
+      if (!input.isEmpty()) {
         // Get the next token and the token type
         token = this.getNextToken(input, token);
         // Advance the string
@@ -120,10 +121,22 @@ public class Tokenizer {
     return new JSLikeList<>(tokens);
   }
 
-  private String getWhitespace(String input) {
-    String firstMatch = getFirstMatch(input, this.WHITESPACE_PATTERN);
-    return firstMatch != null ? firstMatch : "";
+  private String[] findBeforeWhitespace(String input) {
+    int index = 0;
+    char[] chars = input.toCharArray();
+    int beforeLength = chars.length;
+    while (index != beforeLength && Character.isWhitespace(chars[index])) {
+      index++;
+    }
+    return new String[] {
+      new String(chars, 0, index), new String(chars, index, beforeLength - index)
+    };
   }
+
+  // private String getWhitespace(String input) {
+  //   String firstMatch = getFirstMatch(input, this.WHITESPACE_PATTERN);
+  //   return firstMatch != null ? firstMatch : "";
+  // }
 
   private Token getNextToken(String input, Token previousToken) {
     return Util.firstNotnull(

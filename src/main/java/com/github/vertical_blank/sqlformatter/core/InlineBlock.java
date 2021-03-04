@@ -57,7 +57,7 @@ class InlineBlock {
     int level = 0;
 
     for (int i = index; i < tokens.size(); i++) {
-      Token token = tokens.get(i).get();
+      Token token = tokens.get(i);
       length += token.value.length();
 
       // Overran max length
