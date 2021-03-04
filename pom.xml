@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.vertical-blank</groupId>
   <artifactId>sql-formatter</artifactId>
-  <version>1.0.3</version>
+  <version>2.0.0-beta1</version>
   <packaging>jar</packaging>
   <name>sql-formatter</name>
   <description>Simple SQL formatter without dependencies.</description>
@@ -38,7 +38,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.4.2</version>
+        <version>5.7.1</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -165,7 +165,7 @@
       <plugin>
         <groupId>de.sormuras.junit</groupId>
         <artifactId>junit-platform-maven-plugin</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.2</version>
         <extensions>true</extensions>
         <configuration>
           <executor>JAVA</executor>
