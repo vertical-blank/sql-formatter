@@ -15,9 +15,8 @@ public class SqlFormatter {
    * FormatConfig whitespaces in a query to make it easier to read.
    *
    * @param query sql
-   * @param cfg cfg.indent Characters used for indentation, default is " " (2 spaces) cfg.params
-   *     Collection of params for placeholder replacement
-   * @return {String}
+   * @param cfg FormatConfig
+   * @return Formatted query
    */
   public static String format(String query, FormatConfig cfg) {
     return standard().format(query, cfg);
