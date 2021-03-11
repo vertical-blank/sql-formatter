@@ -3,7 +3,6 @@ package com.github.vertical_blank.sqlformatter.languages;
 import com.github.vertical_blank.sqlformatter.core.AbstractFormatter;
 import com.github.vertical_blank.sqlformatter.core.DialectConfig;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -383,7 +382,7 @@ public class RedshiftFormatter extends AbstractFormatter {
         .reservedNewlineWords(reservedNewlineWords)
         .stringTypes(
             Arrays.asList(
-                StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote))
+                StringLiteral.DOUBLE_QUOTE, StringLiteral.SINGLE_QUOTE, StringLiteral.BACK_QUOTE))
         .openParens(Collections.singletonList("("))
         .closeParens(Collections.singletonList(")"))
         .indexedPlaceholderTypes(Collections.singletonList("?"))

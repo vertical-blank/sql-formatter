@@ -1,7 +1,6 @@
 package com.github.vertical_blank.sqlformatter.core;
 
 import com.github.vertical_blank.sqlformatter.core.util.Util;
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class DialectConfig {
   public final List<String> reservedNewlineWords;
   public final List<String> reservedWords;
   public final List<String> specialWordChars;
-  public final List<StringLiteral> stringTypes;
+  public final List<String> stringTypes;
   public final List<String> openParens;
   public final List<String> closeParens;
   public final List<String> indexedPlaceholderTypes;
@@ -26,7 +25,7 @@ public class DialectConfig {
       List<String> reservedTopLevelWordsNoIndent,
       List<String> reservedWords,
       List<String> specialWordChars,
-      List<StringLiteral> stringTypes,
+      List<String> stringTypes,
       List<String> openParens,
       List<String> closeParens,
       List<String> indexedPlaceholderTypes,
@@ -131,15 +130,15 @@ public class DialectConfig {
         .build();
   }
 
-  public DialectConfig withStringTypes(List<StringLiteral> stringTypes) {
+  public DialectConfig withStringTypes(List<String> stringTypes) {
     return this.toBuilder().stringTypes(stringTypes).build();
   }
 
-  public DialectConfig plusStringTypes(StringLiteral... stringTypes) {
+  public DialectConfig plusStringTypes(String... stringTypes) {
     return this.plusStringTypes(Arrays.asList(stringTypes));
   }
 
-  public DialectConfig plusStringTypes(List<StringLiteral> stringTypes) {
+  public DialectConfig plusStringTypes(List<String> stringTypes) {
     return this.toBuilder().stringTypes(Util.concat(this.stringTypes, stringTypes)).build();
   }
 
@@ -234,7 +233,7 @@ public class DialectConfig {
     private List<String> reservedTopLevelWordsNoIndent;
     private List<String> reservedWords;
     private List<String> specialWordChars;
-    private List<StringLiteral> stringTypes;
+    private List<String> stringTypes;
     private List<String> openParens;
     private List<String> closeParens;
     private List<String> indexedPlaceholderTypes;
@@ -274,7 +273,7 @@ public class DialectConfig {
       return this;
     }
 
-    public DialectConfigBuilder stringTypes(List<StringLiteral> stringTypes) {
+    public DialectConfigBuilder stringTypes(List<String> stringTypes) {
       this.stringTypes = stringTypes;
       return this;
     }

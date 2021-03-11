@@ -1,6 +1,5 @@
 package com.github.vertical_blank.sqlformatter
 
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral
 import com.github.vertical_blank.sqlformatter.features.supportsAlterTable
 import com.github.vertical_blank.sqlformatter.features.supportsBetween
 import com.github.vertical_blank.sqlformatter.features.supportsCase
@@ -10,6 +9,7 @@ import com.github.vertical_blank.sqlformatter.features.supportsOperators
 import com.github.vertical_blank.sqlformatter.features.supportsSchema
 import com.github.vertical_blank.sqlformatter.features.supportsStrings
 import com.github.vertical_blank.sqlformatter.languages.Dialect
+import com.github.vertical_blank.sqlformatter.languages.StringLiteral
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -26,11 +26,11 @@ object PostgreSqlFormatterTest :
           supportsStrings(
               formatter,
               listOf(
-                  StringLiteral.DoubleQuote,
-                  StringLiteral.SingleQuote,
-                  StringLiteral.UDoubleQuote,
-                  StringLiteral.USingleQuote,
-                  StringLiteral.Dollar))
+                  StringLiteral.DOUBLE_QUOTE,
+                  StringLiteral.SINGLE_QUOTE,
+                  StringLiteral.U_DOUBLE_QUOTE,
+                  StringLiteral.U_SINGLE_QUOTE,
+                  StringLiteral.DOLLAR))
           supportsBetween(formatter)
           supportsSchema(formatter)
           supportsOperators(

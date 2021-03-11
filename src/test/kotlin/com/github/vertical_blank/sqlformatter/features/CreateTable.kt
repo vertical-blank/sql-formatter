@@ -12,7 +12,7 @@ fun Suite.supportsCreateTable(formatter: SqlFormatter.Formatter) {
     }
 
     // The decision to place it to multiple lines is made based on the length of text inside
-    // braces
+    // BRACEs
     // ignoring the whitespace. (Which is not quite right :P)
     it("formats long CREATE TABLE") {
       expect(

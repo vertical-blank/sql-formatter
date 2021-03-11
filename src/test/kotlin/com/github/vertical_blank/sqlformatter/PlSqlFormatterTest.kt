@@ -1,6 +1,5 @@
 package com.github.vertical_blank.sqlformatter
 
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral
 import com.github.vertical_blank.sqlformatter.features.supportsAlterTable
 import com.github.vertical_blank.sqlformatter.features.supportsAlterTableModify
 import com.github.vertical_blank.sqlformatter.features.supportsBetween
@@ -11,6 +10,7 @@ import com.github.vertical_blank.sqlformatter.features.supportsOperators
 import com.github.vertical_blank.sqlformatter.features.supportsSchema
 import com.github.vertical_blank.sqlformatter.features.supportsStrings
 import com.github.vertical_blank.sqlformatter.languages.Dialect
+import com.github.vertical_blank.sqlformatter.languages.StringLiteral
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -27,7 +27,8 @@ object PlSqlFormatterTest :
           supportsAlterTableModify(formatter)
           supportsStrings(
               formatter,
-              listOf(StringLiteral.DoubleQuote, StringLiteral.SingleQuote, StringLiteral.BackQuote))
+              listOf(
+                  StringLiteral.DOUBLE_QUOTE, StringLiteral.SINGLE_QUOTE, StringLiteral.BACK_QUOTE))
           supportsBetween(formatter)
           supportsSchema(formatter)
           supportsOperators(formatter, listOf("||", "**", "!=", ":="))

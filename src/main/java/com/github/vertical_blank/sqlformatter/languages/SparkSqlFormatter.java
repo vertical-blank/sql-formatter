@@ -5,7 +5,6 @@ import com.github.vertical_blank.sqlformatter.core.DialectConfig;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
 import com.github.vertical_blank.sqlformatter.core.Token;
 import com.github.vertical_blank.sqlformatter.core.TokenTypes;
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -244,10 +243,10 @@ public class SparkSqlFormatter extends AbstractFormatter {
         .reservedNewlineWords(reservedNewlineWords)
         .stringTypes(
             Arrays.asList(
-                StringLiteral.DoubleQuote,
-                StringLiteral.SingleQuote,
-                StringLiteral.BackQuote,
-                StringLiteral.Brace))
+                StringLiteral.DOUBLE_QUOTE,
+                StringLiteral.SINGLE_QUOTE,
+                StringLiteral.BACK_QUOTE,
+                StringLiteral.BRACE))
         .openParens(Arrays.asList("(", "CASE"))
         .closeParens(Arrays.asList(")", "END"))
         .indexedPlaceholderTypes(Collections.singletonList("?"))

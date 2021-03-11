@@ -1,52 +1,49 @@
 package com.github.vertical_blank.sqlformatter.features
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral
 import com.github.vertical_blank.sqlformatter.expect
+import com.github.vertical_blank.sqlformatter.languages.StringLiteral
 import org.spekframework.spek2.style.specification.Suite
 
-fun Suite.supportsStrings(
-    formatter: SqlFormatter.Formatter,
-    stringTypes: List<StringLiteral> = listOf()
-) {
+fun Suite.supportsStrings(formatter: SqlFormatter.Formatter, stringTypes: List<String> = listOf()) {
   with(formatter) {
-    if (stringTypes.contains(StringLiteral.DoubleQuote)) {
+    if (stringTypes.contains(StringLiteral.DOUBLE_QUOTE)) {
       it("supports double-quoted strings") {
         expect(format(""""foo JOIN bar"""")).toBe(""""foo JOIN bar"""")
         expect(format(""""foo \" JOIN bar"""")).toBe(""""foo \" JOIN bar"""")
       }
     }
 
-    if (stringTypes.contains(StringLiteral.SingleQuote)) {
+    if (stringTypes.contains(StringLiteral.SINGLE_QUOTE)) {
       it("supports single-quoted strings") {
         expect(format("'foo JOIN bar'")).toBe("'foo JOIN bar'")
         expect(format("'foo \\' JOIN bar'")).toBe("'foo \\' JOIN bar'")
       }
     }
 
-    if (stringTypes.contains(StringLiteral.BackQuote)) {
+    if (stringTypes.contains(StringLiteral.BACK_QUOTE)) {
       it("supports backtick-quoted strings") {
         expect(format("`foo JOIN bar`")).toBe("`foo JOIN bar`")
         expect(format("`foo `` JOIN bar`")).toBe("`foo `` JOIN bar`")
       }
     }
 
-    if (stringTypes.contains(StringLiteral.UDoubleQuote)) {
+    if (stringTypes.contains(StringLiteral.U_DOUBLE_QUOTE)) {
       it("supports unicode double-quoted strings") {
         expect(format("""U&"foo JOIN bar"""")).toBe("""U&"foo JOIN bar"""")
         expect(format("""U&"foo \" JOIN bar"""")).toBe("""U&"foo \" JOIN bar"""")
       }
     }
 
-    if (stringTypes.contains(StringLiteral.USingleQuote)) {
+    if (stringTypes.contains(StringLiteral.U_SINGLE_QUOTE)) {
       it("supports single-quoted strings") {
         expect(format("U&'foo JOIN bar'")).toBe("U&'foo JOIN bar'")
         expect(format("U&'foo \\' JOIN bar'")).toBe("U&'foo \\' JOIN bar'")
       }
     }
 
-    if (stringTypes.contains(StringLiteral.Dollar)) {
-      it("supports dollar-quoted strings") {
+    if (stringTypes.contains(StringLiteral.DOLLAR)) {
+      it("supports DOLLAR-quoted strings") {
         expect(format("\$xxx\$foo \$\$ LEFT JOIN \$yyy\$ bar\$xxx\$"))
             .toBe("\$xxx\$foo \$\$ LEFT JOIN \$yyy\$ bar\$xxx\$")
         expect(format("\$\$foo JOIN bar\$\$")).toBe("\$\$foo JOIN bar\$\$")
@@ -55,14 +52,14 @@ fun Suite.supportsStrings(
       }
     }
 
-    if (stringTypes.contains(StringLiteral.Bracket)) {
-      it("supports [bracket-quoted identifiers]") {
+    if (stringTypes.contains(StringLiteral.BRACKET)) {
+      it("supports [BRACKET-quoted identifiers]") {
         expect(format("[foo JOIN bar]")).toBe("[foo JOIN bar]")
         expect(format("[foo ]] JOIN bar]")).toBe("[foo ]] JOIN bar]")
       }
     }
 
-    if (stringTypes.contains(StringLiteral.NSingleQuote)) {
+    if (stringTypes.contains(StringLiteral.N_SINGLE_QUOTE)) {
       it("supports T-SQL unicode strings") {
         expect(format("N'foo JOIN bar'")).toBe("N'foo JOIN bar'")
         expect(format("N'foo \\' JOIN bar'")).toBe("N'foo \\' JOIN bar'")

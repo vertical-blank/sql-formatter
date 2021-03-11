@@ -1,6 +1,6 @@
 package com.github.vertical_blank.sqlformatter.core.util;
 
-import com.github.vertical_blank.sqlformatter.enums.StringLiteral;
+import com.github.vertical_blank.sqlformatter.languages.StringLiteral;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,7 +43,7 @@ public class RegexUtil {
         + "]+)";
   }
 
-  public static String createStringRegex(JSLikeList<StringLiteral> stringTypes) {
+  public static String createStringRegex(JSLikeList<String> stringTypes) {
     return "^(" + createStringPattern(stringTypes) + ")";
   }
 
@@ -53,8 +53,8 @@ public class RegexUtil {
   // 3. double quoted string using "" or \" to escape
   // 4. single quoted string using '' or \' to escape
   // 5. national character quoted string using N'' or N\' to escape
-  public static String createStringPattern(JSLikeList<StringLiteral> stringTypes) {
-    return stringTypes.map(StringLiteral.regexMap::get).join("|");
+  public static String createStringPattern(JSLikeList<String> stringTypes) {
+    return stringTypes.map(StringLiteral::get).join("|");
   }
 
   public static String createParenRegex(JSLikeList<String> parens) {
