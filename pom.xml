@@ -223,7 +223,8 @@
               <include>src/test/java/**/*.java</include>
             </includes>
             <googleJavaFormat>
-              <style></style>
+              <version>1.9</version>
+              <style>GOOGLE</style>
             </googleJavaFormat>
           </java>
           <kotlin>
