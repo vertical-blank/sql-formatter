@@ -28,10 +28,6 @@ public class Indentation {
     this.indentTypes = new Stack<>();
   }
 
-  public Indentation() {
-    this("  ");
-  }
-
   /**
    * Returns current indentation string.
    *
