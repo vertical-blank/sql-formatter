@@ -47,22 +47,6 @@ public class Params {
     Object get();
 
     Object getByName(String key);
-
-    /**
-     * @param params query param
-     * @return Holder
-     */
-    static Holder of(Map<String, ?> params) {
-      return new NamedParamHolder(params);
-    }
-
-    /**
-     * @param params query param
-     * @return Holder
-     */
-    static Holder of(List<?> params) {
-      return new IndexedParamHolder(params);
-    }
   }
 
   private static class NamedParamHolder implements Holder {
