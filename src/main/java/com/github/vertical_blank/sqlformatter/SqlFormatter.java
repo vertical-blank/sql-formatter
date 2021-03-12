@@ -82,20 +82,20 @@ public class SqlFormatter {
 
     public String format(String query, String indent, List<?> params) {
       return format(
-          query, FormatConfig.builder().indent(indent).params(Params.Holder.of(params)).build());
+          query, FormatConfig.builder().indent(indent).params(new Params(params)).build());
     }
 
     public String format(String query, List<?> params) {
-      return format(query, FormatConfig.builder().params(Params.Holder.of(params)).build());
+      return format(query, FormatConfig.builder().params(new Params(params)).build());
     }
 
     public String format(String query, String indent, Map<String, ?> params) {
       return format(
-          query, FormatConfig.builder().indent(indent).params(Params.Holder.of(params)).build());
+          query, FormatConfig.builder().indent(indent).params(new Params(params)).build());
     }
 
     public String format(String query, Map<String, ?> params) {
-      return format(query, FormatConfig.builder().params(Params.Holder.of(params)).build());
+      return format(query, FormatConfig.builder().params(new Params(params)).build());
     }
 
     public String format(String query, String indent) {

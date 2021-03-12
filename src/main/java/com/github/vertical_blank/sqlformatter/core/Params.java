@@ -8,7 +8,40 @@ import java.util.Queue;
 /** Handles placeholder replacement with given params. */
 public class Params {
 
-  public interface Holder {
+  public static Params EMPTY = new Params();
+
+  private Holder params;
+
+  /** @param params query param */
+  public Params(Map<String, ?> params) {
+    this.params = new NamedParamHolder(params);
+  }
+
+  /** @param params query param */
+  public Params(List<?> params) {
+    this.params = new IndexedParamHolder(params);
+  }
+
+  private Params() {}
+
+  /**
+   * Returns param value that matches given placeholder with param key.
+   *
+   * @param token token.key Placeholder key token.value Placeholder value
+   * @return param or token.value when params are missing
+   */
+  Object get(Token token) {
+    if (this.params == null || this.params.isEmpty()) {
+      return token.value;
+    }
+    if (!(token.key == null || token.key.isEmpty())) {
+      return this.params.getByName(token.key);
+    } else {
+      return params.get();
+    }
+  }
+
+  private interface Holder {
     boolean isEmpty();
 
     Object get();
@@ -32,8 +65,8 @@ public class Params {
     }
   }
 
-  public static class NamedParamHolder implements Holder {
-    private Map<String, ?> params;
+  private static class NamedParamHolder implements Holder {
+    private final Map<String, ?> params;
 
     NamedParamHolder(Map<String, ?> params) {
       this.params = params;
@@ -59,8 +92,8 @@ public class Params {
     }
   }
 
-  public static class IndexedParamHolder implements Holder {
-    private Queue<?> params;
+  private static class IndexedParamHolder implements Holder {
+    private final Queue<?> params;
 
     IndexedParamHolder(List<?> params) {
       this.params = new PriorityQueue<>(params);
@@ -83,42 +116,6 @@ public class Params {
     @Override
     public String toString() {
       return this.params.toString();
-    }
-  }
-
-  private Holder params;
-  //    private int index;
-
-  /** @param params query param */
-  public Params(Map<String, ?> params) {
-    this.params = new NamedParamHolder(params);
-  }
-
-  /** @param params query param */
-  public Params(List<?> params) {
-    this.params = new IndexedParamHolder(params);
-    //        this.index = 0;
-  }
-
-  /** @param holder query param holder */
-  public Params(Holder holder) {
-    this.params = holder;
-  }
-
-  /**
-   * Returns param value that matches given placeholder with param key.
-   *
-   * @param token token.key Placeholder key token.value Placeholder value
-   * @return param or token.value when params are missing
-   */
-  Object get(Token token) {
-    if (this.params == null || this.params.isEmpty()) {
-      return token.value;
-    }
-    if (!(token.key == null || token.key.isEmpty())) {
-      return this.params.getByName(token.key);
-    } else {
-      return params.get();
     }
   }
 

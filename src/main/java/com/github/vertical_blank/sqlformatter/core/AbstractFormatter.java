@@ -21,7 +21,7 @@ public abstract class AbstractFormatter implements DialectConfigurator {
     this.cfg = cfg;
     this.indentation = new Indentation(cfg.indent);
     this.inlineBlock = new InlineBlock(cfg.maxColumnLength);
-    this.params = new Params(cfg.params);
+    this.params = cfg.params;
     this.previousReservedToken = null;
     this.index = 0;
   }

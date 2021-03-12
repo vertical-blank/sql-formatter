@@ -11,19 +11,19 @@ public class FormatConfig {
 
   public final String indent;
   public final int maxColumnLength;
-  public final Params.Holder params;
+  public final Params params;
   public final boolean uppercase;
   public final Integer linesBetweenQueries;
 
   FormatConfig(
       String indent,
       int maxColumnLength,
-      Params.Holder params,
+      Params params,
       boolean uppercase,
       Integer linesBetweenQueries) {
     this.indent = indent;
     this.maxColumnLength = maxColumnLength;
-    this.params = params;
+    this.params = params == null ? Params.EMPTY : params;
     this.uppercase = uppercase;
     this.linesBetweenQueries = linesBetweenQueries;
   }
@@ -41,7 +41,7 @@ public class FormatConfig {
   public static class FormatConfigBuilder {
     private String indent = DEFAULT_INDENT;
     private int maxColumnLength = DEFAULT_COLUMN_MAX_LENGTH;
-    private Params.Holder params;
+    private Params params;
     private boolean uppercase;
     private Integer linesBetweenQueries;
 
@@ -69,7 +69,7 @@ public class FormatConfig {
      * @param params Collection of params for placeholder replacement
      * @return This
      */
-    public FormatConfigBuilder params(Params.Holder params) {
+    public FormatConfigBuilder params(Params params) {
       this.params = params;
       return this;
     }
@@ -79,7 +79,7 @@ public class FormatConfig {
      * @return This
      */
     public FormatConfigBuilder params(Map<String, ?> params) {
-      return this.params(Params.Holder.of(params));
+      return params(new Params(params));
     }
 
     /**
@@ -87,7 +87,7 @@ public class FormatConfig {
      * @return This
      */
     public FormatConfigBuilder params(List<?> params) {
-      return this.params(Params.Holder.of(params));
+      return params(new Params(params));
     }
 
     /**
