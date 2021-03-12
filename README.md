@@ -137,6 +137,11 @@ WHERE
   foo = 'bar'
 ```
 
+## Build
+
+Building this library requires JDK 11 because of [ktfmt](https://github.com/facebookincubator/ktfmt).
+
+
 [standard sql]: https://en.wikipedia.org/wiki/SQL:2011
 [couchbase n1ql]: http://www.couchbase.com/n1ql
 [ibm db2]: https://www.ibm.com/analytics/us/en/technology/db2/
