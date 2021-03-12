@@ -20,7 +20,7 @@ public class Token {
   }
 
   public Token(TokenTypes type, String value, String regex, String whitespaceBefore) {
-    this(type, value, regex, null, null);
+    this(type, value, regex, whitespaceBefore, null);
   }
 
   public Token(TokenTypes type, String value, String regex) {
