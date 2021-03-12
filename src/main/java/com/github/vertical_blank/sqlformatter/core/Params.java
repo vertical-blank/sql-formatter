@@ -6,23 +6,25 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /** Handles placeholder replacement with given params. */
-public class Params {
+public interface Params {
 
-  public static Params EMPTY = new Params();
+  public static final Params EMPTY = new Empty();
 
-  private Holder params;
+  boolean isEmpty();
+
+  Object get();
+
+  Object getByName(String key);
 
   /** @param params query param */
-  public Params(Map<String, ?> params) {
-    this.params = new NamedParamHolder(params);
+  public static Params of(Map<String, ?> params) {
+    return new NamedParams(params);
   }
 
   /** @param params query param */
-  public Params(List<?> params) {
-    this.params = new IndexedParamHolder(params);
+  public static Params of(List<?> params) {
+    return new IndexedParams(params);
   }
-
-  private Params() {}
 
   /**
    * Returns param value that matches given placeholder with param key.
@@ -30,29 +32,21 @@ public class Params {
    * @param token token.key Placeholder key token.value Placeholder value
    * @return param or token.value when params are missing
    */
-  Object get(Token token) {
-    if (this.params == null || this.params.isEmpty()) {
+  default Object get(Token token) {
+    if (this.isEmpty()) {
       return token.value;
     }
     if (!(token.key == null || token.key.isEmpty())) {
-      return this.params.getByName(token.key);
+      return this.getByName(token.key);
     } else {
-      return params.get();
+      return this.get();
     }
   }
 
-  private interface Holder {
-    boolean isEmpty();
-
-    Object get();
-
-    Object getByName(String key);
-  }
-
-  private static class NamedParamHolder implements Holder {
+  public static class NamedParams implements Params {
     private final Map<String, ?> params;
 
-    NamedParamHolder(Map<String, ?> params) {
+    NamedParams(Map<String, ?> params) {
       this.params = params;
     }
 
@@ -76,10 +70,10 @@ public class Params {
     }
   }
 
-  private static class IndexedParamHolder implements Holder {
+  public static class IndexedParams implements Params {
     private final Queue<?> params;
 
-    IndexedParamHolder(List<?> params) {
+    IndexedParams(List<?> params) {
       this.params = new PriorityQueue<>(params);
     }
 
@@ -103,8 +97,26 @@ public class Params {
     }
   }
 
-  @Override
-  public String toString() {
-    return String.valueOf(this.params);
+  public static class Empty implements Params {
+    Empty() {}
+
+    public boolean isEmpty() {
+      return true;
+    }
+
+    @Override
+    public Object get() {
+      return null;
+    }
+
+    @Override
+    public Object getByName(String key) {
+      return null;
+    }
+
+    @Override
+    public String toString() {
+      return "[]";
+    }
   }
 }

@@ -79,7 +79,7 @@ public class FormatConfig {
      * @return This
      */
     public FormatConfigBuilder params(Map<String, ?> params) {
-      return params(new Params(params));
+      return params(Params.of(params));
     }
 
     /**
@@ -87,7 +87,7 @@ public class FormatConfig {
      * @return This
      */
     public FormatConfigBuilder params(List<?> params) {
-      return params(new Params(params));
+      return params(Params.of(params));
     }
 
     /**
