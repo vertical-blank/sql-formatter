@@ -5,120 +5,118 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-/**
- * Handles placeholder replacement with given params.
- */
-public class Params {
+/** Handles placeholder replacement with given params. */
+public interface Params {
 
-	public interface Holder {
-		boolean isEmpty();
+  public static final Params EMPTY = new Empty();
 
-		Object get();
+  boolean isEmpty();
 
-		Object getByName(String key);
+  Object get();
 
-		/**
-		 * @param params query param
-		 * @return Holder
-		 */
-		static Holder of(Map<String, ?> params) {
-			return new NamedParamHolder(params);
-		}
+  Object getByName(String key);
 
-		/**
-		 * @param params query param
-		 * @return Holder
-		 */
-		static Holder of(List<?> params) {
-			return new IndexedParamHolder(params);
-		}
-	}
+  /** @param params query param */
+  public static Params of(Map<String, ?> params) {
+    return new NamedParams(params);
+  }
 
-	public static class NamedParamHolder implements Holder {
-		private Map<String, ?> params;
+  /** @param params query param */
+  public static Params of(List<?> params) {
+    return new IndexedParams(params);
+  }
 
-		NamedParamHolder(Map<String, ?> params) {
-			this.params = params;
-		}
+  /**
+   * Returns param value that matches given placeholder with param key.
+   *
+   * @param token token.key Placeholder key token.value Placeholder value
+   * @return param or token.value when params are missing
+   */
+  default Object get(Token token) {
+    if (this.isEmpty()) {
+      return token.value;
+    }
+    if (!(token.key == null || token.key.isEmpty())) {
+      return this.getByName(token.key);
+    } else {
+      return this.get();
+    }
+  }
 
-		public boolean isEmpty() {
-			return this.params.isEmpty();
-		}
+  public static class NamedParams implements Params {
+    private final Map<String, ?> params;
 
-		@Override
-		public Object get() {
-			return null;
-		}
+    NamedParams(Map<String, ?> params) {
+      this.params = params;
+    }
 
-		@Override
-		public Object getByName(String key) {
-			return this.params.get(key);
-		}
-	}
+    public boolean isEmpty() {
+      return this.params.isEmpty();
+    }
 
-	public static class IndexedParamHolder implements Holder {
-		private Queue<?> params;
+    @Override
+    public Object get() {
+      return null;
+    }
 
-		IndexedParamHolder(List<?> params) {
-			this.params = new PriorityQueue<>(params);
-		}
+    @Override
+    public Object getByName(String key) {
+      return this.params.get(key);
+    }
 
-		public boolean isEmpty() {
-			return this.params.isEmpty();
-		}
+    @Override
+    public String toString() {
+      return this.params.toString();
+    }
+  }
 
-		@Override
-		public Object get() {
-			return this.params.poll();
-		}
+  public static class IndexedParams implements Params {
+    private final Queue<?> params;
 
-		@Override
-		public Object getByName(String key) {
-			return null;
-		}
-	}
+    IndexedParams(List<?> params) {
+      this.params = new PriorityQueue<>(params);
+    }
 
+    public boolean isEmpty() {
+      return this.params.isEmpty();
+    }
 
-	private Holder params;
-//    private int index;
+    @Override
+    public Object get() {
+      return this.params.poll();
+    }
 
-	/**
-	 * @param params query param
-	 */
-	public Params(Map<String, ?> params) {
-		this.params = new NamedParamHolder(params);
-	}
+    @Override
+    public Object getByName(String key) {
+      return null;
+    }
 
-	/**
-	 * @param params query param
-	 */
-	public Params(List<?> params) {
-		this.params = new IndexedParamHolder(params);
-//        this.index = 0;
-	}
+    @Override
+    public String toString() {
+      return this.params.toString();
+    }
+  }
 
-	/**
-	 * @param holder query param holder
-	 */
-	public Params(Holder holder) {
-		this.params = holder;
-	}
+  public static class Empty implements Params {
+    Empty() {}
 
-	/**
-	 * Returns param value that matches given placeholder with param key.
-	 *
-	 * @param token token.key Placeholder key
-	 *              token.value Placeholder value
-	 * @return param or token.value when params are missing
-	 */
-	Object get(Token token) {
-		if (this.params == null || this.params.isEmpty()) {
-			return token.value;
-		}
-		if (!(token.key == null || token.key.isEmpty())) {
-			return this.params.getByName(token.key);
-		} else {
-			return params.get();
-		}
-	}
+    public boolean isEmpty() {
+      return true;
+    }
+
+    @Override
+    public Object get() {
+      return null;
+    }
+
+    @Override
+    public Object getByName(String key) {
+      return null;
+    }
+
+    @Override
+    public String toString() {
+      return "[]";
+    }
+  }
 }

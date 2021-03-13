@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.vertical-blank</groupId>
   <artifactId>sql-formatter</artifactId>
-  <version>1.0.4</version>
+  <version>2.0.0</version>
   <packaging>jar</packaging>
   <name>sql-formatter</name>
   <description>Simple SQL formatter without dependencies.</description>
@@ -30,6 +29,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <kotlin.version>1.4.31</kotlin.version>
+    <spek_version>2.0.15</spek_version>
   </properties>
 
   <dependencyManagement>
@@ -37,7 +38,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.4.2</version>
+        <version>5.7.1</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -49,13 +50,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-      <version>2.5.14</version>
+      <version>5.7.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -65,6 +60,46 @@
       <version>1.19</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spekframework.spek2</groupId>
+      <artifactId>spek-dsl-jvm</artifactId>
+      <version>${spek_version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spekframework.spek2</groupId>
+      <artifactId>spek-runner-junit5</artifactId>
+      <version>${spek_version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
+      <version>1.1.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.amshove.kluent</groupId>
+      <artifactId>kluent</artifactId>
+      <version>1.65</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -77,21 +112,6 @@
     </extensions>
 
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.6.3</version>
-        <executions>
-          <execution>
-            <goals>
-              <!-- <goal>addSources</goal> -->
-              <goal>addTestSources</goal>
-              <!-- <goal>compile</goal> -->
-              <goal>compileTests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -143,21 +163,102 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.1</version>
+        <groupId>de.sormuras.junit</groupId>
+        <artifactId>junit-platform-maven-plugin</artifactId>
+        <version>1.1.2</version>
+        <extensions>true</extensions>
+        <configuration>
+          <executor>JAVA</executor>
+          <javaOptions>
+            <inheritIO>true</inheritIO>
+            <additionalOptions>
+              <jacoco>${jacoco.java.option}</jacoco>
+            </additionalOptions>
+          </javaOptions>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/test/kotlin</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>2.7.0</version>
+        <configuration>
+          <java>
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+            </includes>
+            <googleJavaFormat>
+              <version>1.9</version>
+              <style>GOOGLE</style>
+            </googleJavaFormat>
+          </java>
+          <kotlin>
+            <includes>
+              <include>src/test/kotlin/**/*.kt</include>
+            </includes>
+            <ktfmt>
+              <version>0.21</version>
+              <style>DEFAULT</style>
+            </ktfmt>
+          </kotlin>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            </execution>
+        </executions>
       </plugin>
 
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.2</version>
-
+        <version>0.8.6</version>
         <executions>
           <execution>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <configuration>
+              <propertyName>jacoco.java.option</propertyName>
+            </configuration>
           </execution>
           <execution>
             <id>report</id>
@@ -171,6 +272,24 @@
 
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.6</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <!-- select non-aggregate reports -->
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <profiles>
     <profile>
