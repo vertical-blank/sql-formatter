@@ -90,9 +90,9 @@ SQL formatter supports the following dialects:
 - **spark** - [Spark][]
 - **tsql** - [SQL Server Transact-SQL][tsql]
 
-### Extend dialects
+### Extend formatters
 
-Dialects can be extended as following.
+Formatters can be extended as below :
 
 ```java
 SqlFormatter
