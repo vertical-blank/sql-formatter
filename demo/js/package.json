@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ffi": "^2.3.0"
+    "ffi-napi": "^4.0.2",
+    "ref-napi": "^3.0.1"
   }
 }
