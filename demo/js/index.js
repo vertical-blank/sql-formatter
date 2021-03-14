@@ -1,7 +1,7 @@
-const ref = require('ref');
-const ffi = require('ffi');
+const ref = require('ref-napi');
+const ffi = require('ffi-napi');
 
-const version = '1.0.1'
+const version = '2.0.0'
 
 const libJava = ffi.Library(__dirname + '/sqlformatterdemo', {
   graal_create_isolate: [
