@@ -379,6 +379,7 @@ public class StandardSqlFormatter extends AbstractFormatter {
         .indexedPlaceholderTypes(Collections.singletonList("?"))
         .namedPlaceholderTypes(Collections.emptyList())
         .lineCommentTypes(Arrays.asList("--"))
+        .operators(Collections.singletonList("||"))
         .build();
   }
 
