@@ -12,6 +12,7 @@ public class StringLiteral {
   public static final String U_SINGLE_QUOTE = "U&''";
   public static final String E_SINGLE_QUOTE = "E''";
   public static final String N_SINGLE_QUOTE = "N''";
+  public static final String Q_SINGLE_QUOTE = "Q''";
   public static final String SINGLE_QUOTE = "''";
   public static final String BRACE = "{}";
   public static final String DOLLAR = "$$";
@@ -47,6 +48,10 @@ public class StringLiteral {
         "(('[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"), // "((^'((?:''|[^'])*)')+)"),
     /** N'' */
     N_SINGLE_QUOTE(StringLiteral.N_SINGLE_QUOTE, "((N'[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"),
+    /** q'' */
+    Q_SINGLE_QUOTE(
+        StringLiteral.Q_SINGLE_QUOTE,
+        "(?i)((n?q'\\[.*($|\\]'))+)|((n?q'\\{.*($|\\}'))+)|((n?q'\\<.*($|\\>'))+)|((n?q'\\(.*($|\\)'))+)"),
     // single_quote("((^'((?:''|[^'])*)')+)"),
     E_SINGLE_QUOTE(StringLiteral.E_SINGLE_QUOTE, "((E'[^'\\\\]*(?:\\\\.[^'\\\\]*)*('|$))+)"),
     /** U&amp;'' */

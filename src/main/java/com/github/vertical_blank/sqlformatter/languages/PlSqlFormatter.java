@@ -434,6 +434,7 @@ public class PlSqlFormatter extends AbstractFormatter {
             Arrays.asList(
                 StringLiteral.DOUBLE_QUOTE,
                 StringLiteral.N_SINGLE_QUOTE,
+                StringLiteral.Q_SINGLE_QUOTE,
                 StringLiteral.SINGLE_QUOTE,
                 StringLiteral.BACK_QUOTE))
         .openParens(Arrays.asList("(", "CASE"))
