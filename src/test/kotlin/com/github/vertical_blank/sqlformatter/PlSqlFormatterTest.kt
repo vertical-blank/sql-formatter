@@ -28,7 +28,10 @@ object PlSqlFormatterTest :
           supportsStrings(
               formatter,
               listOf(
-                  StringLiteral.DOUBLE_QUOTE, StringLiteral.SINGLE_QUOTE, StringLiteral.BACK_QUOTE))
+                  StringLiteral.DOUBLE_QUOTE,
+                  StringLiteral.SINGLE_QUOTE,
+                  StringLiteral.BACK_QUOTE,
+                  StringLiteral.Q_SINGLE_QUOTE))
           supportsBetween(formatter)
           supportsSchema(formatter)
           supportsOperators(formatter, listOf("||", "**", "!=", ":="))
