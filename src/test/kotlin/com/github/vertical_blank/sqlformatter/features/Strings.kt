@@ -68,14 +68,20 @@ fun Suite.supportsStrings(formatter: SqlFormatter.Formatter, stringTypes: List<S
 
     if (stringTypes.contains(StringLiteral.Q_SINGLE_QUOTE)) {
       it("supports Oracle quotation operator") {
-        expect(format("Q'[I'm boy]'")).toBe("Q'[I'm boy]'")
-        expect(format("Q'{I'm boy}'")).toBe("Q'{I'm boy}'")
-        expect(format("Q'<I'm boy>'")).toBe("Q'<I'm boy>'")
-        expect(format("Q'(I'm boy)'")).toBe("Q'(I'm boy)'")
-        expect(format("NQ'[I'm boy]'")).toBe("NQ'[I'm boy]'")
-        expect(format("NQ'{I'm boy}'")).toBe("NQ'{I'm boy}'")
-        expect(format("NQ'<I'm boy>'")).toBe("NQ'<I'm boy>'")
-        expect(format("NQ'(I'm boy)'")).toBe("NQ'(I'm boy)'")
+        expect(format("Q'[I'm boy]',Q'{I'm boy}',Q'<I'm boy>',Q'(I'm boy)',1"))
+            .toBe(
+                """Q'[I'm boy]',
+            |Q'{I'm boy}',
+            |Q'<I'm boy>',
+            |Q'(I'm boy)',
+            |1""".trimMargin())
+        expect(format("NQ'[I'm boy]',NQ'{I'm boy}',NQ'<I'm boy>',NQ'(I'm boy)',1"))
+            .toBe(
+                """NQ'[I'm boy]',
+            |NQ'{I'm boy}',
+            |NQ'<I'm boy>',
+            |NQ'(I'm boy)',
+            |1""".trimMargin())
       }
     }
   }
