@@ -531,7 +531,7 @@ public class PostgreSqlFormatter extends AbstractFormatter {
         .operators(
             Arrays.asList(
                 "!=", "<<", ">>", "||/", "|/", "::", "->>", "->", "~~*", "~~", "!~~*", "!~~", "~*",
-                "!~*", "!~", "!!"))
+                "!~*", "!~", "!!", "@@", "@@@"))
         .build();
   }
 

@@ -60,6 +60,8 @@ object PostgreSqlFormatterTest :
                   "~*",
                   "!~*",
                   "!~",
+                  "@@",
+                  "@@@",
               ))
           supportsJoin(formatter)
 
