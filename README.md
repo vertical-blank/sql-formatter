@@ -25,14 +25,14 @@ This does not support:
 <dependency>
   <groupId>com.github.vertical-blank</groupId>
   <artifactId>sql-formatter</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```gradle
-implementation 'com.github.vertical-blank:sql-formatter:2.0.1'
+implementation 'com.github.vertical-blank:sql-formatter:2.0.2'
 ```
 
 ## Examples
