@@ -1,8 +1,8 @@
 package com.github.vertical_blank.sqlformatter.core;
 
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /** Handles placeholder replacement with given params. */
@@ -74,7 +74,7 @@ public interface Params {
     private final Queue<?> params;
 
     IndexedParams(List<?> params) {
-      this.params = new PriorityQueue<>(params);
+      this.params = new ArrayDeque<>(params);
     }
 
     public boolean isEmpty() {
