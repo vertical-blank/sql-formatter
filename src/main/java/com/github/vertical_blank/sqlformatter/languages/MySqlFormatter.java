@@ -33,6 +33,7 @@ public class MySqlFormatter extends AbstractFormatter {
           "CHANGE",
           "CHAR",
           "CHARACTER",
+          "CHARACTER SET",
           "CHECK",
           "COLLATE",
           "COLUMN",
