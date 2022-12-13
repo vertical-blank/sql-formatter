@@ -16,7 +16,9 @@ public abstract class AbstractFormatter implements DialectConfigurator {
   private JSLikeList<Token> tokens;
   private int index;
 
-  /** @param cfg FormatConfig */
+  /**
+   * @param cfg FormatConfig
+   */
   public AbstractFormatter(FormatConfig cfg) {
     this.cfg = cfg;
     this.indentation = new Indentation(cfg.indent);

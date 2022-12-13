@@ -6,16 +6,14 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 object MySqlFormatterTest :
-    Spek({
-      val formatter = SqlFormatter.of(Dialect.MySql)
+  Spek({
+    val formatter = SqlFormatter.of(Dialect.MySql)
 
-      describe("MySqlFormatter") {
-        with(formatter) {
-          behavesLikeMariaDbFormatter(formatter)
+    describe("MySqlFormatter") {
+      with(formatter) {
+        behavesLikeMariaDbFormatter(formatter)
 
-          describe("additional MySQL operators") {
-            supportsOperators(formatter, listOf("->", "->>"))
-          }
-        }
+        describe("additional MySQL operators") { supportsOperators(formatter, listOf("->", "->>")) }
       }
-    })
+    }
+  })

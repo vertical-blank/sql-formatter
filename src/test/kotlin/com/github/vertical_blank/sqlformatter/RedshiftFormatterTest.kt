@@ -14,28 +14,30 @@ import org.spekframework.spek2.dsl.Skip
 import org.spekframework.spek2.style.specification.describe
 
 object RedshiftFormatterTest :
-    Spek({
-      val formatter = SqlFormatter.of(Dialect.Redshift)
+  Spek({
+    val formatter = SqlFormatter.of(Dialect.Redshift)
 
-      describe("RedshiftFormatter") {
-        with(formatter) {
-          behavesLikeSqlFormatter(formatter)
-          supportsCreateTable(formatter)
-          supportsAlterTable(formatter)
-          supportsAlterTableModify(formatter)
-          supportsStrings(
-              formatter,
-              listOf(
-                  StringLiteral.DOUBLE_QUOTE, StringLiteral.SINGLE_QUOTE, StringLiteral.BACK_QUOTE))
-          supportsSchema(formatter)
-          supportsOperators(
-              formatter, listOf("%", "^", "|/", "||/", "<<", ">>", "&", "|", "~", "!", "!=", "||"))
-          supportsJoin(formatter)
+    describe("RedshiftFormatter") {
+      with(formatter) {
+        behavesLikeSqlFormatter(formatter)
+        supportsCreateTable(formatter)
+        supportsAlterTable(formatter)
+        supportsAlterTableModify(formatter)
+        supportsStrings(
+          formatter,
+          listOf(StringLiteral.DOUBLE_QUOTE, StringLiteral.SINGLE_QUOTE, StringLiteral.BACK_QUOTE)
+        )
+        supportsSchema(formatter)
+        supportsOperators(
+          formatter,
+          listOf("%", "^", "|/", "||/", "<<", ">>", "&", "|", "~", "!", "!=", "||")
+        )
+        supportsJoin(formatter)
 
-          it("formats LIMIT") {
-            expect(format("SELECT col1 FROM tbl ORDER BY col2 DESC LIMIT 10;"))
-                .toBe(
-                    """
+        it("formats LIMIT") {
+          expect(format("SELECT col1 FROM tbl ORDER BY col2 DESC LIMIT 10;"))
+            .toBe(
+              """
         SELECT
           col1
         FROM
@@ -44,46 +46,52 @@ object RedshiftFormatterTest :
           col2 DESC
         LIMIT
           10;
-                    """.trimIndent())
-          }
+                    """.trimIndent()
+            )
+        }
 
-          it("formats only -- as a line comment") {
-            val result =
-                format(
-                    """
+        it("formats only -- as a line comment") {
+          val result =
+            format(
+              """
         SELECT col FROM
         -- This is a comment
         MyTable;
-        """)
-            expect(result)
-                .toBe(
-                    """
+        """
+            )
+          expect(result)
+            .toBe(
+              """
         SELECT
           col
         FROM
           -- This is a comment
           MyTable;
-                    """.trimIndent())
-          }
+                    """.trimIndent()
+            )
+        }
 
-          it("recognizes @ as part of identifiers") {
-            val result = format("SELECT @col1 FROM tbl")
-            expect(result)
-                .toBe(
-                    """
+        it("recognizes @ as part of identifiers") {
+          val result = format("SELECT @col1 FROM tbl")
+          expect(result)
+            .toBe(
+              """
         SELECT
           @col1
         FROM
           tbl
-                    """.trimIndent())
-          }
+                    """.trimIndent()
+            )
+        }
 
-          it("formats DISTKEY and SORTKEY after CREATE TABLE", skip = Skip.Yes()) {
-            expect(
-                    format(
-                        "CREATE TABLE items (a INT PRIMARY KEY, b TEXT, c INT NOT NULL, d INT NOT NULL) DISTKEY(created_at) SORTKEY(created_at);"))
-                .toBe(
-                    """
+        it("formats DISTKEY and SORTKEY after CREATE TABLE", skip = Skip.Yes()) {
+          expect(
+              format(
+                "CREATE TABLE items (a INT PRIMARY KEY, b TEXT, c INT NOT NULL, d INT NOT NULL) DISTKEY(created_at) SORTKEY(created_at);"
+              )
+            )
+            .toBe(
+              """
         CREATE TABLE items (
           a INT PRIMARY KEY,
           b TEXT,
@@ -92,21 +100,24 @@ object RedshiftFormatterTest :
         )
         DISTKEY(created_at)
         SORTKEY(created_at);
-                    """.trimIndent())
-          }
+                    """.trimIndent()
+            )
+        }
 
-          it("formats COPY") {
-            expect(
-                    format(
-                        """
+        it("formats COPY") {
+          expect(
+              format(
+                """
           COPY schema.table
           FROM 's3://bucket/file.csv'
           IAM_ROLE 'arn:aws:iam::123456789:role/rolename'
           FORMAT AS CSV DELIMITER ',' QUOTE '"'
           REGION AS 'us-east-1'
-          """))
-                .toBe(
-                    """
+          """
+              )
+            )
+            .toBe(
+              """
         COPY
           schema.table
         FROM
@@ -119,8 +130,9 @@ object RedshiftFormatterTest :
           ',' QUOTE '"'
         REGION
           AS 'us-east-1'
-                    """.trimIndent())
-          }
+                    """.trimIndent()
+            )
         }
       }
-    })
+    }
+  })

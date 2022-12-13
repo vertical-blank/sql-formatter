@@ -8,7 +8,7 @@ fun Suite.supportsCreateTable(formatter: SqlFormatter.Formatter) {
   with(formatter) {
     it("formats short CREATE TABLE") {
       expect(format("CREATE TABLE items (a INT PRIMARY KEY, b TEXT);"))
-          .toBe("CREATE TABLE items (a INT PRIMARY KEY, b TEXT);")
+        .toBe("CREATE TABLE items (a INT PRIMARY KEY, b TEXT);")
     }
 
     // The decision to place it to multiple lines is made based on the length of text inside
@@ -16,17 +16,20 @@ fun Suite.supportsCreateTable(formatter: SqlFormatter.Formatter) {
     // ignoring the whitespace. (Which is not quite right :P)
     it("formats long CREATE TABLE") {
       expect(
-              format(
-                  "CREATE TABLE items (a INT PRIMARY KEY, b TEXT, c INT NOT NULL, doggie INT NOT NULL);"))
-          .toBe(
-              """
+          format(
+            "CREATE TABLE items (a INT PRIMARY KEY, b TEXT, c INT NOT NULL, doggie INT NOT NULL);"
+          )
+        )
+        .toBe(
+          """
       CREATE TABLE items (
         a INT PRIMARY KEY,
         b TEXT,
         c INT NOT NULL,
         doggie INT NOT NULL
       );
-                """.trimIndent())
+                """.trimIndent()
+        )
     }
   }
 }

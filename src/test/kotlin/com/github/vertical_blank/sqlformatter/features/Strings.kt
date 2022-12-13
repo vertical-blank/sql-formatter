@@ -45,7 +45,7 @@ fun Suite.supportsStrings(formatter: SqlFormatter.Formatter, stringTypes: List<S
     if (stringTypes.contains(StringLiteral.DOLLAR)) {
       it("supports DOLLAR-quoted strings") {
         expect(format("\$xxx\$foo \$\$ LEFT JOIN \$yyy\$ bar\$xxx\$"))
-            .toBe("\$xxx\$foo \$\$ LEFT JOIN \$yyy\$ bar\$xxx\$")
+          .toBe("\$xxx\$foo \$\$ LEFT JOIN \$yyy\$ bar\$xxx\$")
         expect(format("\$\$foo JOIN bar\$\$")).toBe("\$\$foo JOIN bar\$\$")
         expect(format("\$\$foo \$ JOIN bar\$\$")).toBe("\$\$foo $ JOIN bar\$\$")
         expect(format("\$\$foo \n bar\$\$")).toBe("\$\$foo \n bar\$\$")
@@ -69,19 +69,21 @@ fun Suite.supportsStrings(formatter: SqlFormatter.Formatter, stringTypes: List<S
     if (stringTypes.contains(StringLiteral.Q_SINGLE_QUOTE)) {
       it("supports Oracle quotation operator") {
         expect(format("Q'[I'm boy]',Q'{I'm boy}',Q'<I'm boy>',Q'(I'm boy)',1"))
-            .toBe(
-                """Q'[I'm boy]',
+          .toBe(
+            """Q'[I'm boy]',
             |Q'{I'm boy}',
             |Q'<I'm boy>',
             |Q'(I'm boy)',
-            |1""".trimMargin())
+            |1""".trimMargin()
+          )
         expect(format("NQ'[I'm boy]',NQ'{I'm boy}',NQ'<I'm boy>',NQ'(I'm boy)',1"))
-            .toBe(
-                """NQ'[I'm boy]',
+          .toBe(
+            """NQ'[I'm boy]',
             |NQ'{I'm boy}',
             |NQ'<I'm boy>',
             |NQ'(I'm boy)',
-            |1""".trimMargin())
+            |1""".trimMargin()
+          )
       }
     }
   }
