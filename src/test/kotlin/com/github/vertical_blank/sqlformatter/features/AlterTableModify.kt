@@ -9,13 +9,14 @@ fun Suite.supportsAlterTableModify(formatter: SqlFormatter.Formatter) {
     it("formats ALTER TABLE ... MODIFY statement") {
       val result = format("ALTER TABLE supplier MODIFY supplier_name char(100) NOT NULL;")
       expect(result)
-          .toBe(
-              """
+        .toBe(
+          """
       ALTER TABLE
         supplier
       MODIFY
         supplier_name char(100) NOT NULL;
-                """.trimIndent())
+                """.trimIndent()
+        )
     }
   }
 }

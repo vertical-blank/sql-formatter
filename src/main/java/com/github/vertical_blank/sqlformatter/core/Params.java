@@ -16,12 +16,16 @@ public interface Params {
 
   Object getByName(String key);
 
-  /** @param params query param */
+  /**
+   * @param params query param
+   */
   public static Params of(Map<String, ?> params) {
     return new NamedParams(params);
   }
 
-  /** @param params query param */
+  /**
+   * @param params query param
+   */
   public static Params of(List<?> params) {
     return new IndexedParams(params);
   }

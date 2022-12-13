@@ -7,8 +7,8 @@ interface Expect<T> {
 }
 
 fun <T> expect(v: T) =
-    object : Expect<T> {
-      override fun toBe(v2: T) {
-        v shouldBeEqualTo v2
-      }
+  object : Expect<T> {
+    override fun toBe(v2: T) {
+      v shouldBeEqualTo v2
     }
+  }

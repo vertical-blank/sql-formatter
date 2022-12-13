@@ -9,13 +9,14 @@ fun Suite.supportsAlterTable(formatter: SqlFormatter.Formatter) {
     it("formats ALTER TABLE ... ALTER COLUMN query") {
       val result = format("ALTER TABLE supplier ALTER COLUMN supplier_name VARCHAR(100) NOT NULL;")
       expect(result)
-          .toBe(
-              """
+        .toBe(
+          """
       ALTER TABLE
         supplier
       ALTER COLUMN
         supplier_name VARCHAR(100) NOT NULL;
-                """.trimIndent())
+                """.trimIndent()
+        )
     }
   }
 }

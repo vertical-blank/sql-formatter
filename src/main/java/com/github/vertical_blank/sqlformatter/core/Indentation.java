@@ -22,7 +22,9 @@ public class Indentation {
   private final String indent;
   private final Stack<IndentTypes> indentTypes;
 
-  /** @param indent Indent value, default is " " (2 spaces) */
+  /**
+   * @param indent Indent value, default is " " (2 spaces)
+   */
   Indentation(String indent) {
     this.indent = indent;
     this.indentTypes = new Stack<>();
