@@ -31,7 +31,7 @@ object SparkSqlFormatterTest :
         supportsSchema(formatter)
         supportsOperators(
           formatter,
-          listOf("!=", "%", "|", "&", "^", "~", "!", "<=>", "%", "&&", "||", "==")
+          listOf("!=", "%", "|", "&", "^", "~", "!", "<=>", "%", "&&", "||", "==", "->")
         )
         supportsJoin(
           formatter,

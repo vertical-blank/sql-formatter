@@ -252,7 +252,7 @@ public class SparkSqlFormatter extends AbstractFormatter {
         .indexedPlaceholderTypes(Collections.singletonList("?"))
         .namedPlaceholderTypes(Collections.singletonList("$"))
         .lineCommentTypes(Collections.singletonList("--"))
-        .operators(Arrays.asList("!=", "<=>", "&&", "||", "=="))
+        .operators(Arrays.asList("!=", "<=>", "&&", "||", "==", "->"))
         .build();
   }
 
