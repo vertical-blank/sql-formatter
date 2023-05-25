@@ -75,4 +75,14 @@ public class SqlFormatterTest {
     String format = SqlFormatter.format("SELECT * FROM tbl WHERE foo = ?", Arrays.asList("'bar'"));
     assertEquals(format, "SELECT\n" + "  *\n" + "FROM\n" + "  tbl\n" + "WHERE\n" + "  foo = 'bar'");
   }
+
+  @Test
+  public void withLambdasParams() {
+    String format =
+        SqlFormatter.of(Dialect.SparkSql)
+            .format("SELECT aggregate(array(1, 2, 3), 0, (acc, x) -> acc + x, acc -> acc * 10);");
+    assertEquals(
+        format,
+        "SELECT\n" + "  aggregate(array(1, 2, 3), 0, (acc, x) -> acc + x, acc -> acc * 10);");
+  }
 }
