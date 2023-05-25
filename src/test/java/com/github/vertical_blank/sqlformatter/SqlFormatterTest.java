@@ -78,7 +78,11 @@ public class SqlFormatterTest {
 
   @Test
   public void withLambdasParams() {
-    String format = SqlFormatter.of(Dialect.SparkSql).format("SELECT aggregate(array(1, 2, 3), 0, (acc, x) -> acc + x, acc -> acc * 10);");
-    assertEquals(format, "SELECT\n" + "  aggregate(array(1, 2, 3), 0, (acc, x) -> acc + x, acc -> acc * 10);");
+    String format =
+        SqlFormatter.of(Dialect.SparkSql)
+            .format("SELECT aggregate(array(1, 2, 3), 0, (acc, x) -> acc + x, acc -> acc * 10);");
+    assertEquals(
+        format,
+        "SELECT\n" + "  aggregate(array(1, 2, 3), 0, (acc, x) -> acc + x, acc -> acc * 10);");
   }
 }
