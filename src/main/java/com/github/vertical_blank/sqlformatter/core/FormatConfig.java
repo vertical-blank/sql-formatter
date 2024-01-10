@@ -14,18 +14,21 @@ public class FormatConfig {
   public final Params params;
   public final boolean uppercase;
   public final Integer linesBetweenQueries;
+  public final boolean skipWhitespaceNearBlockParentheses;
 
   FormatConfig(
       String indent,
       int maxColumnLength,
       Params params,
       boolean uppercase,
-      Integer linesBetweenQueries) {
+      Integer linesBetweenQueries,
+      boolean skipWhitespaceNearBlockParentheses) {
     this.indent = indent;
     this.maxColumnLength = maxColumnLength;
     this.params = params == null ? Params.EMPTY : params;
     this.uppercase = uppercase;
     this.linesBetweenQueries = linesBetweenQueries;
+    this.skipWhitespaceNearBlockParentheses = skipWhitespaceNearBlockParentheses;
   }
 
   /**
@@ -44,6 +47,7 @@ public class FormatConfig {
     private Params params;
     private boolean uppercase;
     private Integer linesBetweenQueries;
+    private boolean skipWhitespaceNearBlockParentheses;
 
     FormatConfigBuilder() {}
 
@@ -109,13 +113,29 @@ public class FormatConfig {
     }
 
     /**
+     * @param skipWhitespaceNearBlockParentheses skip adding whitespace before and after block
+     *     Parentheses
+     * @return This
+     */
+    public FormatConfigBuilder skipWhitespaceNearBlockParentheses(
+        boolean skipWhitespaceNearBlockParentheses) {
+      this.skipWhitespaceNearBlockParentheses = skipWhitespaceNearBlockParentheses;
+      return this;
+    }
+
+    /**
      * Returns an instance of FormatConfig created from the fields set on this builder.
      *
      * @return FormatConfig
      */
     public FormatConfig build() {
       return new FormatConfig(
-          this.indent, this.maxColumnLength, this.params, this.uppercase, this.linesBetweenQueries);
+          this.indent,
+          this.maxColumnLength,
+          this.params,
+          this.uppercase,
+          this.linesBetweenQueries,
+          this.skipWhitespaceNearBlockParentheses);
     }
   }
 }
