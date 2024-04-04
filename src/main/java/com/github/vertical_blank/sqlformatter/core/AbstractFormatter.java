@@ -167,7 +167,9 @@ public abstract class AbstractFormatter implements DialectConfigurator {
 
     if (!this.inlineBlock.isActive()) {
       this.indentation.increaseBlockLevel();
-      query = this.addNewline(query);
+      if (!cfg.skipWhitespaceNearBlockParentheses) {
+        query = this.addNewline(query);
+      }
     }
     return query;
   }
@@ -179,7 +181,11 @@ public abstract class AbstractFormatter implements DialectConfigurator {
       return this.formatWithSpaceAfter(token, query);
     } else {
       this.indentation.decreaseBlockLevel();
-      return this.formatWithSpaces(token, this.addNewline(query));
+      if (!cfg.skipWhitespaceNearBlockParentheses) {
+        return this.formatWithSpaces(token, this.addNewline(query));
+      } else {
+        return this.formatWithoutSpaces(token, query);
+      }
     }
   }
 
