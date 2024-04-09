@@ -199,6 +199,7 @@ public class TSqlFormatter extends AbstractFormatter {
 
   private static final List<String> reservedTopLevelWords =
       Arrays.asList(
+          "GO",
           "ADD",
           "ALTER COLUMN",
           "ALTER TABLE",
@@ -226,6 +227,7 @@ public class TSqlFormatter extends AbstractFormatter {
 
   private static final List<String> reservedNewlineWords =
       Arrays.asList(
+          "GO",
           "AND",
           "ELSE",
           "OR",
